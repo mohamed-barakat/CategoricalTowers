@@ -433,6 +433,250 @@ InstallMethod( ZariskiCoframeOfAffineSpectrum,
     
 end );
 
+InstallGlobalFunction( ZariskiCoframeOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRows,
+  function( R )
+    local object_constructor, object_datum,
+          morphism_constructor, morphism_datum,
+          F, S, P, T, O,
+          modeling_tower_object_constructor, modeling_tower_object_datum,
+          modeling_tower_morphism_constructor, modeling_tower_morphism_datum,
+          ZC, B;
+    
+    ##
+    object_constructor :=
+      function( ZC, column_matrix )
+        
+        #return ObjectInZariskiFrameOrCoframe( ZC, RadicalSubobjectOp( column_matrix ) );
+        return ObjectInZariskiFrameOrCoframe( ZC, column_matrix );
+        
+    end;
+    
+    ##
+    object_datum :=
+      function( ZC, A )
+        
+        return UnderlyingColumn( A );
+        
+    end;
+    
+    ##
+    morphism_constructor :=
+      function( ZC, source, dummy, range )
+        
+        return CreateCapCategoryMorphismWithAttributes( ZC, source, range );
+        
+    end;
+    
+    ##
+    morphism_datum :=
+      function( ZC, phi )
+        
+        return fail;
+        
+    end;
+    
+    ## modifing the lowest level category of the tower
+    if not IsBound( R!.CategoryOfRows ) then
+        R!.CategoryOfRows := CategoryOfRows( R : overhead := false, FinalizeCategory := false );
+        
+        ##
+        AddProjectionOfBiasedWeakFiberProduct( R!.CategoryOfRows,
+          function( cat, morphism_1, morphism_2 )
+            local homalg_matrix;
+            
+            homalg_matrix := SyzygiesOfRows( UnderlyingMatrix( morphism_1 ), UnderlyingMatrix( morphism_2 ) );
+            
+            return CategoryOfRowsMorphism( cat, CategoryOfRowsObject( cat, NrRows( homalg_matrix ) ), homalg_matrix, Source( morphism_1 ) ); # taking NrRows could be avoided by using a WithGiven version
+            
+        end );
+        
+        Finalize( R!.CategoryOfRows : FinalizeCategory := true );
+        
+    fi;
+    
+    ## building the tower
+    
+    ## semantic: the additive monoidal category of free R-modules
+    F := R!.CategoryOfRows;
+    
+    ## semantic: the monoidal category of ideals with generators
+    S := SliceCategoryOverTensorUnit( F : overhead := false, FinalizeCategory := true );
+    
+    ## semantic: the closed monoidal lattice of ideals (without generators)
+    P := PosetOfCategory( S : overhead := false, FinalizeCategory := true );
+    
+    ## semantic1: the Heyting algebra of radical ideals
+    ## semantic2: the Heyting algebra of Zariski-open subsets
+    T := StablePosetOfCategory( P : overhead := false, FinalizeCategory := true );
+    
+    ## semantic1: th opposite of the Heyting algebra of radical ideals
+    ## semantic2: the co-Heyting algebra of Zariski-closed subsets
+    O := Opposite( T : only_primitive_operations := true, overhead := false, FinalizeCategory := true );
+    
+    ##
+    modeling_tower_object_constructor :=
+      function( ZC, column_matrix )
+        local O, T, P, S, F;
+        
+        O := ModelingCategory( ZC );
+        T := OppositeCategory( O );
+        P := AmbientCategory( T );
+        S := AmbientCategory( P );
+        F := AmbientCategory( S );
+        
+        return ObjectConstructor( O,
+                       ObjectConstructor( T,
+                               ObjectConstructor( P,
+                                       ObjectConstructor( S,
+                                               MorphismConstructor( F,
+                                                       ObjectConstructor( F, NrRows( column_matrix ) ),
+                                                       column_matrix,
+                                                       ObjectConstructor( F, 1 ) ) ) ) ) );
+        
+    end;
+    
+    ##
+    modeling_tower_object_datum :=
+      function( ZC, objO )
+        local O, T, P, S, F;
+        
+        O := ModelingCategory( ZC );
+        T := OppositeCategory( O );
+        P := AmbientCategory( T );
+        S := AmbientCategory( P );
+        F := AmbientCategory( S );
+        
+        return MorphismDatum( F,
+                       ObjectDatum( S,
+                               ObjectDatum( P,
+                                       ObjectDatum( T,
+                                               ObjectDatum( O,
+                                                       objO ) ) ) ) );
+        
+    end;
+    
+    ##
+    modeling_tower_morphism_constructor :=
+      function( ZC, sourceO, dummy, rangeO )
+        local O;
+        
+        O := ModelingCategory( ZC );
+        
+        return MorphismConstructor( O, sourceO, rangeO );
+        
+    end;
+    
+    ##
+    modeling_tower_morphism_datum :=
+      function( ZC, morO )
+        
+        return fail;
+        
+    end;
+    
+    ## semantic: the co-Heyting algebra of Zariski closed subsets
+    ZC := ReinterpretationOfCategory( O,
+                  rec( name := Concatenation( "The coframe of Zariski closed subsets of the affine spectrum of ", RingName( R ) ),
+                       category_filter := IsZariskiCoframeOfAnAffineVariety,
+                       category_object_filter := IsObjectInZariskiCoframeOfAnAffineVariety,
+                       category_morphism_filter := IsMorphismInZariskiCoframeOfAnAffineVariety,
+                       object_constructor := object_constructor,
+                       object_datum := object_datum,
+                       morphism_constructor := morphism_constructor,
+                       morphism_datum := morphism_datum,
+                       modeling_tower_object_constructor := modeling_tower_object_constructor,
+                       modeling_tower_object_datum := modeling_tower_object_datum,
+                       modeling_tower_morphism_constructor := modeling_tower_morphism_constructor,
+                       modeling_tower_morphism_datum := modeling_tower_morphism_datum,
+                       only_primitive_operations := true ) : FinalizeCategory := false );
+    
+    SetUnderlyingRing( ZC, R );
+    SetBaseObject( ZC, BaseObject( S ) );
+    
+    SetZariskiCoframeOfAffineSpectrum( R, ZC );
+    
+    ZC!.Constructor := ClosedSubsetOfSpec;
+    ZC!.ConstructorByListOfColumns := ClosedSubsetOfSpecByListOfColumns;
+    ZC!.ConstructorByRadicalColumn := ClosedSubsetOfSpecByRadicalColumn;
+    ZC!.ConstructorByStandardColumn := ClosedSubsetOfSpecByStandardColumn;
+    
+    ZC!.compiler_hints.category_attribute_names :=
+      [ "UnderlyingRing",
+        "BaseObject",
+        ];
+    
+    ZC!.compiler_hints.precompiled_towers :=
+      [ rec(
+            remaining_constructors_in_tower := [ "MeetSemilatticeOfDifferences" ],
+            precompiled_functions_adder := ValueGlobal( "ADD_FUNCTIONS_FOR_MeetSemilatticeOfDifferencesOfLocallyClosedSubsetsOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled" ),
+            ),
+        rec(
+            remaining_constructors_in_tower := [ "MeetSemilatticeOfMultipleDifferences" ],
+            precompiled_functions_adder := ValueGlobal( "ADD_FUNCTIONS_FOR_MeetSemilatticeOfMultipleDifferencesOfLocallyClosedSubsetsOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled" ),
+            ),
+        rec(
+            remaining_constructors_in_tower := [ "BooleanAlgebraOfConstructibleObjectsAsUnionOfDifferences" ],
+            precompiled_functions_adder := ValueGlobal( "ADD_FUNCTIONS_FOR_BooleanAlgebraOfConstructibleObjectsAsUnionOfDifferencesOfLocallyClosedSubsetsOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled" ),
+            ),
+        ];
+    
+    B := BaseRing( R );
+    
+    if not IsIdenticalObj( R, B ) then
+        SetBaseOfFibration( ZC, TerminalObject( ZariskiCoframeOfAffineSpectrum( B : FinalizeCategory := true ) ) );
+    fi;
+    
+    if ValueOption( "no_precompiled_code" ) <> true then
+        ADD_FUNCTIONS_FOR_ZariskiCoframeOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled( ZC );
+    fi;
+    
+    Finalize( ZC );
+    
+    return ZC;
+    
+end );
+
+##
+InstallMethod( ZariskiCoframeOfAffineSpectrum,
+        "for a homalg ring",
+        [ IsHomalgRing ],
+        
+  function( R )
+    local ZC;
+    
+    ZC := ZariskiCoframeOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRows( R : FinalizeCategory := false );
+    
+    ##
+    AddIsHomSetInhabited( ZC,
+      { cat, S, T } -> IsHomSetInhabitedForCoframes( cat, S, T ) );
+    
+    ##
+    if IsBound( homalgTable( R )!.CoefficientsOfUnreducedNumeratorOfWeightedHilbertPoincareSeries ) then
+        
+        ##
+        AddIsEqualForObjectsIfIsHomSetInhabited( ZC,
+          { cat, A, B } -> IsEqualForObjectsIfIsHomSetInhabitedForCoframes( cat, A, B ) );
+        
+    fi;
+    
+    ##
+    AddIsEqualForObjects( ZC,
+      function( cat, A, B )
+        
+        if not Dimension( A ) = Dimension( B ) then
+            return false;
+        fi;
+        
+        return IsHomSetInhabited( cat, A, B ) and IsEqualForObjectsIfIsHomSetInhabited( cat, A, B );
+        
+    end );
+    
+    Finalize( ZC );
+    
+    return ZC;
+    
+end );
+
 ##
 InstallOtherMethod( IsOpen,
         "for an object in a Zariski coframe of an affine variety",

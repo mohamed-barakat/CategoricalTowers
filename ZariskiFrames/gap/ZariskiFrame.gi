@@ -49,6 +49,9 @@ InstallMethod( ComplementAsClosedSubset,
     elif HasUnderlyingRadicalColumn( A ) then
         A := UnderlyingRadicalColumn( A );
         return C!.ConstructorByRadicalColumn( A );
+    elif HasBestUnderlyingColumn( A ) then
+        A := BestUnderlyingColumn( A );
+        return C!.ConstructorByRadicalColumn( A );
     elif HasUnderlyingListOfColumns( A ) then
         A := UnderlyingListOfColumns( A );
         return C!.ConstructorByListOfColumns( A );

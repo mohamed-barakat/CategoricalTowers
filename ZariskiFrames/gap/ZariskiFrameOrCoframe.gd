@@ -49,9 +49,22 @@ DeclareOperation( "IsClosed",
 DeclareAttribute( "UnderlyingRing",
         IsObjectInZariskiFrameOrCoframe );
 
+CapJitAddTypeSignature( "UnderlyingRing", [ IsZariskiFrameOrCoframe ], IsHomalgRing );
+
 #!
 DeclareAttribute( "BaseOfFibration",
         IsZariskiFrameOrCoframe );
+
+#!
+DeclareAttribute( "BaseObject",
+        IsZariskiFrameOrCoframe );
+
+CapJitAddTypeSignature( "BaseObject", [ IsZariskiFrameOrCoframe ],
+  function ( input_types )
+    
+    return CapJitDataTypeOfObjectOfCategory( CapCategory( BaseObject( input_types[1].category ) ) );
+    
+end );
 
 #!
 DeclareAttribute( "BaseOfFibration",
@@ -153,6 +166,8 @@ DeclareOperation( "ObjectInZariskiFrameOrCoframeByListOfRadicalColumns",
 
 #! @Section Operations
 
+CapJitAddTypeSignature( "RadicalSubobjectOp", [ IsHomalgMatrix ], IsHomalgMatrix );
+
 #! @Description
 #!  Return a closed superset of <A>A</A>, i.e.,
 #!  a set which includes <C>Closure</C>( <A>A</A> ).
@@ -167,8 +182,11 @@ DeclareOperation( "AClosedSuperset",
 #!  The column matrix of generators of the defining ideal of <A>A</A>.
 #! @Arguments A
 #! @Returns a &homalg; matrix
-DeclareOperation( "BestUnderlyingColumn",
-        [ IsObjectInZariskiFrameOrCoframe ] );
+DeclareAttribute( "BestUnderlyingColumn",
+        IsObjectInZariskiFrameOrCoframe );
+
+CapJitAddTypeSignature( "UnderlyingColumn", [ IsObjectInZariskiFrameOrCoframe ], IsHomalgMatrix );
+CapJitAddTypeSignature( "BestUnderlyingColumn", [ IsObjectInZariskiFrameOrCoframe ], IsHomalgMatrix );
 
 #! @Arguments A
 #! @Returns the object in the Zariski frame or coframe <A>A</A>

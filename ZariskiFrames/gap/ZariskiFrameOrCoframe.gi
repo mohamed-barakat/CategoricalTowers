@@ -28,6 +28,18 @@ InstallMethod( BaseOfFibration,
 end );
 
 ##
+#InstallMethodForCompilerForCAP( ObjectInZariskiFrameOrCoframe,
+#        "for a Zariksi frame or coframe and a homalg matrix",
+#        [ IsZariskiFrameOrCoframe, IsHomalgMatrix ],
+#        
+#  function( Z, I )
+#    
+#    return ObjectifyObjectForCAPWithAttributes( rec( ), Z,
+#                   PreUnderlyingMatrix, I );
+#    
+#end );
+
+##
 InstallMethodForCompilerForCAP( ObjectInZariskiFrameOrCoframe,
         "for a Zariksi frame or coframe and a homalg matrix",
         [ IsZariskiFrameOrCoframe, IsHomalgMatrix ],
@@ -35,7 +47,7 @@ InstallMethodForCompilerForCAP( ObjectInZariskiFrameOrCoframe,
   function( Z, I )
     
     return CreateCapCategoryObjectWithAttributes( Z,
-                   PreUnderlyingMatrix, I );
+                   UnderlyingColumn, I );
     
 end );
 
@@ -211,6 +223,28 @@ InstallMethod( UnderlyingListOfColumns,
     fi;
     
     return DuplicateFreeList( List( [ 1 .. g ], i -> CertainColumns( A, [ i ] ) ) );
+    
+end );
+
+##
+InstallMethod( UnderlyingListOfColumns,
+        "for an object in a Zariski frame or coframe",
+        [ IsObjectInZariskiFrameOrCoframe and HasUnderlyingColumn ],
+        
+  function( A )
+    
+    return [ UnderlyingColumn( A ) ];
+    
+end );
+
+##
+InstallMethod( UnderlyingListOfColumns,
+        "for an object in a Zariski frame or coframe",
+        [ IsObjectInZariskiFrameOrCoframe and HasBestUnderlyingColumn ],
+        
+  function( A )
+    
+    return [ BestUnderlyingColumn( A ) ];
     
 end );
 

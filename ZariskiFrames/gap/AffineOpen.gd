@@ -38,6 +38,8 @@ DeclareCategory( "IsMorphismInZariskiFrameOfAnAffineVariety",
 DeclareAttribute( "ZariskiFrameOfAffineSpectrum",
         IsHomalgRing );
 
+DeclareGlobalFunction( "ZariskiFrameOfAffineSpectrumAsStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRows" );
+
 #! @Description
 #!  Construct a Zariski open subset (as an object in the Zariski frame
 #!  of open subsets in an affine variety) from a matrix <A>mat</A>.

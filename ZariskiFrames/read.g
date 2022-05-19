@@ -4,6 +4,12 @@
 # Reading the implementation part of the package.
 #
 
+ReadPackage( "ZariskiFrames", "gap/precompiled_categories/ZariskiFrameOfAffineSpectrumAsStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled.gi" );
+ReadPackage( "ZariskiFrames", "gap/precompiled_categories/ZariskiCoframeOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled.gi" );
+ReadPackage( "ZariskiFrames", "gap/precompiled_categories/MeetSemilatticeOfDifferencesOfLocallyClosedSubsetsOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled.gi" );
+ReadPackage( "ZariskiFrames", "gap/precompiled_categories/MeetSemilatticeOfMultipleDifferencesOfLocallyClosedSubsetsOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled.gi" );
+ReadPackage( "ZariskiFrames", "gap/precompiled_categories/BooleanAlgebraOfConstructibleObjectsAsUnionOfDifferencesOfLocallyClosedSubsetsOfAffineSpectrumAsOppositeOfStablePosetOfSliceCategoryOverTensorUnitOfCategoryOfRowsPrecompiled.gi" );
+
 ReadPackage( "ZariskiFrames", "gap/ZariskiFrameOrCoframe.gi");
 ReadPackage( "ZariskiFrames", "gap/ZariskiFrame.gi");
 ReadPackage( "ZariskiFrames", "gap/ZariskiCoframe.gi");
