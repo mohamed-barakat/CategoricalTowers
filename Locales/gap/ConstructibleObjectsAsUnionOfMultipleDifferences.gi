@@ -224,8 +224,7 @@ InstallGlobalFunction( UnionOfMultipleDifferences,
     
     ars1 := ars[1];
     
-    C := BooleanAlgebraOfConstructibleObjectsAsUnionOfMultipleDifferences(
-                 CapCategory( MinuendAndSubtrahendInUnderlyingLattice( List( ars1 )[1] )[1] ) );
+    C := BooleanAlgebraOfConstructibleObjectsAsUnionOfMultipleDifferences( UnderlyingCategory( CapCategory( ars1 ) ) );
     
     ars := Filtered( ars, D -> not IsInitial( D ) );
     
@@ -337,14 +336,14 @@ InstallMethod( ListOfObjectsInMeetSemilatticeOfDifferences,
   ListOfPreObjectsInMeetSemilatticeOfDifferences );
 
 ##
-InstallMethod( ListOfObjectsInMeetSemilatticeOfDifferences,
+InstallOtherMethod( ListOfObjectsInMeetSemilatticeOfDifferences,
         "for a constructible object as a union of formal multiple differences",
         [ IsConstructibleObjectAsUnionOfMultipleDifferences and HasListOfNormalizedObjectsInMeetSemilatticeOfDifferences ],
         
   ListOfNormalizedObjectsInMeetSemilatticeOfDifferences );
 
 ##
-InstallMethod( ListOfObjectsInMeetSemilatticeOfDifferences,
+InstallOtherMethod( ListOfObjectsInMeetSemilatticeOfDifferences,
         "for a constructible object as a union of formal multiple differences",
         [ IsConstructibleObjectAsUnionOfMultipleDifferences and HasListOfStandardObjectsInMeetSemilatticeOfDifferences ],
         
@@ -399,11 +398,11 @@ InstallMethod( \-,
         [ IsObjectInThinCategory, IsObjectInMeetSemilatticeOfMultipleDifferences ],
         
   function( A, B )
-    local L;
+    local msB, L;
     
-    B := ListOfNormalizedObjectsInMeetSemilatticeOfDifferences( B );
+    msB := NormalizedMinuendAndSubtrahendsInUnderlyingLattice( B );
     
-    L := Concatenation( [ A - B[1].I ], List( List( B, D -> D.J ), Bi -> A * Bi ) );
+    L := Concatenation( [ A - msB[1] ], List( msB[2], Bi -> A * Bi ) );
     
     return UnionOfMultipleDifferences( L );
     

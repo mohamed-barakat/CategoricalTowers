@@ -45,13 +45,13 @@ CapJitAddTypeSignature( "UnderlyingCategoryOfSingleDifferences", [ IsMeetSemilat
     
 end );
 
-DeclareAttribute( "ListOfPreObjectsInMeetSemilatticeOfDifferences",
+DeclareAttribute( "PreMinuendAndSubtrahendsInUnderlyingLattice",
         IsObjectInMeetSemilatticeOfMultipleDifferences );
 
-DeclareAttribute( "ListOfNormalizedObjectsInMeetSemilatticeOfDifferences",
+DeclareAttribute( "NormalizedMinuendAndSubtrahendsInUnderlyingLattice",
         IsObjectInMeetSemilatticeOfMultipleDifferences );
 
-DeclareAttribute( "ListOfStandardObjectsInMeetSemilatticeOfDifferences",
+DeclareAttribute( "StandardMinuendAndSubtrahendsInUnderlyingLattice",
         IsObjectInMeetSemilatticeOfMultipleDifferences );
 
 DeclareAttribute( "EquivalenceToMeetSemilatticeOfDifferences",
@@ -72,39 +72,25 @@ end );
 #! @Section Operations
 
 #! @Description
-#!  A list of formal single differences in the underlying lattice representing the formal multiple difference <A>A</A>.
+#!  A pair consisting of an object in the underlying lattice <A>P</A> and a list of objects in <A>P</A>.
 #! @Arguments A
 #! @Returns a list of &CAP; morphism
-DeclareOperation( "ListOfSingleDifferences",
+DeclareOperation( "MinuendAndSubtrahendsInUnderlyingLattice",
         [ IsObjectInMeetSemilatticeOfMultipleDifferences ] );
 
-CapJitAddTypeSignature( "ListOfSingleDifferences", [ IsObjectInMeetSemilatticeOfMultipleDifferences ], function ( input_types )
+CapJitAddTypeSignature( "MinuendAndSubtrahendsInUnderlyingLattice", [ IsObjectInMeetSemilatticeOfMultipleDifferences ], function ( input_types )
+    local type_of_object_in_underlying_category;
     
     Assert( 0, IsMeetSemilatticeOfMultipleDifferences( input_types[1].category ) );
+
+    type_of_object_in_underlying_category := CapJitDataTypeOfObjectOfCategory( UnderlyingCategory( input_types[1].category ) );
     
-    return rec( filter := IsList,
-                element_type := CapJitDataTypeOfObjectOfCategory( UnderlyingCategoryOfSingleDifferences( input_types[1].category ) ) );
+    return rec( filter := IsNTuple,
+                element_types :=
+                [ type_of_object_in_underlying_category,
+                  rec( filter := IsList, element_type := type_of_object_in_underlying_category ) ] );
     
 end );
-
-DeclareOperation( "ListOp",
-        [ IsObjectInMeetSemilatticeOfMultipleDifferences ] );
-
-DeclareOperation( "ListOp",
-        [ IsObjectInMeetSemilatticeOfMultipleDifferences, IsFunction ] );
-
-DeclareOperation( "Iterator",
-        [ IsObjectInMeetSemilatticeOfMultipleDifferences ] );
-
-DeclareOperation( "ForAllOp",
-        [ IsObjectInMeetSemilatticeOfMultipleDifferences, IsFunction ] );
-
-DeclareOperation( "ForAnyOp",
-        [ IsObjectInMeetSemilatticeOfMultipleDifferences, IsFunction ] );
-
-#!
-DeclareOperation( "\[\]",
-        [ IsObjectInMeetSemilatticeOfMultipleDifferences, IsInt ] );
 
 #! @Section Constructors
 

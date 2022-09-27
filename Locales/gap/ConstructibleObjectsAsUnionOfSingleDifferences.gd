@@ -41,6 +41,12 @@ DeclareAttribute( "ListOfStandardObjectsInMeetSemilatticeOfDifferences",
 DeclareAttribute( "UnderlyingMeetSemilatticeOfDifferences",
         IsBooleanAlgebraOfConstructibleObjectsAsUnionOfSingleDifferences );
 
+CapJitAddTypeSignature( "UnderlyingMeetSemilatticeOfDifferences", [ IsBooleanAlgebraOfConstructibleObjectsAsUnionOfSingleDifferences ], function ( input_types )
+    
+    return CapJitDataTypeOfCategory( UnderlyingMeetSemilatticeOfDifferences( input_types[1].category ) );
+    
+end );
+
 CapJitAddTypeSignature( "Length", [ IsConstructibleObjectAsUnionOfSingleDifferences ], IsInt );
 
 #! @Section Operations

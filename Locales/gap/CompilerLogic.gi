@@ -14,8 +14,8 @@ CapJitAddLogicTemplate(
 
 CapJitAddLogicTemplate(
     rec(
-        variable_names := [ "cat", "list" ],
-        src_template := "ListOfSingleDifferences( CreateCapCategoryObjectWithAttributes( cat, ListOfPreObjectsInMeetSemilatticeOfDifferences, list, IsLocallyClosed, true ) )",
-        dst_template := "list",
+        variable_names := [ "cat", "pair" ],
+        src_template := "MinuendAndSubtrahendsInUnderlyingLattice( CreateCapCategoryObjectWithAttributes( cat, PreMinuendAndSubtrahendsInUnderlyingLattice, pair, IsLocallyClosed, true ) )",
+        dst_template := "pair",
     )
 );
