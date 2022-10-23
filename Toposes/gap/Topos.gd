@@ -50,14 +50,13 @@ DeclareAttribute( "ExactCoverWithGlobalElements",
 
 DeclareGlobalVariable( "TOPOS_METHOD_NAME_RECORD" );
 
-
 #! @Description
 #!  The property of the category <A>C</A> being an elementary topos.
 #! @Arguments C
 DeclareProperty( "IsElementaryTopos",
         IsCapCategory );
 
-AddCategoricalProperty( [ "IsElementaryTopos", fail ] );
+AddCategoricalProperty( [ "IsElementaryTopos", "IsElementaryLogos" ] );
 
 CAP_INTERNAL_CONSTRUCTIVE_CATEGORIES_RECORD.IsElementaryTopos :=
   SortedList(
