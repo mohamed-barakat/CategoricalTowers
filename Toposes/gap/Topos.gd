@@ -50,6 +50,15 @@ DeclareAttribute( "ExactCoverWithGlobalElements",
 
 DeclareGlobalVariable( "TOPOS_METHOD_NAME_RECORD" );
 
+#! @Description
+#!  The property of the category <A>C</A> being idempotent complete.
+#! @Arguments C
+AddCategoricalProperty( [ "IsIdempotentComplete", "IsIdempotentComplete" ] );
+
+#! @Description
+#!  The property of the category <A>C</A> being reflexively complete.
+#! @Arguments C
+AddCategoricalProperty( [ "IsReflexivelyComplete", "IsReflexivelyComplete" ] );
 
 #! @Description
 #!  The property of the category <A>C</A> being an elementary topos.
