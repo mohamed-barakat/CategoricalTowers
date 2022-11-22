@@ -16,6 +16,28 @@ InstallMethod( AsList,
 end );
 
 ##
+InstallOtherMethod( AsList,
+        "for a map of skeletal finite sets",
+        [ IsMorphismInSkeletalFinSets ],
+        
+  function ( phi )
+    
+    return ListOfValues( AsLazyArray( phi ) );
+    
+end );
+
+##
+InstallOtherMethod( MorphismConstructor,
+        "for two skeletal finite sets and a list",
+        [ IsObjectInSkeletalFinSets, IsList, IsObjectInSkeletalFinSets ],
+        
+  function ( source, images, range )
+    
+    return MorphismConstructor( CapCategory( source ), source, LazyArrayFromList( images ), range );
+    
+end );
+
+##
 InstallGlobalFunction( SkeletalFinSetsAsFiniteStrictCoproductCocompletionOfTerminalCategory,
   function( )
     local object_constructor, object_datum,
@@ -40,12 +62,12 @@ InstallGlobalFunction( SkeletalFinSetsAsFiniteStrictCoproductCocompletionOfTermi
         return CreateCapCategoryMorphismWithAttributes( sFinSets,
                    source,
                    range,
-                   AsList, images );
+                   AsLazyArray, images );
         
     end;
     
     ##
-    morphism_datum := { sFinSets, phi } -> AsList( phi );
+    morphism_datum := { sFinSets, phi } -> AsLazyArray( phi );
     
     ## building the categorical tower:
     
@@ -218,9 +240,20 @@ InstallMethod( Display,
         [ IsMorphismInSkeletalFinSets ],
         
   function ( phi )
+    local lazy;
     
     Print( PrintString( Source( phi ) ) );
-    Print( " ⱶ", AsList( phi ), "→ " );
+    
+    lazy := AsLazyArray( phi );
+    
+    if IsLazyInterval( lazy ) or
+       IsLazyConstantArray( lazy ) or
+       ValueOption( "lazy" ) = true then
+        Print( " ⱶ", lazy, "→ " );
+    else
+        Print( " ⱶ", AsList( phi ), "→ " );
+    fi;
+    
     Print( PrintString( Range( phi ) ), "\n" );
     
 end );

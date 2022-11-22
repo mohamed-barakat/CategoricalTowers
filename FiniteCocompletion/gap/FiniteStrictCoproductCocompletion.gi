@@ -44,7 +44,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
             return """
                 function( input_arguments... )
                     
-                    return MorphismConstructor( cat, top_source, Pair( [ ], [ ] ), top_range );
+                    return MorphismConstructor( cat, top_source, Pair( LazyStandardInterval( 0 ), [ ] ), top_range );
                     
                 end
             """;
@@ -68,7 +68,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
         #% CAP_JIT_DROP_NEXT_STATEMENT
         Assert( 0, IsList( pair_of_lists ) and
                 Length( pair_of_lists ) = 2 and
-                IsList( pair_of_lists[1] ) and
+                IsLazyArray( pair_of_lists[1] ) and
                 IsList( pair_of_lists[2] ) );
         
         return CreateCapCategoryMorphismWithAttributes( UI,
@@ -215,7 +215,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
         #% CAP_JIT_DROP_NEXT_STATEMENT
         Assert( 0, IsList( pair_of_lists ) and
                 Length( pair_of_lists ) = 2 and
-                IsList( pair_of_lists[1] ) and
+                IsLazyArray( pair_of_lists[1] ) and
                 IsList( pair_of_lists[2] ) );
         
         return CreateCapCategoryMorphismWithAttributes( UC,
@@ -293,7 +293,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                            IsCapCategoryMorphism( mors[i] ) and
                            IsIdenticalObj( CapCategory( mors[i] ), C ) and
                            IsEqualForObjects( C, Source( mors[i] ), S[i] ) and
-                           IsEqualForObjects( C, Range( mors[i] ), T[1 + map[i]] ) );
+                           IsEqualForObjects( C, Range( mors[i] ), T[1 + map[-1 + i]] ) );
         fi;
         
     end );
@@ -375,7 +375,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
         pair := ObjectDatum( UC, object );
         
         ## SkeletalFinSets code:
-        map := [ 0 .. pair[1] - 1 ];
+        map := LazyStandardInterval( pair[1] );
         
         ## FiniteStrictCoproductCocompletion code:
         C := UnderlyingCategory( UC );
@@ -403,10 +403,10 @@ InstallMethod( FiniteStrictCoproductCocompletion,
         maps_pre := pair_of_lists_pre[1];
         maps_post := pair_of_lists_post[1];
         
-        s := [ 0 .. ObjectDatum( UC, S )[1] - 1 ];
+        s := ObjectDatum( UC, S )[1];
         
-        maps_cmp := List( s, i ->
-                          maps_post[1 + maps_pre[1 + i]] );
+        maps_cmp := LazyArray( s, i ->
+                            maps_post[maps_pre[i]] );
         
         ## FiniteStrictCoproductCocompletion code:
         C := UnderlyingCategory( UC );
@@ -414,10 +414,10 @@ InstallMethod( FiniteStrictCoproductCocompletion,
         mors_pre := pair_of_lists_pre[2];
         mors_post := pair_of_lists_post[2];
         
-        mors_cmp := List( s, i ->
+        mors_cmp := List( [ 0 .. s - 1 ], i ->
                           PreCompose( C,
                                   mors_pre[1 + i],
-                                  mors_post[1 + maps_pre[1 + i]] ) );
+                                  mors_post[1 + maps_pre[i]] ) );
         
         return MorphismConstructor( UC, S, Pair( maps_cmp, mors_cmp ), T );
         
@@ -448,7 +448,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
     AddUniversalMorphismFromInitialObjectWithGivenInitialObject( UC,
       function ( UC, object, I )
         
-        return MorphismConstructor( UC, I, Pair( [ ], [ ] ), object );
+        return MorphismConstructor( UC, I, Pair( LazyStandardInterval( 0 ), [ ] ), object );
         
     end );
     
@@ -494,7 +494,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
             pair := ObjectDatum( UC, object );
             
             ## SkeletalFinSets code:
-            map := ListWithIdenticalEntries( pair[1], 0 );
+            map := LazyConstantArray( pair[1], 0 );
             
             ## FiniteStrictCoproductCocompletion code:
             C := UnderlyingCategory( UC );
@@ -539,7 +539,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
         
         lk := lengths[k];
         
-        map := [ sum .. sum + lk - 1 ];
+        map := LazyInterval( lk, sum );
         
         ## FiniteStrictCoproductCocompletion code:
         C := UnderlyingCategory( UC );
@@ -606,7 +606,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
             
             p := pair[1];
             
-            map := List( [ 0 .. p - 1 ], i -> RemInt( QuoInt( i, pk ), dk ) );
+            map := LazyArray( p, i -> RemInt( QuoInt( i, pk ), dk ) );
             
             ## FiniteStrictCoproductCocompletion code:
             C := UnderlyingCategory( UC );
@@ -645,9 +645,9 @@ InstallMethod( FiniteStrictCoproductCocompletion,
             
             tau_maps := List( tau, t -> MorphismDatum( UC, t )[1] );
             
-            m := [ 0 .. pairT[1] - 1 ];
+            m := pairT[1];
             
-            map := List( m, i -> Sum( [ 0 .. l - 1 ], j -> tau_maps[1 + j][1 + i] * dd[1 + j] ) );
+            map := LazyArray( m, i -> Sum( [ 0 .. l - 1 ], j -> tau_maps[1 + j][i] * dd[1 + j] ) );
             
             ## FiniteStrictCoproductCocompletion code:
             C := UnderlyingCategory( UC );
@@ -660,12 +660,12 @@ InstallMethod( FiniteStrictCoproductCocompletion,
             
             LP := pairP[2];
             
-            mor := List( m,
+            mor := List( [ 0 .. m - 1 ],
                          i -> UniversalMorphismIntoDirectProductWithGivenDirectProduct( C,
-                                 cartesian[1 + map[1 + i]],
+                                 cartesian[1 + map[i]],
                                  LT[1 + i],
                                  List( [ 1 .. l ], j -> tau_mors[j][1 + i] ),
-                                 LP[1 + map[1 + i]] ) );
+                                 LP[1 + map[i]] ) );
             
             return MorphismConstructor( UC, T, Pair( map, mor ), P );
             
@@ -713,7 +713,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                 
                 return MorphismConstructor( V,
                     source,
-                    Pair( [ 0 ], [ morphism ] ),
+                    Pair( LazyStandardInterval( 1 ), [ morphism ] ),
                     range
                 );
                 
@@ -737,7 +737,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                 #% CAP_JIT_RESOLVE_FUNCTION
                 
                 #% CAP_JIT_DROP_NEXT_STATEMENT
-                Assert( 0, pair_of_lists[1] = [ 0 ] and Length( pair_of_lists[2] ) = 1 );
+                Assert( 0, pair_of_lists[1] = LazyStandardInterval( 1 ) and Length( pair_of_lists[2] ) = 1 );
                 
                 morphism := pair_of_lists[2][1];
                 
@@ -841,7 +841,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
             mor := pair_of_lists[2];
             
             ## map -> number
-            number := Sum( [ 0 .. s - 1 ], i -> map[1 + i] * t^i );
+            number := Sum( [ 0 .. s - 1 ], i -> map[i] * t^i );
             
             intros := List( [ 0 .. s - 1 ], i ->
                             InterpretMorphismAsMorphismFromDistinguishedObjectToHomomorphismStructureWithGivenObjectsExtendedByFullEmbedding( C, V,
@@ -909,11 +909,11 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                           Hom_range_alpha_source_gamma_g_factors, Hom_source_alpha_range_gamma_fgh_factors,
                           mor_value;
                     
-                    g := List( [ 0 .. range_alpha_length - 1 ], i -> RemInt( QuoInt( gg, source_gamma_length ^ i ), source_gamma_length ) );
+                    g := LazyArray( range_alpha_length, i -> RemInt( QuoInt( gg, source_gamma_length ^ i ), source_gamma_length ) );
                     
-                    cmp_f_g_h := List( [ 0 .. source_alpha_length - 1 ], j -> h[1 + g[1 + f[1 + j]]] );
+                    cmp_f_g_h := LazyArray( source_alpha_length, j -> h[g[f[j]]] );
                     
-                    map_value := Sum( [ 0 .. source_alpha_length - 1 ], i -> cmp_f_g_h[1 + i] * range_gamma_length ^ i );
+                    map_value := Sum( [ 0 .. source_alpha_length - 1 ], i -> cmp_f_g_h[i] * range_gamma_length ^ i );
                     
                     Hom_range_alpha_source_gamma_g := Hom_range_alpha_source_gamma[2][1 + gg];
 
@@ -922,12 +922,12 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                     Hom_range_alpha_source_gamma_g_factors := List( [ 0 .. range_alpha_length - 1 ], j ->
                                                                     HomomorphismStructureOnObjects( C,
                                                                             range_alpha[2][1 + j],
-                                                                            source_gamma[2][1 + g[1 + j]] ) );
+                                                                            source_gamma[2][1 + g[j]] ) );
                     
                     Hom_source_alpha_range_gamma_fgh_factors := List( [ 0 .. source_alpha_length - 1 ], i ->
                                                                       HomomorphismStructureOnObjects( C,
                                                                               source_alpha[2][1 + i],
-                                                                              range_gamma[2][1 + cmp_f_g_h[1 + i]] ) );
+                                                                              range_gamma[2][1 + cmp_f_g_h[i]] ) );
                     
                     mor_value := UniversalMorphismIntoDirectProductWithGivenDirectProduct( V,
                                          Hom_source_alpha_range_gamma_fgh_factors,
@@ -936,12 +936,12 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                                                PreCompose( V,
                                                        ProjectionInFactorOfDirectProductWithGivenDirectProduct( V,
                                                                Hom_range_alpha_source_gamma_g_factors,
-                                                               1 + f[1 + i],
+                                                               1 + f[i],
                                                                Hom_range_alpha_source_gamma_g ),
                                                        HomomorphismStructureOnMorphismsWithGivenObjects( C,
-                                                               Hom_range_alpha_source_gamma_g_factors[1 + f[1 + i]],
+                                                               Hom_range_alpha_source_gamma_g_factors[1 + f[i]],
                                                                alpha_mor[1 + i],
-                                                               gamma_mor[1 + g[1 + f[1 + i]]],
+                                                               gamma_mor[1 + g[f[i]]],
                                                                Hom_source_alpha_range_gamma_fgh_factors[1 + i] ) ) ),
                                          Hom_source_alpha_range_gamma_fgh );
                     
@@ -953,7 +953,7 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                 
                 return MorphismConstructor( UV,
                                s,
-                               Pair( List( map_and_mor, a -> a[1] ),
+                               Pair( LazyArrayFromList( List( map_and_mor, a -> a[1] ) ),
                                      List( map_and_mor, a -> a[2] ) ),
                                r );
                 
@@ -991,20 +991,20 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                 #% CAP_JIT_DROP_NEXT_STATEMENT
                 Assert( 0, Length( pair_of_lists[1] ) = 1 );
                 
-                number := pair_of_lists[1][1];
+                number := pair_of_lists[1][0];
                 
                 ## number -> map
-                map := List( [ 0 .. s - 1 ], i -> RemInt( QuoInt( number, t^i ), t ) );
+                map := LazyArray( s, i -> RemInt( QuoInt( number, t^i ), t ) );
                 
                 #% CAP_JIT_DROP_NEXT_STATEMENT
-                Assert( 0, map = maps[1 + number] );
+                Assert( 0, ListOfValues( map ) = maps[1 + number] );
                 
                 m := pair_of_lists[2][1];
                 
                 mor := List( [ 0 .. s - 1 ], i ->
                              InterpretMorphismFromDistinguishedObjectToHomomorphismStructureAsMorphism( C,
                                      LS[1 + i],
-                                     LT[1 + map[1 + i]],
+                                     LT[1 + map[i]],
                                      PreCompose( V,
                                              m,
                                              ProjectionInFactorOfDirectProductWithGivenDirectProduct( V,
@@ -1048,20 +1048,20 @@ InstallMethod( FiniteStrictCoproductCocompletion,
                 
                 homs := List( Homs, L -> DirectProduct( V, L ) );
                 
-                value := MorphismDatum( V, morphism )[1];
+                value := morphism( 0 );
                 
                 number := First( [ 0 .. t ^ s - 1 ], i -> Sum( List( homs{[ 1 .. 1 + i ]}, Length ) ) > value );
                 
                 ## number -> map
-                map := List( [ 0 .. s - 1 ], i -> RemInt( QuoInt( number, t^i ), t ) );
+                map := LazyArray( s, i -> RemInt( QuoInt( number, t^i ), t ) );
                 
                 #% CAP_JIT_DROP_NEXT_STATEMENT
-                Assert( 0, map = maps[1 + number] );
+                Assert( 0, ListOfValues( map ) = maps[1 + number] );
                 
                 mor := List( [ 0 .. s - 1 ], i ->
                              InterpretMorphismFromDistinguishedObjectToHomomorphismStructureAsMorphism( C,
                                      LS[1 + i],
-                                     LT[1 + map[1 + i]],
+                                     LT[1 + map[i]],
                                      PreCompose( V,
                                              Lift( V,
                                                    morphism,
@@ -1102,7 +1102,7 @@ InstallMethod( YonedaEmbeddingOfUnderlyingCategory,
     
     AddObjectFunction( Y, objC -> ObjectConstructor( UC, Pair( 1, [ objC ] ) ) );
     
-    AddMorphismFunction( Y, { source, morC, range } -> MorphismConstructor( UC, source, Pair( [ 0 ], [ morC ] ), range ) );
+    AddMorphismFunction( Y, { source, morC, range } -> MorphismConstructor( UC, source, Pair( LazyStandardInterval( 1 ), [ morC ] ), range ) );
     
     return Y;
     
@@ -1212,7 +1212,7 @@ InstallMethod( ExtendFunctorToFiniteStrictCoproductCocompletion,
         cmp := List( [ 0 .. pairS[1] - 1 ], i ->
                      PreCompose( D,
                              Fmor[1 + i],
-                             inj[1 + i] ) );
+                             inj[i] ) );
         
         return UniversalMorphismFromCoproductWithGivenCoproduct( D,
                        FLS,
@@ -1272,9 +1272,20 @@ InstallMethod( Display,
         [ IsMorphismInFiniteStrictCoproductCocompletion ],
         
   function ( phi )
+    local lazy;
     
     Print( PrintString( Source( phi ) ) );
-    Print( " ⱶ", MorphismDatum( phi )[1], "→ " );
+    
+    lazy := PairOfLists( phi )[1];
+    
+    if IsLazyInterval( lazy ) or
+       IsLazyConstantArray( lazy ) or
+       ValueOption( "lazy" ) = true then
+        Print( " ⱶ", lazy, "→ " );
+    else
+        Print( " ⱶ", ListOfValues( lazy ), "→ " );
+    fi;
+    
     Print( PrintString( Range( phi ) ), "\n\n" );
     
     Print( "A morphism in ", Name( CapCategory( phi ) ), " with the above associated map\n" );

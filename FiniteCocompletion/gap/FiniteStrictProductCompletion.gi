@@ -36,7 +36,7 @@ InstallMethod( FiniteStrictProductCompletion,
         #% CAP_JIT_DROP_NEXT_STATEMENT
         Assert( 0, IsList( pair_of_lists ) and
                 Length( pair_of_lists ) = 2 and
-                IsList( pair_of_lists[1] ) and
+                IsLazyArray( pair_of_lists[1] ) and
                 IsList( pair_of_lists[2] ) );
         
         return CreateCapCategoryMorphismWithAttributes( PC,
@@ -179,7 +179,7 @@ InstallMethod( CoYonedaEmbeddingOfUnderlyingCategory,
     
     AddObjectFunction( Y, objC -> ObjectConstructor( PC, Pair( 1, [ objC ] ) ) );
     
-    AddMorphismFunction( Y, { source, morC, range } -> MorphismConstructor( PC, source, Pair( [ 0 ], [ morC ] ), range ) );
+    AddMorphismFunction( Y, { source, morC, range } -> MorphismConstructor( PC, source, Pair( LazyStandardInterval( 1 ), [ morC ] ), range ) );
     
     return Y;
     
@@ -288,7 +288,7 @@ InstallMethod( ExtendFunctorToFiniteStrictProductCompletion,
         
         cmp := List( [ 0 .. pairT[1] - 1 ], i ->
                      PreCompose( D,
-                             prj[1 + i],
+                             prj[i],
                              Fmor[1 + i] ) );
         
         return UniversalMorphismIntoDirectProductWithGivenDirectProduct( D,

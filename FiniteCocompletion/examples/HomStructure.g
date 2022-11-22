@@ -111,7 +111,7 @@ L := ObjectDatum( HomAB );
 homAB := List( [ 0 .. L[1] - 1 ], i ->
                MorphismConstructor( sFinSets,
                        I,
-                       Pair( [ i ],
+                       Pair( LazyInterval( 1, i ),
                              [ MorphismConstructor( T,
                                      U,
                                      String( i ),

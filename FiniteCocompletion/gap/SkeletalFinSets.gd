@@ -62,10 +62,10 @@ CapJitAddTypeSignature( "AsList", [ IsObjectInSkeletalFinSets ], rec( filter := 
 #!  The lazy array of images between skeletal finite sets.
 #! @Arguments phi
 #! @Returns a lazy array
-DeclareAttribute( "AsList",
+DeclareAttribute( "AsLazyArray",
         IsMorphismInSkeletalFinSets );
 
-CapJitAddTypeSignature( "AsList", [ IsMorphismInSkeletalFinSets ], rec( filter := IsList, element_type := rec( filter := IsInt ) ) );
+CapJitAddTypeSignature( "AsLazyArray", [ IsMorphismInSkeletalFinSets ], rec( filter := IsList, element_type := rec( filter := IsInt ) ) );
 
 ####################################
 #
