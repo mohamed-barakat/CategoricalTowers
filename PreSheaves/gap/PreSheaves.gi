@@ -709,6 +709,307 @@ InstallMethodWithCache( PreSheavesOfEnrichedCategory,
         
     fi;
     
+    if CheckConstructivenessOfCategory( C, "IsElementaryTopos" ) = [ ] and
+       HasRangeCategoryOfHomomorphismStructure( PSh ) and
+       ## in the following we require (1) that the range category C of the presheaf category
+       ## is itself the range category of the homomorphism structure of the presheaf category:
+       IsIdenticalObj( C, RangeCategoryOfHomomorphismStructure( PSh ) ) then
+        
+        ##
+        AddExponentialOnObjects ( PSh,
+          function ( PSh, F, G )
+            local Yoneda, presheaf_on_objects, presheaf_on_morphisms;
+            
+            ## the Yoneda embedding: B ↪ PSh( B )
+            Yoneda := YonedaEmbeddingFunctionalData( PSh );
+            
+            presheaf_on_objects :=
+              function ( objB )
+                
+                ## the output lives by construction in the range category of the homomorphism structure of the presheaf category,
+                ## but should live in the range category C of the presheaf category (necessitating requirement (1) above):
+                return HomomorphismStructureOnObjects( PSh,
+                               DirectProduct( PSh,
+                                       [ Yoneda[1]( objB ),
+                                         F ] ),
+                               G );
+                
+            end;
+            
+            presheaf_on_morphisms :=
+              function ( new_source, morB, new_range )
+                
+                return HomomorphismStructureOnMorphismsWithGivenObjects( PSh,
+                               new_source,
+                               DirectProductFunctorial( PSh,
+                                       [ Yoneda[2]( Yoneda[1]( Source( morB ) ), morB, Yoneda[1]( Range( morB ) ) ),
+                                         IdentityMorphism( PSh, F ) ] ),
+                               IdentityMorphism( PSh, G ),
+                               new_range );
+                
+            end;
+            
+            return ObjectConstructor( PSh,
+                           Pair( presheaf_on_objects,
+                                 presheaf_on_morphisms ) );
+            
+        end );
+        
+        ##
+        AddExponentialOnMorphismsWithGivenExponentials( PSh,
+          function( PSh, source, eta, rho, range )
+            local Yoneda, presheaf_morphism_on_objects;
+            
+            ## the Yoneda embedding: B ↪ PSh( B )
+            Yoneda := YonedaEmbeddingFunctionalData( PSh );
+            
+            presheaf_morphism_on_objects :=
+              function ( source, objB, range )
+                
+                return HomomorphismStructureOnMorphismsWithGivenObjects( PSh,
+                               source,
+                               DirectProductFunctorial( PSh,
+                                       [ IdentityMorphism( PSh, Yoneda[1]( objB ) ),
+                                         eta ] ),
+                               rho,
+                               range );
+                
+            end;
+            
+            return MorphismConstructor( PSh,
+                           source,
+                           presheaf_morphism_on_objects,
+                           range );
+            
+        end );
+        
+        ## the following code requires (2) that the range category C of the presheaf category coincides with the category SkeletalFinSets:
+        if IsCategoryOfSkeletalFinSets( C ) and
+           ## and requires (3) that the range category C of the presheaf category must coincide with
+           ## the range category of the homomorphism structure of the source category B of the presheaf category
+           IsIdenticalObj( C, RangeCategoryOfHomomorphismStructure( B ) ) then
+            
+            ## G^F × F → G
+            AddCartesianEvaluationMorphismWithGivenSource( PSh,
+              function( PSh, F, G, exp )
+                local B, C, T, Yoneda, presheaf_morphism_on_objects;
+                
+                B := Source( PSh );
+                C := Range( PSh );
+                
+                ## T will be used below once as the distinguished object of the homomorphism structure of the source category B of the presheaf category,
+                ## and once as the distinguished object of the homomorphism structure of the presheaf category itself, which both coincide by the above assumption:
+                T := DistinguishedObjectOfHomomorphismStructure( B );
+                
+                ## the Yoneda embedding: B ↪ PSh( B )
+                Yoneda := YonedaEmbeddingFunctionalData( PSh );
+                
+                presheaf_morphism_on_objects :=
+                  function ( source, b, range )
+                    local expFG, expFG_b, Fb, prj1, prj2, id_b, i_b, hom_bb, ev_b;
+                    
+                    ## source = G^F(b) × F(b)
+                    ## range  = G(b)
+                    
+                    ## G^F := Hom(Y(-) × F, G) ∈ Obj(C):
+                    expFG := ExponentialOnObjects( PSh, F, G );
+                    
+                    ## G^F(b) := Hom(Y(b) × F, G) ∈ Obj(C):
+                    expFG_b := PairOfFunctionsOfPreSheaf( expFG )[1]( b );
+                    
+                    ## Fb := F(b) ∈ Obj(C):
+                    Fb := PairOfFunctionsOfPreSheaf( F )[1]( b );
+                    
+                    ## G^F(b) × F(b) ↠ G^F(b) ∈ Mor(C):
+                    prj1 := ProjectionInFactorOfDirectProductWithGivenDirectProduct( C,
+                                    [ expFG_b, Fb ],
+                                    1,
+                                    source );
+                    
+                    ## G^F(b) × F(b) ↠ F(b) ∈ Mor(C):
+                    prj2 := ProjectionInFactorOfDirectProductWithGivenDirectProduct( C,
+                                    [ expFG_b, Fb ],
+                                    2,
+                                    source );
+                    
+                    ## Hom(b, b) is an object in the range category of the homomorphism structure of the source category B of the presheaf category,
+                    ## which is required below to be an object in the range category C of the presheaf category (necessitating requirement (3) above):
+                    hom_bb := HomomorphismStructureOnObjects( B, b, b );
+                    
+                    ## id_b ∈ Y(b)(b) := Hom(b, b) ∈ Mor(B):
+                    id_b := IdentityMorphism( B, b );
+                    
+                    ## interpreted as 1 → Hom(b, b) ∈ Mor( RangeCategoryOfHomomorphismStructure( B ) ) = Mor(C):
+                    i_b := InterpretMorphismAsMorphismFromDistinguishedObjectToHomomorphismStructureWithGivenObjects( B,
+                                   T, ## the distinguished object of the homomorphism structure of the source category B of the presheaf category
+                                   id_b,
+                                   hom_bb );
+                    
+                    ## ev_b: G^F(b) × F(b) → G(b), i = (t, f) ↦ ev_b(i), where G^F(b) := Hom(y(b) × F, G):
+                    ev_b :=
+                      function( i )
+                        local ii, t, f, id_b_f, theta, theta_b;
+                        
+                        ## this function assumes that the range category C of the presheaf category is the category SkeletalFinSets (necessitating requirement (2) above):
+                        
+                        ## the input is an integer i interpreted as an element of the skeletal finite set G^F(b) × F(b),
+                        ## i.e., it corresponds to a pair (t, f) ∈ G^F(b) × F(b), the entries of which we will construct below:
+                        
+                        ## interpret the integer i as a morphsim 1 → G^F(b) × F(b):
+                        ii := MapOfFinSets( C,
+                                      T, ## T plays here the role of the terminal object of the range category C of the presheaf category
+                                      [ i ],
+                                      source );
+                        
+                        ## the 1st projection 1 → G^F(b) ∈ Mor(C) corresponds to the 1st entry t ∈ G^F(b) of the pair (t, f):
+                        t := PreCompose( C,
+                                     ii,
+                                     prj1 );
+                        
+                        ## reinterpret t: 1 → G^F(b) := Hom(Y(b) × F, G) ∈ Mor(C) as a natural transformation theta: Y(b) × F → G;
+                        theta := InterpretMorphismFromDistinguishedObjectToHomomorphismStructureAsMorphism( PSh,
+                                         DirectProduct( PSh,
+                                                 [ Yoneda[1]( b ),
+                                                   F ] ),
+                                         G,
+                                         ## here we need that the range category C of the presheaf category coincides with
+                                         ## the range category of the homomorphism structure of the presheaf category (see requirement (1) above):
+                                         t );
+                        
+                        ## the 2nd projection 1 → F(b) corresponds to the 2nd entry f ∈ F(b) of the pair (theta, f):
+                        f := PreCompose( C,
+                                     ii,
+                                     prj2 );
+                        
+                        ## Hom(b, b), T, and i_b must all live in C (necessitating requirement (3) above):
+                        
+                        ## the pair (id_b, f) interpreted as 1 → Hom(b, b) × F(b) ∈ Mor(C):
+                        id_b_f := UniversalMorphismIntoDirectProduct( C,
+                                          [ hom_bb, Fb ],
+                                          T,
+                                          [ i_b, f ] );
+                        
+                        ## theta_b: Y(b)(b) × F(b) → G(b) ∈ Mor(C)
+                        theta_b := theta( b );
+                        
+                        ## 1 → Hom(b, b) × F(b) → G(b) ∈ Mor(C)
+                        return PreCompose( C,
+                                       id_b_f,
+                                       theta_b )(0);
+                        
+                    end;
+                    
+                    ## ev_b: G^F(b) × F(b) → G(b)
+                    return MapOfFinSets( C,
+                                   source,
+                                   List( source, ev_b ),
+                                   range );
+                    
+                end;
+                
+                return MorphismConstructor( PSh,
+                               exp,
+                               presheaf_morphism_on_objects,
+                               G );
+                
+            end );
+            
+            ## F → (F × G)^G
+            AddCartesianCoevaluationMorphismWithGivenRange( PSh,
+              function( PSh, F, G, exp )
+                local B, C, T, Yoneda, presheaf_morphism_on_objects;
+                
+                B := Source( PSh );
+                C := Range( PSh );
+                
+                ## T will be used below once as the distinguished object of the homomorphism structure of the source category B of the presheaf category,
+                ## and once as the distinguished object of the homomorphism structure of the presheaf category itself, which both coincide by the above assumption:
+                T := DistinguishedObjectOfHomomorphismStructure( B );
+                
+                ## the Yoneda embedding: B ↪ PSh( B )
+                Yoneda := YonedaEmbeddingFunctionalData( PSh );
+                
+                presheaf_morphism_on_objects :=
+                  function ( source, b, range )
+                    local Yb, YbxG, FxG, coev_b;
+                    
+                    ## source = F(b)
+                    ## range  = ((F × G)^G)(b)
+                    
+                    Yb := Yoneda[1]( b );
+                    
+                    YbxG := DirectProduct( PSh, [ Yb, G ] );
+                    FxG := DirectProduct( PSh, [ F, G ] );
+                    
+                    ## coev_b: F(b) → ((F × G)^G)(b), f ↦ coev_b(f), where ((F × G)^G)(b) := Hom(Y(b) × G, F × G):
+                    coev_b :=
+                      function( f ) ## ∈ F(b)
+                        local component, coev_b_f;
+                        
+                        ## this function assumes that the range category of the homomorphism structure of
+                        ## the presheaf category is the category SkeletalFinSets (necessitating requirement (2) above):
+                        
+                        component :=
+                          function( b_ )
+                            local phis, Fphis, images, factor1;
+                            
+                            phis := List( Yb( b_ ), ## Y(b)(b') = Hom_B(b', b)
+                                          phi -> ## φ ∈ Hom_B(b', b) as a natural number
+                                          InterpretMorphismFromDistinguishedObjectToHomomorphismStructureAsMorphism( B,
+                                                  b_,
+                                                  b,
+                                                  MapOfFinSets( C, T, [ phi ], Yb( b_ ) ) ## φ: 1 → Hom_B(b', b)
+                                                  ) ); ## φ: b' → b
+                            
+                            Fphis := List( phis,
+                                           phi -> F( phi ) ); ## F(φ): F(b) → F(b')
+                            
+                            images := List( Fphis,
+                                            Fphi -> Fphi( f ) ); ## F(φ)(f) ∈ F(b')
+                            
+                            ## Y(b)(b') = Hom_B(b', b) → F(b'), (φ: b' → b) ↦ (F(φ)(f): F(b) → F(b'))
+                            factor1 := MapOfFinSets( C,
+                                               Yb( b_ ),
+                                               images,
+                                               F( b_ ) );
+                            
+                            ## (Y(b) × G)(b') = Y(b)(b') × G(b') → F(b') × G(b') = (F × G)(b')
+                            return DirectProductOnMorphisms( C,
+                                           factor1,
+                                           IdentityMorphism( C, G( b_ ) ) );
+                            
+                        end;
+                        
+                        ## coev_b_f: (Y(b) × G) → F × G
+                        coev_b_f := MorphismConstructor( PSh,
+                                            YbxG,
+                                            b_ -> component( b_ ),
+                                            FxG );
+                        
+                        ## 1 → Hom(Y(b) × G, F × G)
+                        return AsList( InterpretMorphismAsMorphismFromDistinguishedObjectToHomomorphismStructure( PSh, coev_b_f ) )[1 + 0];
+                        
+                    end;
+                    
+                    ## coev_b: F(b) → ((F × G)^G)(b)
+                    return MapOfFinSets( C,
+                                   source,
+                                   List( source, coev_b ),
+                                   range );
+                    
+                end;
+                
+                return MorphismConstructor( PSh,
+                               F,
+                               presheaf_morphism_on_objects,
+                               exp );
+                
+            end );
+            
+        fi;
+        
+    fi;
+    
     AddToToDoList( ToDoListEntry( [ [ PSh, "IsFinalized", true ] ], function ( ) IdentityFunctor( PSh )!.UnderlyingFunctor := IdentityFunctor( C ); end ) );
     
     Finalize( PSh );
