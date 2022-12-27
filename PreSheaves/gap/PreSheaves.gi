@@ -10,6 +10,31 @@
 #
 ####################################
 
+BindGlobal( "PRESHEAVES_presheaf_on_objects_data_type_getter",
+        { cat } ->
+        rec( filter := IsFunction,
+                       signature :=
+                       Pair( [ CapJitDataTypeOfObjectOfCategory( Source( cat ) ) ],
+                             CapJitDataTypeOfObjectOfCategory( Range( cat ) ) ) )  );
+
+BindGlobal( "PRESHEAVES_presheaf_on_morphisms_data_type_getter",
+        { cat } ->
+        rec( filter := IsFunction,
+                       signature :=
+                       Pair( [ CapJitDataTypeOfObjectOfCategory( Range( cat ) ),
+                               CapJitDataTypeOfMorphismOfCategory( Source( cat ) ),
+                               CapJitDataTypeOfObjectOfCategory( Range( cat ) ) ],
+                             CapJitDataTypeOfMorphismOfCategory( Range( cat ) ) ) ) );
+
+BindGlobal( "PRESHEAVES_presheaf_morphism_on_objects_data_type_getter",
+        { cat } ->
+        rec( filter := IsFunction,
+                       signature :=
+                       Pair( [ CapJitDataTypeOfObjectOfCategory( Range( cat ) ),
+                               CapJitDataTypeOfObjectOfCategory( Source( cat ) ),
+                               CapJitDataTypeOfObjectOfCategory( Range( cat ) ) ],
+                             CapJitDataTypeOfMorphismOfCategory( Range( cat ) ) ) ) );
+
 ##
 InstallValue( CAP_INTERNAL_METHOD_NAME_LIST_FOR_PRESHEAF_CATEGORY,
         [ 
@@ -260,7 +285,7 @@ end );
 ####################################
 
 ##
-InstallMethodWithCache( PreSheaves,
+InstallMethodWithCache( PRE_SHEAVES,
         "for two CAP categories",
         [ IsCapCategory, IsCapCategory ],
         
@@ -274,7 +299,7 @@ InstallMethodWithCache( PreSheaves,
     
     B_op := Opposite( B : FinalizeCategory := true );
     
-    name := "PreSheaves( ";
+    name := "PRE_SHEAVES( ";
     
     if HasName( B ) and HasName( C ) then
         name := Concatenation( name, Name( B ), ", ", Name( C ), " )" );
@@ -334,9 +359,15 @@ InstallMethodWithCache( PreSheaves,
                 
                 objC := operation_name( C );
                 
-                presheaf_on_objects := objB -> objC;
+                presheaf_on_objects :=
+                  CapJitTypedExpression(
+                  objB -> objC,
+                  PRESHEAVES_presheaf_on_objects_data_type_getter );
                 
-                presheaf_on_morphisms := { new_source, morB, new_range } -> functorial_with_given_objects( C, new_source, new_range );
+                presheaf_on_morphisms :=
+                  CapJitTypedExpression(
+                  { new_source, morB, new_range } -> functorial_with_given_objects( C, new_source, new_range ),
+                  PRESHEAVES_presheaf_on_morphisms_data_type_getter );
                 
                 return ObjectConstructor( cat, Pair( presheaf_on_objects, presheaf_on_morphisms ) );
                 
@@ -359,6 +390,7 @@ InstallMethodWithCache( PreSheaves,
                 etas := i_arg[2];
                 
                 presheaf_on_objects :=
+                  CapJitTypedExpression(
                   function( objB )
                     local func_obj;
                     
@@ -374,9 +406,11 @@ InstallMethodWithCache( PreSheaves,
                     
                     return operation_name( C, List( etas, func_obj ) );
                     
-                end;
+                  end,
+                  PRESHEAVES_presheaf_on_objects_data_type_getter );
                 
                 presheaf_on_morphisms :=
+                  CapJitTypedExpression(
                   function ( new_source, morB, new_range )
                     local func_mor, l, L;
                     
@@ -414,7 +448,8 @@ InstallMethodWithCache( PreSheaves,
                     
                     return functorial_helper( C, new_source, L[1], L[2], L[3], L[4], new_range );
                     
-                end;
+                  end,
+                  PRESHEAVES_presheaf_on_morphisms_data_type_getter );
                 
                 return ObjectConstructor( cat, Pair( presheaf_on_objects, presheaf_on_morphisms ) );
                 
@@ -438,6 +473,7 @@ InstallMethodWithCache( PreSheaves,
                 etas := i_arg[3];
                 
                 presheaf_on_objects :=
+                  CapJitTypedExpression(
                   function( objB )
                     local func_obj;
                     
@@ -455,9 +491,11 @@ InstallMethodWithCache( PreSheaves,
                                    PairOfFunctionsOfPreSheaf( object )[1]( objB ),
                                    List( etas, func_obj ) );
                     
-                end;
+                  end,
+                  PRESHEAVES_presheaf_on_objects_data_type_getter );
                 
                 presheaf_on_morphisms :=
+                  CapJitTypedExpression(
                   function ( new_source, morB, new_range )
                     local func_mor, l, L;
                     
@@ -495,7 +533,8 @@ InstallMethodWithCache( PreSheaves,
                     
                     return functorial_helper( C, new_source, L[1], L[2], L[3], L[4], new_range );
                     
-                end;
+                  end,
+                  PRESHEAVES_presheaf_on_morphisms_data_type_getter );
                 
                 return ObjectConstructor( cat, Pair( presheaf_on_objects, presheaf_on_morphisms ) );
                 
@@ -517,18 +556,23 @@ InstallMethodWithCache( PreSheaves,
                 
                 Fs := i_arg[2];
                 
-                presheaf_on_objects := objB ->
-                                       operation_name( C, List( Fs, F -> PairOfFunctionsOfPreSheaf( F )[1]( objB ) ) );
+                presheaf_on_objects :=
+                  CapJitTypedExpression(
+                  objB -> operation_name( C, List( Fs, F -> PairOfFunctionsOfPreSheaf( F )[1]( objB ) ) ),
+                  PRESHEAVES_presheaf_on_objects_data_type_getter );
                 
-                presheaf_on_morphisms := { new_source, morB, new_range } ->
-                                         functorial( C,
-                                                 new_source,
-                                                 List( Fs, F ->
-                                                       PairOfFunctionsOfPreSheaf( F )[2](
-                                                               PairOfFunctionsOfPreSheaf( F )[1]( Range( morB ) ),
-                                                               morB,
+                presheaf_on_morphisms :=
+                  CapJitTypedExpression(
+                  { new_source, morB, new_range } ->
+                          functorial( C,
+                                  new_source,
+                                  List( Fs, F ->
+                                        PairOfFunctionsOfPreSheaf( F )[2](
+                                                PairOfFunctionsOfPreSheaf( F )[1]( Range( morB ) ),
+                                                morB,
                                                                PairOfFunctionsOfPreSheaf( F )[1]( Source( morB ) ) ) ),
-                                                 new_range );
+                                  new_range ),
+                  PRESHEAVES_presheaf_on_morphisms_data_type_getter );
                 
                 return ObjectConstructor( cat, Pair( presheaf_on_objects, presheaf_on_morphisms ) );
                 
@@ -551,6 +595,7 @@ InstallMethodWithCache( PreSheaves,
                 eta := i_arg[2];
                 
                 presheaf_on_objects :=
+                  CapJitTypedExpression(
                   function( objB )
                     
                     return operation_name( C,
@@ -559,9 +604,11 @@ InstallMethodWithCache( PreSheaves,
                                            objB,
                                            PairOfFunctionsOfPreSheaf( Range( eta ) )[1]( objB ) ) );
                     
-                end;
+                  end,
+                  PRESHEAVES_presheaf_on_objects_data_type_getter );
                 
                 presheaf_on_morphisms :=
+                  CapJitTypedExpression(
                   function ( new_source, morB, new_range )
                     local source_eta, range_eta, eta_func, Stm, Rtm, Ssm, Rsm, L;
                     
@@ -588,7 +635,8 @@ InstallMethodWithCache( PreSheaves,
                     
                     return functorial_helper( C, new_source, L[1], L[2], L[3], L[4], new_range );
                     
-                end;
+                  end,
+                  PRESHEAVES_presheaf_on_morphisms_data_type_getter );
                 
                 return ObjectConstructor( cat, Pair( presheaf_on_objects, presheaf_on_morphisms ) );
                 
@@ -622,11 +670,9 @@ InstallMethodWithCache( PreSheaves,
             i_arg := NTuple( number_of_arguments, input_arguments... );
             
             natural_transformation_on_objects :=
-              function ( source, objB, range )
-                
-                return operation_name( C, sequence_of_arguments_objB... );
-                
-            end;
+              CapJitTypedExpression(
+                      { source, objB, range } -> operation_name( C, sequence_of_arguments_objB... ),
+                      PRESHEAVES_presheaf_morphism_on_objects_data_type_getter );
             
             return MorphismConstructor( cat, top_source, natural_transformation_on_objects, top_range );
             
@@ -972,8 +1018,30 @@ end );
 
 ##
 InstallMethod( PreSheaves,
+        "for two CAP categories",
+        [ IsCapCategory, IsCapCategory ],
+        
+  function( B, C )
+    
+    return PRE_SHEAVES( B, RangeCategoryOfHomomorphismStructure( B ) );
+    
+end );
+
+##
+InstallMethod( PreSheaves,
         "for a CAP category",
         [ IsCapCategory and HasRangeCategoryOfHomomorphismStructure ],
+        
+  function( B )
+    
+    return PRE_SHEAVES( B, RangeCategoryOfHomomorphismStructure( B ) );
+    
+end );
+
+##
+InstallMethod( PreSheaves,
+        "for a CAP category",
+        [ IsCapCategory and IsInitialCategory and HasRangeCategoryOfHomomorphismStructure ],
         
   function( B )
     

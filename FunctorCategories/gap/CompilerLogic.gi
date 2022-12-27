@@ -341,3 +341,19 @@ CapJitAddLogicTemplate(
         dst_template := "n"
     )
 );
+
+CapJitAddLogicTemplate(
+    rec(
+        variable_names := [ "entry1", "entry2" ],
+        src_template := "SafePosition( [ entry1, entry2 ], entry1 )",
+        dst_template := "1"
+    )
+);
+
+CapJitAddLogicTemplate(
+    rec(
+        variable_names := [ "entry1", "entry2" ],
+        src_template := "SafePosition( [ entry1, entry2 ], entry2 )",
+        dst_template := "2"
+    )
+);

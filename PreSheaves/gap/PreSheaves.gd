@@ -230,20 +230,15 @@ DeclareOperation( "MorphismFromRepresentableFunctor",
 #! @Arguments B, C
 #! @Returns a &CAP; category
 #! @Group PreSheaves
-DeclareOperationWithCache( "PreSheaves",
+DeclareOperationWithCache( "PRE_SHEAVES",
         [ IsCapCategory, IsCapCategory ] );
 
-CapJitAddTypeSignature( "PreSheaves", [ IsCapCategory, IsCapCategory ], IsPreSheafCategory );
+#! @Arguments B
+#! @Group PreSheaves
+DeclareAttribute( "PreSheaves",
+        IsCapCategory );
 
 #! @Arguments B
 #! @Group PreSheaves
 DeclareOperationWithCache( "PreSheaves",
-        [ IsCapCategory ] );
-
-CapJitAddTypeSignature( "PreSheaves", [ IsCapCategory ], IsPreSheafCategory );
-
-DeclareOperationWithCache( "PreSheavesOfEnrichedCategory",
         [ IsCapCategory, IsCapCategory ] );
-
-CapJitAddTypeSignature( "PreSheavesOfEnrichedCategory", [ IsCapCategory, IsCapCategory ], IsPreSheafCategory );
-
