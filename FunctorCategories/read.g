@@ -6,6 +6,7 @@
 
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinBouquetsPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinBouquetsAsCCCPrecompiled.gi");
+ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinBouquetsAdjunctionPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinQuiversPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinQuiversAsCCCPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinReflexiveQuiversPrecompiled.gi");
