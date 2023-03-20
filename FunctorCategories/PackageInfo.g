@@ -101,6 +101,7 @@ Dependencies := rec(
                    [ "CategoryConstructor", ">= 2023.05-03" ],
                    [ "SubcategoriesForCAP", ">= 2021.12-01" ],
                    [ "Toposes", ">= 2023.06-05" ],
+                   [ "Locales", ">= 2023.06-01" ],
                    [ "FinSetsForCAP", ">= 2023.05-06" ],
                    ],
   SuggestedOtherPackages := [ ],

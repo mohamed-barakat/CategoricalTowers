@@ -310,7 +310,8 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
           object_constructor, object_datum, morphism_constructor, morphism_datum,
           create_func_bool, create_func_object, create_func_morphism,
           list_of_operations_to_install, skip, commutative_ring,
-          properties, supports_empty_limits, prop, option_record,
+          properties, supports_empty_limits, prop,
+          category_object_filter, category_morphism_filter, option_record,
           PSh, objects, generating_morphisms, H, auxiliary_indices;
     
     if IsFpCategory( B ) then
@@ -712,6 +713,7 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
                     "IsCocartesianCategory",
                     "IsCartesianClosedCategory",
                     "IsCocartesianCoclosedCategory",
+                    "IsThinCategory",
                     "IsElementaryTopos",
                     ];
     
@@ -733,16 +735,29 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
     
     properties := Filtered( properties, p -> ValueGlobal( p )( C ) );
     
+    if (HasIsSkeletalCategory and IsSkeletalCategory)( B ) and
+       IsIntervalCategory( C ) then
+        Add( properties, "IsSkeletalCategory" );
+    fi;
+    
     if IsBound( C!.supports_empty_limits ) then
         supports_empty_limits := C!.supports_empty_limits;
     else
         supports_empty_limits := false;
     fi;
     
+    category_object_filter := IsObjectInPreSheafCategoryOfFpEnrichedCategory;
+    category_morphism_filter := IsMorphismInPreSheafCategoryOfFpEnrichedCategory;
+    
+    if (HasIsThinCategory and IsThinCategory)( C ) then
+        category_object_filter := category_object_filter and IsObjectInThinCategory;
+        category_morphism_filter := category_morphism_filter and IsMorphismInThinCategory;
+    fi;
+    
     option_record := rec( name := name,
                           category_filter := IsPreSheafCategoryOfFpEnrichedCategory,
-                          category_object_filter := IsObjectInPreSheafCategoryOfFpEnrichedCategory,
-                          category_morphism_filter := IsMorphismInPreSheafCategoryOfFpEnrichedCategory,
+                          category_object_filter := category_object_filter,
+                          category_morphism_filter := category_morphism_filter,
                           supports_empty_limits := supports_empty_limits,
                           list_of_operations_to_install := list_of_operations_to_install,
                           properties := properties,
@@ -1372,7 +1387,7 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
         
     fi;
     
-    if CheckConstructivenessOfCategory( C, "IsElementaryTopos" ) = [ ] and
+    if ( CheckConstructivenessOfCategory( C, "IsElementaryTopos" ) = [ ] or IsIntervalCategory( C ) ) and
        HasRangeCategoryOfHomomorphismStructure( PSh ) and
        ## in the following we require (1) that the range category C of the presheaf category
        ## is itself the range category of the homomorphism structure of the presheaf category:
