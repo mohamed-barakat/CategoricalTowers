@@ -113,6 +113,9 @@ DeclareAttribute( "SimpleObjects", IsPreSheafCategory );
 #! @InsertChunk ProjectiveResolution
 #! @InsertChunk ProjectiveResolutionAlgebroidFromDataTables
 
+DeclareAttribute( "PresentationOfPreSheaf",
+    IsObjectInPreSheafCategory );
+
 #! @Description
 #!  The input is a category <A>B</A> with finitely many objects equipped with
 #!  a homomorphism structure with values in a finite complete and finite cocomplete category <A>H</A>.

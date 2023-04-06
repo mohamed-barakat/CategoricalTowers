@@ -3262,6 +3262,35 @@ InstallMethodForCompilerForCAP( ApplyPreSheafToMorphismInFiniteStrictCoproductCo
 end );
 
 ##
+InstallOtherMethodForCompilerForCAP( PresentationOfPreSheaf,
+        [ IsPreSheafCategory, IsObjectInPreSheafCategory ],
+        
+  function ( PSh, F )
+    local pi, kernel_pair, psi;
+    
+    pi := EpimorphismFromSomeProjectiveObject( PSh, F );
+    
+    kernel_pair := KernelPair( PSh, pi );
+    
+    psi := EpimorphismFromSomeProjectiveObject( PSh, kernel_pair[1] );
+    
+    return Pair( Source( pi ),
+                 [ PreCompose( PSh, psi, kernel_pair[2][1] ),
+                   PreCompose( PSh, psi, kernel_pair[2][2] ) ] );
+    
+end );
+
+##
+InstallMethod( PresentationOfPreSheaf,
+        [ IsObjectInPreSheafCategory ],
+        
+  function ( F )
+    
+    return PresentationOfPreSheaf( CapCategory( F ), F );
+    
+end );
+
+##
 InstallMethodForCompilerForCAP( NerveTruncatedInDegree2,
         [ IsFpCategory ],
         
