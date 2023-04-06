@@ -118,6 +118,22 @@ CapJitAddTypeSignature( "FiniteColimitCompletionWithStrictCoproductsOfUnderlying
     
 end );
 
+#! @Arguments G
+DeclareAttribute( "ExtendFunctorToFiniteColimitCompletionWithStrictCoproducts",
+        IsCapFunctor );
+
+#! @Arguments G
+DeclareAttribute( "ExtendYonedaEmbeddingToFiniteColimitCompletionWithStrictCoproducts",
+        IsCapCategory );
+
+#! @Arguments G
+DeclareAttribute( "CoYonedaLemmaEquivalence",
+        IsCapCategory );
+
+#! @Arguments G
+DeclareAttribute( "ExtendFunctorToCategoryOfPreSheaves",
+        IsCapFunctor );
+
 ####################################
 #
 #! @Section Constructors

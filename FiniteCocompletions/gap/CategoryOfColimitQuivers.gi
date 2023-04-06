@@ -349,6 +349,114 @@ InstallMethod( CategoryOfPreSheavesOfUnderlyingCategory,
     
 end );
 
+##
+InstallMethod( ExtendFunctorToFiniteColimitCompletionWithStrictCoproducts,
+        "for a functor",
+        [ IsCapFunctor ],
+        
+  function( G )
+    local C, D, G_UC, ColimitQuivers, G_ColimitQuivers;
+    
+    C := SourceOfFunctor( G );
+    D := RangeOfFunctor( G );
+    
+    G_UC := ExtendFunctorToFiniteStrictCoproductCompletion( G );
+    
+    ColimitQuivers := FiniteColimitCompletionWithStrictCoproducts( C );
+    
+    G_ColimitQuivers := CapFunctor( Concatenation( "Lift to FiniteColimitCompletionWithStrictCoproducts( Source( ", Name( G ), " ) )" ), ColimitQuivers, D );
+    
+    ## the code below is the doctrine-specific ur-algorithm for finite cocomplete categories (with strict coproducts)
+    
+    AddObjectFunction( G_ColimitQuivers,
+      function( F )
+        local ColimitQuivers, Coeq, coeq_pair;
+        
+        ColimitQuivers := CapCategory( F );
+        
+        Coeq := ModelingCategory( ColimitQuivers );
+        
+        coeq_pair := ObjectDatum( Coeq,
+                             ModelingObject( ColimitQuivers, F ) );
+        
+        return Coequalizer( D, List( coeq_pair, mor -> G_UC( mor ) ) );
+        
+    end );
+    
+    AddMorphismFunction( G_ColimitQuivers,
+      function( source, phi, range )
+        local ColimitQuivers, Coeq, coeq_pair_source, coeq_pair_morphism, coeq_pair_range;
+        
+        ColimitQuivers := CapCategory( phi );
+        
+        Coeq := ModelingCategory( ColimitQuivers );
+        
+        coeq_pair_source := ObjectDatum( Coeq,
+                                    ModelingObject( ColimitQuivers, Source( phi ) ) );
+        
+        coeq_pair_morphism := MorphismDatum( Coeq,
+                                      ModelingMorphism( ColimitQuivers, phi ) );
+        coeq_pair_range := ObjectDatum( Coeq,
+                                   ModelingObject( ColimitQuivers, Range( phi ) ) );
+        
+        return CoequalizerFunctorialWithGivenCoequalizers( D,
+                       source,
+                       List( coeq_pair_source, mor -> G_UC( mor ) ),
+                       G_UC( coeq_pair_morphism[1] ),
+                       List( coeq_pair_range, mor -> G_UC( mor ) ),
+                       range );
+        
+    end );
+    
+    return G_ColimitQuivers;
+    
+end );
+
+##
+InstallMethod( ExtendYonedaEmbeddingToFiniteColimitCompletionWithStrictCoproducts,
+        "for a CAP category",
+        [ IsCapCategory ],
+        
+  function( C )
+    
+    return ExtendFunctorToFiniteColimitCompletionWithStrictCoproducts( YonedaEmbedding( C ) );
+    
+end );
+
+##
+InstallMethod( CoYonedaLemmaEquivalence,
+        "for a CAP category",
+        [ IsCapCategory ],
+        
+  function( C )
+    local PSh, CoYo;
+    
+    PSh := PreSheaves( C );
+    
+    CoYo := CapFunctor( Concatenation( "CoYonedaLemmaEquivalence( ", Name( C ), " )" ),
+                    PSh,
+                    FiniteColimitCompletionWithStrictCoproducts( C ) );
+    
+    AddObjectFunction( CoYo, obj -> CoYonedaLemmaOnObjects( PSh, obj ) );
+    
+    AddMorphismFunction( CoYo, { source, mor, range } -> CoYonedaLemmaOnMorphisms( PSh, source, mor, range ) );
+    
+    return CoYo;
+    
+end );
+
+##
+InstallMethod( ExtendFunctorToCategoryOfPreSheaves,
+        "for a functor",
+        [ IsCapFunctor ],
+        
+  function( G )
+    
+    return PreCompose( CoYonedaLemmaEquivalence( SourceOfFunctor( G ) ),
+                   ExtendFunctorToFiniteColimitCompletionWithStrictCoproducts( G ) );
+    
+end );
+
 ####################################
 #
 # View, Print, Display and LaTeX methods:
