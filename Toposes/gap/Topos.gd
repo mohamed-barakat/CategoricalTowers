@@ -12,6 +12,30 @@
 
 ####################################
 ##
+#! @Section KernelPair
+##
+####################################
+
+#! @Description
+#! The argument is a morphism <A>f</A>:$X \to Y$.
+#! The output is a pair consisting of the fiber product $X \times_Y X$ and
+#! the list of the two fiber product projections $X \times_Y X \to X$.
+#! @Returns a pair consisting of an object and list of two morphisms
+#! @Arguments f
+DeclareAttribute( "KernelPair",
+        IsCapCategoryMorphism );
+
+#! @Description
+#! The argument is a morphism <A>f</A>:$X \to Y$.
+#! The output is a pair consisting of the pushout $Z$ of [ <A>f</A>, <A>f</A> ] and
+#! the list of the two pushout injections $Y$ into the pushout $Z$.
+#! @Returns a pair consisting of an object and list of two morphisms
+#! @Arguments f
+DeclareAttribute( "CokernelPair",
+        IsCapCategoryMorphism );
+
+####################################
+##
 #! @Section Morphisms of external Hom
 ##
 ####################################

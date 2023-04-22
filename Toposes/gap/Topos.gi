@@ -86,3 +86,57 @@ InstallMethod( EmbeddingOfRelativePowerObject,
     return EmbeddingOfRelativePowerObject( CapCategory( f ), f );
     
 end );
+
+##
+InstallOtherMethodForCompilerForCAP( KernelPair,
+        [ IsCapCategory, IsCapCategoryMorphism ],
+        
+  function( C, f )
+    local diagram, F;
+    
+    diagram := [ f, f ];
+    
+    F := FiberProduct( C, diagram );
+    
+    return Pair( F,
+                 [ ProjectionInFactorOfFiberProductWithGivenFiberProduct( C, diagram, 1, F ),
+                   ProjectionInFactorOfFiberProductWithGivenFiberProduct( C, diagram, 2, F ) ] );
+    
+end );
+
+##
+InstallMethod( KernelPair,
+        [ IsCapCategoryMorphism ],
+        
+  function( f )
+    
+    return KernelPair( CapCategory( f ), f );
+    
+end );
+
+##
+InstallOtherMethodForCompilerForCAP( CokernelPair,
+        [ IsCapCategory, IsCapCategoryMorphism ],
+        
+  function( C, f )
+    local diagram, P;
+    
+    diagram := [ f, f ];
+    
+    P := Pushout( C, diagram );
+    
+    return Pair( P,
+                 [ InjectionOfCofactorOfPushoutWithGivenPushout( C, diagram, 1, P ),
+                   InjectionOfCofactorOfPushoutWithGivenPushout( C, diagram, 2, P ) ] );
+    
+end );
+
+##
+InstallMethod( CokernelPair,
+        [ IsCapCategoryMorphism ],
+        
+  function( f )
+    
+    return CokernelPair( CapCategory( f ), f );
+    
+end );
