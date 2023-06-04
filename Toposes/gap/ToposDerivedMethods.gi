@@ -1057,6 +1057,85 @@ AddDerivationToCAP( LawvereTierneyEmbeddingsOfSubobjectClassifiers,
     
 end );
 
+## Ωⱼ
+AddDerivationToCAP( ClosedSubobjectClassifier,
+        "",
+        [ [ ImageObject, 1 ] ],
+        
+  function( cat, j )
+    
+    return ImageObject( cat, j );
+    
+end );
+
+## Ωⱼᵃ
+AddDerivationToCAP( ClosedPowerObject,
+        "",
+        [ [ ClosedSubobjectClassifier, 1 ],
+          [ ExponentialOnObjects, 1 ] ],
+        
+  function( cat, a, j )
+    
+    return ExponentialOnObjects( cat,
+                   a,
+                   ClosedSubobjectClassifier( cat, j ) );
+    
+end );
+
+## Ωᵃ -> Ωⱼᵃ
+AddDerivationToCAP( LawvereTierneyClosureOperatorWithGivenPowerObjects,
+        "",
+        [ [ IdentityMorphism, 1 ],
+          [ CoastrictionToImage, 1 ],
+          [ ExponentialOnMorphismsWithGivenExponentials, 1 ] ],
+        
+  function( cat, Pa, a, j, Pja )
+    
+    return ExponentialOnMorphismsWithGivenExponentials( cat,
+                   Pa,
+                   IdentityMorphism( cat, a ),
+                   CoastrictionToImage( cat, j ),
+                   Pja );
+    
+end );
+
+## Compute the precomposition:
+## Hom(a', Ωᵃ) → Hom(a', Ωⱼᵃ) , (a' -ϕ→ Ωᵃ) ↦ (a' -ϕ→ Ωᵃ → Ωⱼᵃ)
+## where Hom(a', Ωᵃ) ≅ Hom(a' × a, Ω) and Hom(a', Ωⱼᵃ)≅ Hom(a' × a, Ωⱼ)
+AddDerivationToCAP( ClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange,
+        "",
+        [ [ LawvereTierneyClosureOperatorWithGivenPowerObjects, 1 ],
+          [ PreCompose, 1 ] ],
+        
+  function( cat, curried_relation_morphism, a, j, Pja )
+    
+    return PreCompose( cat,
+                   curried_relation_morphism,
+                   LawvereTierneyClosureOperatorWithGivenPowerObjects( cat,
+                           Range( curried_relation_morphism ),
+                           a,
+                           j,
+                           Pja ) );
+    
+end );
+
+## a -> Ωⱼᵃ
+AddDerivationToCAP( ClosureOfSingletonMorphismWithGivenClosedPowerObject,
+        "",
+        [ [ SingletonMorphism, 1 ],
+          [ ClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange, 1 ] ],
+        
+  function( cat, a, j, Pja )
+    
+    return ClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange( cat,
+                   SingletonMorphism( cat,
+                           a ),
+                   a,
+                   j,
+                   Pja );
+    
+end );
+
 ##
 AddDerivationToCAP( HomomorphismStructureOnMorphismsWithGivenObjects,
         "",

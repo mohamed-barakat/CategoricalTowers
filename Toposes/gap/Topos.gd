@@ -814,3 +814,58 @@ DeclareAttribute( "LawvereTierneySubobjects",
 #! @Arguments T
 DeclareAttribute( "LawvereTierneyEmbeddingsOfSubobjectClassifiers",
         IsCapCategory );
+
+#! @Description
+#! The argument is a Lawvere-Tierney idempotent <A>j</A>.
+#! The output is the subobject classifier $\Omega_j :=$<C>ImageObject</C>( <A>j</A> ) with respect to <A>j</A>.
+#! @Arguments j
+#! @Returns an object
+DeclareAttribute( "ClosedSubobjectClassifier",
+        IsCapCategoryMorphism );
+
+#! @Description
+#! The arguments are an object <A>a</A> and a Lawvere-Tierney idempotent <A>j</A>.
+#! The output is the power object $P_j(a) :=$<C></C> of <A>a</A> with respect to <A>j</A>.
+#! @Arguments a, j
+#! @Returns an object
+DeclareOperation( "ClosedPowerObject",
+        [ IsCapCategoryObject, IsCapCategoryMorphism ] );
+
+#! @Description
+#! @Returns a morphism
+#! @Arguments obj, j
+DeclareOperation( "LawvereTierneyClosureOperator",
+        [ IsCapCategoryObject, IsCapCategoryMorphism ] );
+
+#! @Description
+#! @Returns a morphism
+#! @Arguments Pa, obj, j, Pja
+DeclareOperation( "LawvereTierneyClosureOperatorWithGivenPowerObjects",
+        [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryMorphism, IsCapCategoryObject ] );
+
+#! @Description
+#! @Returns a morphism
+#! @Arguments curried_relation_morphism, obj, j
+DeclareOperation( "ClosureOfCurriedClassifyingMorphismOfRelation",
+        [ IsCapCategoryMorphism, IsCapCategoryObject, IsCapCategoryMorphism ] );
+
+#! @Description
+#! @Returns a morphism
+#! @Arguments curried_relation_morphism, obj, j, Pja
+DeclareOperation( "ClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange",
+        [ IsCapCategoryMorphism, IsCapCategoryObject, IsCapCategoryMorphism, IsCapCategoryObject ] );
+
+#! @Description
+#!  The arguments are an object <A>a</A> and a Lawvere-Tierney idempotent <A>j</A>.
+#!  The output is the closure of the singleton morphism with respect to <A>j</A>,
+#!  which is a morphism from <A>a</A> to the power object $\mathrm{PowerObject}_j(a)$.
+#! @Arguments a, j
+#! @Returns a morphism in $\mathrm{Hom}( a, \mathrm{ClosedPowerObject}( a, j ) )$
+DeclareOperation( "ClosureOfSingletonMorphism",
+        [ IsCapCategoryObject, IsCapCategoryMorphism ] );
+
+#! @Description
+#! @Returns a morphism in $\mathrm{Hom}( a, Pja )$
+#! @Arguments a, j, Pja
+DeclareOperation( "ClosureOfSingletonMorphismWithGivenClosedPowerObject",
+        [ IsCapCategoryObject, IsCapCategoryMorphism, IsCapCategoryObject ] );

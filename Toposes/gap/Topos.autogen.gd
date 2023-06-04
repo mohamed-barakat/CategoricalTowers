@@ -69,6 +69,120 @@ DeclareOperation( "AddClassifyingMorphismOfSubobjectWithGivenSubobjectClassifier
 #! @Description
 #! The arguments are a category $C$ and a function $F$.
 #! This operation adds the given function $F$
+#! to the category for the basic operation `ClosedPowerObject`.
+#! $F: ( arg2, arg3 ) \mapsto \mathtt{ClosedPowerObject}(arg2, arg3)$.
+#! @Returns nothing
+#! @Arguments C, F
+DeclareOperation( "AddClosedPowerObject",
+                  [ IsCapCategory, IsFunction ] );
+
+DeclareOperation( "AddClosedPowerObject",
+                  [ IsCapCategory, IsFunction, IsInt ] );
+
+DeclareOperation( "AddClosedPowerObject",
+                  [ IsCapCategory, IsList, IsInt ] );
+
+DeclareOperation( "AddClosedPowerObject",
+                  [ IsCapCategory, IsList ] );
+
+#! @Description
+#! The arguments are a category $C$ and a function $F$.
+#! This operation adds the given function $F$
+#! to the category for the basic operation `ClosedSubobjectClassifier`.
+#! $F: ( arg2 ) \mapsto \mathtt{ClosedSubobjectClassifier}(arg2)$.
+#! @Returns nothing
+#! @Arguments C, F
+DeclareOperation( "AddClosedSubobjectClassifier",
+                  [ IsCapCategory, IsFunction ] );
+
+DeclareOperation( "AddClosedSubobjectClassifier",
+                  [ IsCapCategory, IsFunction, IsInt ] );
+
+DeclareOperation( "AddClosedSubobjectClassifier",
+                  [ IsCapCategory, IsList, IsInt ] );
+
+DeclareOperation( "AddClosedSubobjectClassifier",
+                  [ IsCapCategory, IsList ] );
+
+#! @Description
+#! The arguments are a category $C$ and a function $F$.
+#! This operation adds the given function $F$
+#! to the category for the basic operation `ClosureOfCurriedClassifyingMorphismOfRelation`.
+#! $F: ( rho, a, j ) \mapsto \mathtt{ClosureOfCurriedClassifyingMorphismOfRelation}(rho, a, j)$.
+#! @Returns nothing
+#! @Arguments C, F
+DeclareOperation( "AddClosureOfCurriedClassifyingMorphismOfRelation",
+                  [ IsCapCategory, IsFunction ] );
+
+DeclareOperation( "AddClosureOfCurriedClassifyingMorphismOfRelation",
+                  [ IsCapCategory, IsFunction, IsInt ] );
+
+DeclareOperation( "AddClosureOfCurriedClassifyingMorphismOfRelation",
+                  [ IsCapCategory, IsList, IsInt ] );
+
+DeclareOperation( "AddClosureOfCurriedClassifyingMorphismOfRelation",
+                  [ IsCapCategory, IsList ] );
+
+#! @Description
+#! The arguments are a category $C$ and a function $F$.
+#! This operation adds the given function $F$
+#! to the category for the basic operation `ClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange`.
+#! $F: ( rho, a, j, Pja ) \mapsto \mathtt{ClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange}(rho, a, j, Pja)$.
+#! @Returns nothing
+#! @Arguments C, F
+DeclareOperation( "AddClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange",
+                  [ IsCapCategory, IsFunction ] );
+
+DeclareOperation( "AddClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange",
+                  [ IsCapCategory, IsFunction, IsInt ] );
+
+DeclareOperation( "AddClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange",
+                  [ IsCapCategory, IsList, IsInt ] );
+
+DeclareOperation( "AddClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange",
+                  [ IsCapCategory, IsList ] );
+
+#! @Description
+#! The arguments are a category $C$ and a function $F$.
+#! This operation adds the given function $F$
+#! to the category for the basic operation `ClosureOfSingletonMorphism`.
+#! $F: ( a, j ) \mapsto \mathtt{ClosureOfSingletonMorphism}(a, j)$.
+#! @Returns nothing
+#! @Arguments C, F
+DeclareOperation( "AddClosureOfSingletonMorphism",
+                  [ IsCapCategory, IsFunction ] );
+
+DeclareOperation( "AddClosureOfSingletonMorphism",
+                  [ IsCapCategory, IsFunction, IsInt ] );
+
+DeclareOperation( "AddClosureOfSingletonMorphism",
+                  [ IsCapCategory, IsList, IsInt ] );
+
+DeclareOperation( "AddClosureOfSingletonMorphism",
+                  [ IsCapCategory, IsList ] );
+
+#! @Description
+#! The arguments are a category $C$ and a function $F$.
+#! This operation adds the given function $F$
+#! to the category for the basic operation `ClosureOfSingletonMorphismWithGivenClosedPowerObject`.
+#! $F: ( a, j, Pja ) \mapsto \mathtt{ClosureOfSingletonMorphismWithGivenClosedPowerObject}(a, j, Pja)$.
+#! @Returns nothing
+#! @Arguments C, F
+DeclareOperation( "AddClosureOfSingletonMorphismWithGivenClosedPowerObject",
+                  [ IsCapCategory, IsFunction ] );
+
+DeclareOperation( "AddClosureOfSingletonMorphismWithGivenClosedPowerObject",
+                  [ IsCapCategory, IsFunction, IsInt ] );
+
+DeclareOperation( "AddClosureOfSingletonMorphismWithGivenClosedPowerObject",
+                  [ IsCapCategory, IsList, IsInt ] );
+
+DeclareOperation( "AddClosureOfSingletonMorphismWithGivenClosedPowerObject",
+                  [ IsCapCategory, IsList ] );
+
+#! @Description
+#! The arguments are a category $C$ and a function $F$.
+#! This operation adds the given function $F$
 #! to the category for the basic operation `CoproductComplement`.
 #! $F: ( iota ) \mapsto \mathtt{CoproductComplement}(iota)$.
 #! @Returns nothing
@@ -406,6 +520,44 @@ DeclareOperation( "AddIsomorphismOntoCartesianSquareOfPowerObjectWithGivenObject
                   [ IsCapCategory, IsList, IsInt ] );
 
 DeclareOperation( "AddIsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects",
+                  [ IsCapCategory, IsList ] );
+
+#! @Description
+#! The arguments are a category $C$ and a function $F$.
+#! This operation adds the given function $F$
+#! to the category for the basic operation `LawvereTierneyClosureOperator`.
+#! $F: ( a, j ) \mapsto \mathtt{LawvereTierneyClosureOperator}(a, j)$.
+#! @Returns nothing
+#! @Arguments C, F
+DeclareOperation( "AddLawvereTierneyClosureOperator",
+                  [ IsCapCategory, IsFunction ] );
+
+DeclareOperation( "AddLawvereTierneyClosureOperator",
+                  [ IsCapCategory, IsFunction, IsInt ] );
+
+DeclareOperation( "AddLawvereTierneyClosureOperator",
+                  [ IsCapCategory, IsList, IsInt ] );
+
+DeclareOperation( "AddLawvereTierneyClosureOperator",
+                  [ IsCapCategory, IsList ] );
+
+#! @Description
+#! The arguments are a category $C$ and a function $F$.
+#! This operation adds the given function $F$
+#! to the category for the basic operation `LawvereTierneyClosureOperatorWithGivenPowerObjects`.
+#! $F: ( Pa, a, j, Pja ) \mapsto \mathtt{LawvereTierneyClosureOperatorWithGivenPowerObjects}(Pa, a, j, Pja)$.
+#! @Returns nothing
+#! @Arguments C, F
+DeclareOperation( "AddLawvereTierneyClosureOperatorWithGivenPowerObjects",
+                  [ IsCapCategory, IsFunction ] );
+
+DeclareOperation( "AddLawvereTierneyClosureOperatorWithGivenPowerObjects",
+                  [ IsCapCategory, IsFunction, IsInt ] );
+
+DeclareOperation( "AddLawvereTierneyClosureOperatorWithGivenPowerObjects",
+                  [ IsCapCategory, IsList, IsInt ] );
+
+DeclareOperation( "AddLawvereTierneyClosureOperatorWithGivenPowerObjects",
                   [ IsCapCategory, IsList ] );
 
 #! @Description

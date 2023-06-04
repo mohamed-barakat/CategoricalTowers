@@ -665,6 +665,71 @@ LawvereTierneyEmbeddingsOfSubobjectClassifiers := rec(
   filter_list := [ "category" ],
   return_type := "list_of_morphisms" ),
 
+ClosedSubobjectClassifier := rec(
+  filter_list := [ "category", "morphism" ],
+  return_type := "object" ),
+
+ClosedPowerObject := rec(
+  filter_list := [ "category", "object", "morphism" ],
+  return_type := "object" ),
+
+LawvereTierneyClosureOperator := rec(
+  filter_list := [ "category", "object", "morphism" ],
+  return_type := "morphism",
+  input_arguments_names := [ "cat", "a", "j" ],
+  output_source_getter_string := "PowerObject( cat, a )",
+  output_source_getter_preconditions := [ [ "PowerObject", 1 ] ],
+  output_range_getter_string := "ClosedPowerObject( cat, a, j )",
+  output_range_getter_preconditions := [ [ "ClosedPowerObject", 1 ] ],
+  with_given_object_position := "both" ),
+
+LawvereTierneyClosureOperatorWithGivenPowerObjects := rec(
+  filter_list := [ "category", "object", "object", "morphism", "object" ],
+  return_type := "morphism",
+  input_arguments_names := [ "cat", "Pa", "a", "j", "Pja" ],
+  output_source_getter_string := "Pa",
+  output_source_getter_preconditions := [ ],
+  output_range_getter_string := "Pja",
+  output_range_getter_preconditions := [ ] ),
+
+ClosureOfCurriedClassifyingMorphismOfRelation := rec(
+  filter_list := [ "category", "morphism", "object", "morphism" ],
+  return_type := "morphism",
+  input_arguments_names := [ "cat", "rho", "a", "j" ],
+  output_source_getter_string := "Source( rho )",
+  output_source_getter_preconditions := [ ],
+  output_range_getter_string := "ClosedPowerObject( cat, a, j )",
+  output_range_getter_preconditions := [ [ "ClosedPowerObject", 1 ] ],
+  with_given_object_position := "Range" ),
+
+ClosureOfCurriedClassifyingMorphismOfRelationWithGivenRange := rec(
+  filter_list := [ "category", "morphism", "object", "morphism", "object" ],
+  return_type := "morphism",
+  input_arguments_names := [ "cat", "rho", "a", "j", "Pja" ],
+  output_source_getter_string := "Source( rho )",
+  output_source_getter_preconditions := [ ],
+  output_range_getter_string := "Pja",
+  output_range_getter_preconditions := [ ] ),
+
+ClosureOfSingletonMorphism := rec(
+  filter_list := [ "category", "object", "morphism" ],
+  return_type := "morphism",
+  input_arguments_names := [ "cat", "a", "j" ],
+  output_source_getter_string := "a",
+  output_source_getter_preconditions := [ ],
+  output_range_getter_string := "ClosedPowerObject( cat, a, j )",
+  output_range_getter_preconditions := [ [ "ClosedPowerObject", 1 ] ],
+  with_given_object_position := "Range" ),
+
+ClosureOfSingletonMorphismWithGivenClosedPowerObject := rec(
+  filter_list := [ "category", "object", "morphism", "object" ],
+  return_type := "morphism",
+  input_arguments_names := [ "cat", "a", "j", "Pja" ],
+  output_source_getter_string := "a",
+  output_source_getter_preconditions := [ ],
+  output_range_getter_string := "Pja",
+  output_range_getter_preconditions := [ ] ),
+
  ) );
 
 CAP_INTERNAL_ENHANCE_NAME_RECORD( TOPOS_METHOD_NAME_RECORD );
