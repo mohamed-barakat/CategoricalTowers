@@ -294,3 +294,180 @@ InstallMethod( RelativePowerObjectLeftEvaluationMorphism,
     return RelativePowerObjectLeftEvaluationMorphism( CapCategory( f ), f );
     
 end );
+
+##
+InstallOtherMethodForCompilerForCAP( CanonicalOrderRelationOnPowerObject,
+        [ IsCapCategory, IsCapCategoryObject ],
+        
+  function( C, a )
+    local Pa, diagram, PaxPa, emb;
+    
+    Pa := PowerObject( C, a );
+    
+    diagram := [ Pa, Pa ];
+    
+    PaxPa := DirectProduct( C, diagram );
+    
+    emb := EmbeddingOfEqualizer( C,
+                   PaxPa,
+                   [ ProjectionInFactorOfDirectProductWithGivenDirectProduct( C,
+                           diagram,
+                           1,
+                           PaxPa ),
+                     RelativeTruthMorphismOfAndWithGivenObjects( C,
+                             PaxPa,
+                             a,
+                             Pa ) ] );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    SetIsMonomorphism( emb, true );
+    
+    return emb;
+    
+end );
+
+##
+InstallMethod( CanonicalOrderRelationOnPowerObject,
+        [ IsCapCategoryObject ],
+        
+  function( a )
+    
+    return CanonicalOrderRelationOnPowerObject( CapCategory( a ), a );
+    
+end );
+
+##
+InstallOtherMethodForCompilerForCAP( UniversalQuantifierOfMorphism,
+        [ IsCapCategory, IsCapCategoryMorphism ],
+        
+  function( C, f )
+    local a, b, Pa, canonical_order_Pa, lower_segment_Pa, PPf, P_sing_b;
+    
+    a := Source( f );
+    b := Range( f );
+    
+    ## P(a)
+    Pa := PowerObject( C, a );
+    
+    ## R ↪ P(a) × P(a)
+    canonical_order_Pa := CanonicalOrderRelationOnPowerObject( C, a );
+    
+    ## ↓seg_Pa: P(a) → P(P(a))
+    lower_segment_Pa := LowerSegmentOfRelation( C, Pa, Pa, canonical_order_Pa );
+    
+    ## P(P(f)): P(P(a)) → P(P(b))
+    PPf := PowerObjectFunctorial( C, PowerObjectFunctorial( C, f ) );
+    
+    ## P({}_b): P(P(b)) → P(b)
+    P_sing_b := PowerObjectFunctorial( C, SingletonMorphism( C, b ) );
+    
+    ## ∀_f: P(a) → P(b)
+    return PreComposeList( C,
+                   [ lower_segment_Pa,
+                     PPf,
+                     P_sing_b ] );
+    
+end );
+
+##
+InstallMethod( UniversalQuantifierOfMorphism,
+        [ IsCapCategoryMorphism ],
+        
+  function( f )
+    
+    return UniversalQuantifierOfMorphism( CapCategory( f ), f );
+    
+end );
+
+##
+InstallOtherMethodForCompilerForCAP( SubobjectIntersectionMorphism,
+        [ IsCapCategory, IsCapCategoryObject ],
+        
+  function( C, a )
+    local Pa, PPa, canonical_order_PPa, upper_segment_PPa,
+          canonical_order_Pa, upper_segment_Pa, P_upper_segment_Pa, P_sing_a;
+    
+    ## P(a)
+    Pa := PowerObject( C, a );
+    
+    ## P(P(a))
+    PPa := PowerObject( C, Pa );
+    
+    ## R' ↪ P(P(a)) × P(P(a))
+    canonical_order_PPa := CanonicalOrderRelationOnPowerObject( C, Pa );
+    
+    ## ↑seg_PPa: P(P(a)) → P(P(P(a)))
+    upper_segment_PPa := UpperSegmentOfRelation( C, PPa, PPa, canonical_order_PPa );
+    
+    ## R ↪ P(a) × P(a)
+    canonical_order_Pa := CanonicalOrderRelationOnPowerObject( C, a );
+    
+    ## ↑seg_Pa: P(a) → P(P(a))
+    upper_segment_Pa := UpperSegmentOfRelation( C, Pa, Pa, canonical_order_Pa );
+    
+    ## P(↑seg_Pa): P(P(P(a))) → P(P(a))
+    P_upper_segment_Pa := PowerObjectFunctorial( C, upper_segment_Pa );
+    
+    ## P({}ₐ)
+    P_sing_a := PowerObjectFunctorial( C, SingletonMorphism( C, a ) );
+    
+    ## ⋂_a
+    return PreComposeList( C,
+                   [ upper_segment_PPa,
+                     P_upper_segment_Pa,
+                     P_sing_a ] );
+    
+end );
+
+##
+InstallMethod( SubobjectIntersectionMorphism,
+        [ IsCapCategoryObject ],
+        
+  function( a )
+    
+    return SubobjectIntersectionMorphism( CapCategory( a ), a );
+    
+end );
+
+##
+InstallOtherMethodForCompilerForCAP( ExistentialQuantifierOfMorphism,
+        [ IsCapCategory, IsCapCategoryMorphism ],
+        
+  function( C, f )
+    local a, b, Pa, canonical_order_Pa, upper_segment_Pa, PPf, cap_b;
+    
+    a := Source( f );
+    b := Range( f );
+    
+    ## P(a)
+    Pa := PowerObject( C, a );
+
+    ## R ↪ P(a) × P(a)
+    canonical_order_Pa := CanonicalOrderRelationOnPowerObject( C, a );
+    
+    ## ↑seg_Pa: P(a) → P(P(a))
+    upper_segment_Pa := UpperSegmentOfRelation( C, Pa, Pa, canonical_order_Pa );
+    
+    ## P(P(f)): P(P(a)) → P(P(b))
+    PPf := PowerObjectFunctorial( C, PowerObjectFunctorial( C, f ) );
+
+    ## ⋂_b: P(P(b)) → P(b)
+    cap_b := SubobjectIntersectionMorphism( C, b );
+    
+    ## ∃_f: P(a) → P(b)
+    return PreComposeList( C,
+                   [ upper_segment_Pa,
+                     PPf,
+                     cap_b ] );
+    
+end );
+
+##
+InstallMethod( ExistentialQuantifierOfMorphism,
+        [ IsCapCategoryMorphism ],
+        
+  function( f )
+    
+    return ExistentialQuantifierOfMorphism( CapCategory( f ), f );
+    
+end );
