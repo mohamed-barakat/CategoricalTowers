@@ -852,6 +852,30 @@ DeclareOperation( "EmbeddingOfRelativePseudoComplementSubobjectWithGivenImplicat
 
 ###################################
 ##
+#! @Section Canonical ordering
+##
+###################################
+
+#! @Description
+#!  The argument is an object <A>a</A> in a category $C$.
+#!  The output is the embedding of the equalizer $d: R \hookrightarrow Pa \times Pa$
+#!  of the parallel pair $\mathrm{pr}_1, \wedge: Pa \times Pa \to Pa$.
+#! @Returns a monomorphism
+#! @Arguments a
+DeclareAttribute( "CanonicalOrderRelationOnPowerObject",
+        IsCapCategoryObject );
+
+DeclareAttribute( "UniversalQuantifierOfMorphism",
+        IsCapCategoryMorphism );
+
+DeclareAttribute( "SubobjectIntersectionMorphism",
+        IsCapCategoryObject );
+
+DeclareAttribute( "ExistentialQuantifierOfMorphism",
+        IsCapCategoryMorphism );
+
+###################################
+##
 #! @Section Pushout complements
 ##
 ###################################
