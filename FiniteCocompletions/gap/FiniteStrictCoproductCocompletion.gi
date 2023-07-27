@@ -1326,6 +1326,93 @@ InstallMethod( ExtendEmbeddingToFiniteStrictCoproductCocompletion,
     
 end );
 
+##
+InstallOtherMethodForCompilerForCAP( TensorizeObjectWithObjectInRangeCategoryOfHomomorphismStructure,
+        "for a skeletal category of finite sets, a cocartesian category, an object in the cocartesian category, and an object in the skeletal category of finite sets",
+        [ IsCategoryOfSkeletalFinSets,
+          IsCapCategory and IsCocartesianCategory and HasRangeCategoryOfHomomorphismStructure,
+          IsCapCategoryObject, IsSkeletalFiniteSet ],
+        
+  function( H, D, d, v )
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( CapCategory( d ), D ) );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( CapCategory( v ), H ) );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( RangeCategoryOfHomomorphismStructure( D ), H ) );
+    
+    return Coproduct( D, ListWithIdenticalEntries( ObjectDatum( H, v ), d ) );
+    
+end );
+
+##
+InstallOtherMethodForCompilerForCAP( TensorizeObjectWithMorphismInRangeCategoryOfHomomorphismStructure,
+        "for a skeletal category of finite sets, a cocartesian category, three objects in the cocartesian category, and a morphism in the skeletal category of finite sets",
+        [ IsCategoryOfSkeletalFinSets,
+          IsCapCategory and IsCocartesianCategory and HasRangeCategoryOfHomomorphismStructure,
+          IsCapCategoryObject, IsCapCategoryObject, IsSkeletalFiniteSetMap, IsCapCategoryObject ],
+        
+  function( H, D, source, d, nu, range )
+    local id_d, s, t, nu_list;
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( CapCategory( d ), D ) );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( CapCategory( nu ), H ) );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( RangeCategoryOfHomomorphismStructure( D ), H ) );
+    
+    id_d := IdentityMorphism( D, d );
+    
+    s := ObjectDatum( H, Source( nu ) );
+    t := ObjectDatum( H, Range( nu ) );
+    
+    nu_list := MorphismDatum( H, nu );
+    
+    return MorphismBetweenCoproductsWithGivenCoproducts( D,
+                   source,
+                   ListWithIdenticalEntries( s, d ),
+                   Pair( nu_list, ListWithIdenticalEntries( s, id_d ) ),
+                   ListWithIdenticalEntries( t, d ),
+                   range );
+    
+end );
+
+##
+InstallOtherMethodForCompilerForCAP( TensorizeMorphismWithObjectInRangeCategoryOfHomomorphismStructure,
+        "for a skeletal category of finite sets, a cocartesian category, two objects and a morphism in the cocartesian category, and an object in the skeletal category of finite sets",
+        [ IsCategoryOfSkeletalFinSets,
+          IsCapCategory and IsCocartesianCategory and HasRangeCategoryOfHomomorphismStructure,
+          IsCapCategoryObject, IsCapCategoryMorphism, IsSkeletalFiniteSet, IsCapCategoryObject ],
+        
+  function( H, D, source, phi, o, range )
+    local l;
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( CapCategory( phi ), D ) );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( CapCategory( o ), H ) );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    Assert( 0, IsIdenticalObj( RangeCategoryOfHomomorphismStructure( D ), H ) );
+    
+    l := ObjectDatum( H, o );
+    
+    return CoproductFunctorialWithGivenCoproducts( D,
+                   source,
+                   ListWithIdenticalEntries( l, Source( phi ) ),
+                   ListWithIdenticalEntries( l, phi ),
+                   ListWithIdenticalEntries( l, Range( phi ) ),
+                   range );
+    
+end );
+
 ##################################
 ##
 ## View & Display
