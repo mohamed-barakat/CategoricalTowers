@@ -60,3 +60,26 @@ AddDerivationToCAP( Coproduct,
     return Last( SortedList( L, { A, B } -> IsHomSetInhabited( cat, A, B ) ) );
     
 end : CategoryFilter := cat -> HasIsTotalOrderCategory( cat ) and IsTotalOrderCategory( cat ) and not ( IsBound( cat!.supports_empty_limits ) and cat!.supports_empty_limits = true ) );
+
+##
+AddDerivationToCAP( SetOfGeneratingMorphismsOfCategory,
+        "",
+        [ [ SetOfObjectsOfCategory, 1 ],
+          [ IsHomSetInhabited, 1 ],
+          [ UniqueMorphism, 4 ] ],
+        
+  function( cat )
+    local objects, l, digraph;
+    
+    objects := SetOfObjectsOfCategory( cat );
+    
+    l := Length( objects );
+    
+    digraph := DigraphReflexiveTransitiveReduction( Digraph( objects, IsHomSetInhabited ) );
+    
+    return Concatenation( List( [ 1 .. l ], s ->
+                   List( OutNeighborsOfVertex( digraph, s ), t ->
+                         UniqueMorphism( cat, objects[s], objects[t] ) ) ) );
+    
+end );
+        
