@@ -1242,6 +1242,24 @@ InstallOtherMethodForCompilerForCAP( SingletonSupportOfRelationsWithGivenObjects
     
 end );
 
+##
+InstallMethod( SingletonSupportOfRelations,
+        "for two category objects",
+        [ IsCapCategoryObject, IsCapCategoryObject ],
+        
+  function( B, C )
+    local cat, PBxC, PB;
+    
+    cat := CapCategory( B );
+    
+    PBxC := PowerObject( cat, DirectProduct( cat, [ B, C ] ) );
+    
+    PB := PowerObject( cat, B );
+    
+    return SingletonSupportOfRelationsWithGivenObjects( cat, PBxC, B, C, PB );
+    
+end );
+
 ## [MacLane-Moerdijk, p.168]
 AddDerivationToCAP( ExponentialOnObjects,
         "ExponentialOnObjects from the power object, the power object evaluation morphism, and the P-transpose",
