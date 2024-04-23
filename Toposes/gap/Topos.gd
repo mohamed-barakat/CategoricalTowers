@@ -622,6 +622,9 @@ DeclareOperation( "LeftFiberMorphismWithGivenObjects",
 DeclareOperation( "SingletonSupportOfRelationsWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
+DeclareOperation( "SingletonSupportOfRelations",
+        [ IsCapCategoryObject, IsCapCategoryObject ] );
+
 ####################################
 ##
 #! @Section Relative truth morphisms
