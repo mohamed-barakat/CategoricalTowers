@@ -1330,30 +1330,30 @@ AddDerivationToCAP( ExponentialOnObjects,
         [ [ PowerObject, 3 ],
           [ DirectProduct, 3 ],
           [ TerminalObject, 1 ],
-          [ LeftFiberMorphismWithGivenObjects, 1 ],
+          [ RightFiberMorphismWithGivenObjects, 1 ],
           [ SingletonMorphismWithGivenPowerObject, 1 ],
           [ ClassifyingMorphismOfSubobjectWithGivenSubobjectClassifier, 1 ],
           [ PreCompose, 1 ],
-          [ PLeftTransposeMorphismWithGivenRange, 1 ],
+          [ PRightTransposeMorphismWithGivenRange, 1 ],
           [ RelativeTruthMorphismOfTrueWithGivenObjects, 1 ],
           [ FiberProduct, 1 ] ],
         
   function( cat, S, T )
-    local PS, SxT, PSxT, u, true_S;
+    local PS, TxS, PTxS, u, true_S;
     
     PS := PowerObject( cat, S );
     
-    ## S × T
-    SxT := DirectProduct( cat, [ S, T ] );
+    ## T × S
+    TxS := DirectProduct( cat, [ T, S ] );
     
-    ## P(S × T)
-    PSxT := PowerObject( cat, SxT );
+    ## P(T × S)
+    PTxS := PowerObject( cat, TxS );
     
-    ## u: P(S × T) → PS, where
+    ## u: P(T × S) → PS, where
     ## u(R) = { s ∈ S | v(R, s) is a singleton } ∈ PS,
     ## i.e., u(R) is the set of base points s, over which R is a singleton
-    u := SingletonLeftSupportOfRelationsWithGivenObjects( cat,
-                 PSxT,
+    u := SingletonRightSupportOfRelationsWithGivenObjects( cat,
+                 PTxS,
                  S, T,
                  PS );
     
