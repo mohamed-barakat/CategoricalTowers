@@ -565,6 +565,15 @@ DeclareAttribute( "RelativePowerObjectFibrationMorphism",
 
 #! @Description
 #!  The input is a morphism <A>f</A>: $a \to b$.
+#!  The output is the evaluation morphism $a \times P_fa \rightarrow \Omega \times b$,
+#!  where $P_fa$ is the relative power object of <A>f</A>.
+#! @Arguments f
+#! @Returns a monomorphism $\mathrm{Hom}( a \times P_fa, \Omega \times b )$
+DeclareAttribute( "RelativePowerObjectRightEvaluationMorphism",
+        IsCapCategoryMorphism );
+
+#! @Description
+#!  The input is a morphism <A>f</A>: $a \to b$.
 #!  The output is the evaluation morphism $P_fa \times a \rightarrow \Omega \times b$,
 #!  where $P_fa$ is the relative power object of <A>f</A>.
 #! @Arguments f
