@@ -1051,55 +1051,55 @@ AddDerivationToCAP( RightFiberMorphismWithGivenObjects,
           [ PreCompose, 1 ],
           [ PRightTransposeMorphismWithGivenRange, 1 ] ],
         
-  function( cat, CxPBxC, B, C, PB )
-    local B_C, BxC, PBxC, BxC_PBxC, BxCx_PBxC, Omega, epsilon_BxC, Bx_Cx_PBxC, alpha, epsilon_BxC_;
+  function( cat, SxPTxS, S, T, PT )
+    local T_S, TxS, PTxS, TxS_PTxS, TxSx_PTxS, Omega, epsilon_TxS, Tx_Sx_PTxS, alpha, epsilon_TxS_;
     
-    B_C := [ B, C ];
+    T_S := [ T, S ];
     
-    ## B × C
-    BxC := DirectProduct( cat, B_C );
+    ## T × S
+    TxS := DirectProduct( cat, T_S );
     
-    ## P(B × C)
-    PBxC := PowerObject( cat, BxC );
+    ## P(T × S)
+    PTxS := PowerObject( cat, TxS );
     
-    BxC_PBxC := [ BxC, PBxC ];
+    TxS_PTxS := [ TxS, PTxS ];
     
-    ## (B × C) × P(B × C)
-    BxCx_PBxC := DirectProduct( cat, BxC_PBxC );
+    ## (T × S) × P(T × S)
+    TxSx_PTxS := DirectProduct( cat, TxS_PTxS );
     
     ## Ω
     Omega := SubobjectClassifier( cat );
     
-    ## ϵ_{B × C} : (B × C) × P(B × C) → Ω
-    epsilon_BxC := PowerObjectRightEvaluationMorphismWithGivenObjects( cat,
-                           BxCx_PBxC,
-                           BxC,
+    ## ϵ_{T × S} : (T × S) × P(T × S) → Ω
+    epsilon_TxS := PowerObjectRightEvaluationMorphismWithGivenObjects( cat,
+                           TxSx_PTxS,
+                           TxS,
                            Omega );
     
-    ## B × (C × P(B × C))
-    Bx_Cx_PBxC := DirectProduct( cat,
-                          [ B, CxPBxC ] );
+    ## T × (S × P(T × S))
+    Tx_Sx_PTxS := DirectProduct( cat,
+                          [ T, SxPTxS ] );
     
-    ## B × (C × P(B × C)) → (B × C) × P(B × C)
+    ## T × (S × P(T × S)) → (T × S) × P(T × S)
     alpha := CartesianAssociatorRightToLeftWithGivenDirectProducts( cat,
-                     Bx_Cx_PBxC,
-                     B,
-                     C,
-                     PBxC,
-                     BxCx_PBxC );
+                     Tx_Sx_PTxS,
+                     T,
+                     S,
+                     PTxS,
+                     TxSx_PTxS );
     
-    ## ϵ_{B × C} : B × (C × P(B × C)) → Ω
-    epsilon_BxC_ := PreCompose( cat,
+    ## ϵ_{T × S} : T × (S × P(T × S)) → Ω
+    epsilon_TxS_ := PreCompose( cat,
                             alpha,
-                            epsilon_BxC );
+                            epsilon_TxS );
     
-    ## v: C × P(B × C) → PB, where
-    ## v(R, c) = π_C⁻¹(c) ∩ R = { b ∈ B | (b,c) ∈ R } ∈ PB
+    ## v: S × P(T × S) → PT, where
+    ## v(R, s) = π_S⁻¹(s) ∩ R = { t ∈ T | (t,s) ∈ R } ∈ PT
     return PRightTransposeMorphismWithGivenRange( cat,
-                   B,
-                   CxPBxC,
-                   epsilon_BxC_,
-                   PB );
+                   T,
+                   SxPTxS,
+                   epsilon_TxS_,
+                   PT );
     
 end );
 

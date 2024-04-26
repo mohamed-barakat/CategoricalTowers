@@ -3,10 +3,10 @@
 #! @Example
 LoadPackage( "FinSetsForCAP", false );
 #! true
-a := FinSet( 3 );
-#! |3|
-b := FinSet( 2 );
+a := FinSet( 2 );
 #! |2|
+b := FinSet( 3 );
+#! |3|
 right := RightFiberMorphism( a, b );
 #! |128| → |8|
 LoadPackage( "LazyCategories", false );
