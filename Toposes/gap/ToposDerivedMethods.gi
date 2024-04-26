@@ -1168,7 +1168,7 @@ end );
 
 ##
 CAP_INTERNAL_ADD_REPLACEMENTS_FOR_METHOD_RECORD(
-        rec( SingletonSupportOfRelationsWithGivenObjects :=
+        rec( SingletonLeftSupportOfRelationsWithGivenObjects :=
              [ [ "PowerObject", 1 ],
                [ "DirectProduct", 2 ],
                [ "LeftFiberMorphismWithGivenObjects", 1 ],
@@ -1178,7 +1178,7 @@ CAP_INTERNAL_ADD_REPLACEMENTS_FOR_METHOD_RECORD(
                [ "PLeftTransposeMorphismWithGivenRange", 1 ] ] ) );
 
 ##
-InstallOtherMethodForCompilerForCAP( SingletonSupportOfRelationsWithGivenObjects,
+InstallOtherMethodForCompilerForCAP( SingletonLeftSupportOfRelationsWithGivenObjects,
         "for a category and four category objects",
         [ IsCapCategory, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ],
         
@@ -1228,7 +1228,7 @@ InstallOtherMethodForCompilerForCAP( SingletonSupportOfRelationsWithGivenObjects
 end );
 
 ##
-InstallMethod( SingletonSupportOfRelations,
+InstallMethod( SingletonLeftSupportOfRelations,
         "for two category objects",
         [ IsCapCategoryObject, IsCapCategoryObject ],
         
@@ -1241,7 +1241,7 @@ InstallMethod( SingletonSupportOfRelations,
     
     PB := PowerObject( cat, B );
     
-    return SingletonSupportOfRelationsWithGivenObjects( cat, PBxC, B, C, PB );
+    return SingletonLeftSupportOfRelationsWithGivenObjects( cat, PBxC, B, C, PB );
     
 end );
 
@@ -1273,7 +1273,7 @@ AddDerivationToCAP( ExponentialOnObjects,
     ## u: P(B × C) → PB, where
     ## u(R) = { b ∈ B | v(R, b) is a singleton } ∈ PB,
     ## i.e., u(R) is the set of base points b, over which R is a singleton
-    u := SingletonSupportOfRelationsWithGivenObjects( cat,
+    u := SingletonLeftSupportOfRelationsWithGivenObjects( cat,
                  PBxC,
                  B, C,
                  PB );
@@ -1341,7 +1341,7 @@ AddDerivationToCAP( CartesianLeftEvaluationMorphismWithGivenSource,
     ## u: P(B × C) → PB, where
     ## u(R) = { b ∈ B | v(R, b) is a singleton } ∈ PB,
     ## i.e., u(R) is the set of base points b, over which R is a singleton
-    u := SingletonSupportOfRelationsWithGivenObjects( cat,
+    u := SingletonLeftSupportOfRelationsWithGivenObjects( cat,
                  PBxC,
                  B, C,
                  PB );
