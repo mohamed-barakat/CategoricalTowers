@@ -510,7 +510,7 @@ DeclareOperation( "AddLawvereTierneySubobjects",
 #! to the category for the basic operation `LeftFiberMorphism`.
 #! Optionally, a weight (default: 100) can be specified which should roughly correspond
 #! to the computational complexity of the function (lower weight = less complex = faster execution).
-#! $F: ( b, c ) \mapsto \mathtt{LeftFiberMorphism}(b, c)$.
+#! $F: ( s, t ) \mapsto \mathtt{LeftFiberMorphism}(s, t)$.
 #! @Returns nothing
 #! @Arguments C, F
 DeclareOperation( "AddLeftFiberMorphism",
@@ -529,7 +529,7 @@ DeclareOperation( "AddLeftFiberMorphism",
 #! to the category for the basic operation `LeftFiberMorphismWithGivenObjects`.
 #! Optionally, a weight (default: 100) can be specified which should roughly correspond
 #! to the computational complexity of the function (lower weight = less complex = faster execution).
-#! $F: ( Pbxc_b, b, c, Pc ) \mapsto \mathtt{LeftFiberMorphismWithGivenObjects}(Pbxc_b, b, c, Pc)$.
+#! $F: ( Psxt_xs, s, t, Pt ) \mapsto \mathtt{LeftFiberMorphismWithGivenObjects}(Psxt_xs, s, t, Pt)$.
 #! @Returns nothing
 #! @Arguments C, F
 DeclareOperation( "AddLeftFiberMorphismWithGivenObjects",
