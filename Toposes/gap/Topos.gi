@@ -158,6 +158,107 @@ InstallMethod( RelativePowerObjectFibrationMorphism,
     
 end );
 
+
+##
+InstallOtherMethodForCompilerForCAP( RelativePowerObjectRightEvaluationMorphism,
+        "for a category and a morphism",
+        [ IsCapCategory, IsCapCategoryMorphism ],
+        
+ function( C, f ) # f: A → B
+    local A, PA, AxPA, B, PAxB, P_f, emb, P_fA, A_P_fA, A_PAxB, Ax_PAxB, e, Ae, AxPA_B, AxPA_xB, alpha,
+          Omega, epsilon, Omega_B, Omega_xB, epsilonB;
+    
+    A := Source( f );
+    
+    PA := PowerObject( C, A );
+    
+    AxPA := DirectProduct( C, [ A, PA ] );
+    
+    B := Target( f );
+    
+    ## PA × B
+    PAxB := DirectProduct( C, [ PA, B ] );
+    
+    ## P_f: P_fA → B
+    P_f := RelativePowerObjectFibrationMorphism( C, f );
+    
+    ## A (f_x_P_f) P_fA ↪ A × P_fA
+    emb := FiberProductEmbeddingInDirectProduct( C,
+                   [ f, P_f ] );
+    
+    P_fA := Source( P_f );
+    
+    A_P_fA := [ A, P_fA ];
+    A_PAxB := [ A, PAxB ];
+    
+    Ax_PAxB := DirectProduct( C, A_PAxB );
+    
+    ## P_fA ↪ PA × B
+    e := EmbeddingOfRelativePowerObject( C, f );
+    
+    ## 1_A × e: A × P_fA → A × (PA × B)
+    Ae := DirectProductFunctorialWithGivenDirectProducts( C,
+                  DirectProduct( C, A_P_fA ),
+                  A_P_fA,
+                  [ IdentityMorphism( C, A ), e ],
+                  A_PAxB,
+                  Ax_PAxB );
+    
+    AxPA_B := [ AxPA, B ];
+    
+    AxPA_xB := DirectProduct( C, AxPA_B );
+    
+    ## α: A × (PA × B) → (A × PA) × B
+    alpha := CartesianAssociatorRightToLeftWithGivenDirectProducts( C,
+                     Ax_PAxB,
+                     A,
+                     PA,
+                     B,
+                     AxPA_xB );
+    
+    ## Ω
+    Omega := SubobjectClassifier( C );
+    
+    Omega_B := [ Omega, B ];
+    
+    Omega_xB := DirectProduct( C, Omega_B );
+    
+    ## ϵ_A : A × PA → Ω
+    epsilon := PowerObjectRightEvaluationMorphismWithGivenObjects( C,
+                       AxPA,
+                       A,
+                       Omega );
+    
+    ## ϵ_A × 1_B: (A × PA) × B → Ω × B
+    epsilonB := DirectProductFunctorialWithGivenDirectProducts( C,
+                        DirectProduct( C, AxPA_B ),
+                        AxPA_B,
+                        [ epsilon, IdentityMorphism( C, B ) ],
+                        Omega_B,
+                        Omega_xB );
+    
+    ## A × P_fA → Ω × B
+    return PreComposeList( C,
+                   Source( emb ),
+                   [ emb,
+                     Ae,
+                     alpha,
+                     epsilonB ],
+                   Omega_xB );
+    
+end );
+
+##
+InstallMethod( RelativePowerObjectRightEvaluationMorphism,
+        "for a morphism",
+        [ IsCapCategoryMorphism ],
+        
+ function( f )
+    
+    return RelativePowerObjectRightEvaluationMorphism( CapCategory( f ), f );
+    
+end );
+
 ##
 InstallOtherMethodForCompilerForCAP( RelativePowerObjectLeftEvaluationMorphism,
         "for a category and a morphism",
