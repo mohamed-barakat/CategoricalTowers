@@ -573,23 +573,23 @@ DeclareAttribute( "RelativePowerObjectLeftEvaluationMorphism",
         IsCapCategoryMorphism );
 
 #! @Description
-#!  The arguments are two objects <A>b</A>, <A>c</A>.
-#!  The output is the morphism <A>c</A> $\times$ <C>PowerObject</C>(b \times c) $\to$ <C>PowerObject</C>( <A>b</A> )
-#!  that for a given relation $R \subseteq$ <A>b</A> $\times$ <A>c</A>
-#!  and an element $y$ in the base <A>c</A> computes the fiber over $y$ as subset of <A>b</A>.
-#! @Returns a morphism in $\mathrm{Hom}( c \times P(b \times c), P(b) )$
-#! @Arguments b, c
+#!  The arguments are two objects <A>s</A>, <A>t</A>.
+#!  The output is the morphism <A>s</A> $\times$ <C>PowerObject</C>(t \times s) $\to$ <C>PowerObject</C>( <A>t</A> )
+#!  that for a given relation $R \subseteq$ <A>t</A> $\times$ <A>s</A>
+#!  and an element $x$ in <A>s</A> computes the fiber over $x$ as subset of <A>t</A>.
+#! @Returns a morphism in $\mathrm{Hom}( s \times P(t \times s), P(t) )$
+#! @Arguments s, t
 DeclareOperation( "RightFiberMorphism",
         [ IsCapCategoryObject, IsCapCategoryObject ] );
 #! @InsertChunk RightFiberMorphism
 
 #! @Description
-#!  The arguments are four objects <A>cxPbxc</A>, <A>b</A>, <A>c</A>, <A>Pb</A>,
-#!  where <A>cxPbxc</A> = $c \times P(b \times c)$ and <A>Pb</A> = <C>PowerObject</C>( <A>b</A> ).
-#!  The output is the morphism that for a given relation $R \subseteq$ <A>b</A> $\times$ <A>c</A>
-#!  and an element $y$ in the base <A>c</A> computes the fiber over $y$ as subset of <A>b</A>.
-#! @Returns a morphism in $\mathrm{Hom}( cxPbxc, Pb )$
-#! @Arguments cxPbxc, b, c, Pb
+#!  The arguments are four objects <A>sxPtxs</A>, <A>s</A>, <A>t</A>, <A>Pt</A>,
+#!  where <A>sxPtxs</A> = $s \times P(t \times s)$ and <A>Pt</A> = <C>PowerObject</C>( <A>t</A> ).
+#!  The output is the morphism that for a given relation $R \subseteq$ <A>t</A> $\times$ <A>s</A>
+#!  and an element $x$ in <A>s</A> computes the fiber over $x$ as subset of <A>t</A>.
+#! @Returns a morphism in $\mathrm{Hom}( sxPtxs, Pt )$
+#! @Arguments sxPtxs, s, t, Pt
 DeclareOperation( "RightFiberMorphismWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
