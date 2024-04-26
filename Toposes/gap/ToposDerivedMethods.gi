@@ -1129,55 +1129,55 @@ AddDerivationToCAP( LeftFiberMorphismWithGivenObjects,
           [ PreCompose, 1 ],
           [ PLeftTransposeMorphismWithGivenRange, 1 ] ],
         
-  function( cat, PBxC_xB, B, C, PC )
-    local B_C, BxC, PBxC, PBxC_BxC, PBxC_xBxC, Omega, epsilon_BxC, PBxC_xB_xC, alpha, epsilon_BxC_;
+  function( cat, PSxT_xS, S, T, PT )
+    local S_T, SxT, PSxT, PSxT_SxT, PSxT_xSxT, Omega, epsilon_SxT, PSxT_xS_xT, alpha, epsilon_SxT_;
     
-    B_C := [ B, C ];
+    S_T := [ S, T ];
     
-    ## B × C
-    BxC := DirectProduct( cat, B_C );
+    ## S × T
+    SxT := DirectProduct( cat, S_T );
     
-    ## P(B × C)
-    PBxC := PowerObject( cat, BxC );
+    ## P(S × T)
+    PSxT := PowerObject( cat, SxT );
     
-    PBxC_BxC := [ PBxC, BxC ];
+    PSxT_SxT := [ PSxT, SxT ];
     
-    ## P(B × C) × (B × C)
-    PBxC_xBxC := DirectProduct( cat, PBxC_BxC );
+    ## P(S × T) × (S × T)
+    PSxT_xSxT := DirectProduct( cat, PSxT_SxT );
     
     ## Ω
     Omega := SubobjectClassifier( cat );
     
-    ## ϵ_{B × C} : P(B × C) × (B × C) → Ω
-    epsilon_BxC := PowerObjectLeftEvaluationMorphismWithGivenObjects( cat,
-                           PBxC_xBxC,
-                           BxC,
+    ## ϵ_{S × T} : P(S × T) × (S × T) → Ω
+    epsilon_SxT := PowerObjectLeftEvaluationMorphismWithGivenObjects( cat,
+                           PSxT_xSxT,
+                           SxT,
                            Omega );
     
-    ## (P(B × C) × B) × C
-    PBxC_xB_xC := DirectProduct( cat,
-                          [ PBxC_xB, C ] );
+    ## (P(S × T) × S) × T
+    PSxT_xS_xT := DirectProduct( cat,
+                          [ PSxT_xS, T ] );
     
-    ## (P(B × C) × B) × C → P(B × C) × (B × C)
+    ## (P(S × T) × S) × T → P(S × T) × (S × T)
     alpha := CartesianAssociatorLeftToRightWithGivenDirectProducts( cat,
-                     PBxC_xB_xC,
-                     PBxC,
-                     B,
-                     C,
-                     PBxC_xBxC );
+                     PSxT_xS_xT,
+                     PSxT,
+                     S,
+                     T,
+                     PSxT_xSxT );
     
-    ## ϵ_{B × C} : (P(B × C) × B) × C → Ω
-    epsilon_BxC_ := PreCompose( cat,
+    ## ϵ_{S × T} : (P(S × T) × S) × T → Ω
+    epsilon_SxT_ := PreCompose( cat,
                             alpha,
-                            epsilon_BxC );
+                            epsilon_SxT );
     
-    ## v: P(B × C) × B → PC, where
-    ## v(R, b) = π_B⁻¹(b) ∩ R = { c ∈ C | (b,c) ∈ R } ∈ PC
+    ## v: P(S × T) × S → PT, where
+    ## v(R, s) = π_S⁻¹(s) ∩ R = { t ∈ T | (s,t) ∈ R } ∈ PT
     return PLeftTransposeMorphismWithGivenRange( cat,
-                   PBxC_xB,
-                   C,
-                   epsilon_BxC_,
-                   PC );
+                   PSxT_xS,
+                   T,
+                   epsilon_SxT_,
+                   PT );
     
 end );
 
@@ -1197,48 +1197,48 @@ InstallOtherMethodForCompilerForCAP( SingletonLeftSupportOfRelationsWithGivenObj
         "for a category and four category objects",
         [ IsCapCategory, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ],
         
-  function( cat, PBxC, B, C, PB )
-    local PC, BxC, PBxC_xB, v, sing, sigma, v_sigma;
+  function( cat, PSxT, S, T, PS )
+    local PT, SxT, PSxT_xS, v, sing, sigma, v_sigma;
     
-    PC := PowerObject( cat, C );
+    PT := PowerObject( cat, T );
     
-    ## B × C
-    BxC := DirectProduct( cat, [ B, C ] );
+    ## S × T
+    SxT := DirectProduct( cat, [ S, T ] );
     
-    ## P(B × C) × B
-    PBxC_xB := DirectProduct( cat,
-                       [ PBxC, B ] );
+    ## P(S × T) × S
+    PSxT_xS := DirectProduct( cat,
+                       [ PSxT, S ] );
     
-    ## v: P(B × C) × B → PC, where
-    ## v(R, b) = π_B⁻¹(b) ∩ R = { c ∈ C | (b,c) ∈ R } ∈ PC
+    ## v: P(S × T) × S → PT, where
+    ## v(R, s) = π_S⁻¹(s) ∩ R = { t ∈ T | (s,t) ∈ R } ∈ PT
     v := LeftFiberMorphismWithGivenObjects( cat,
-                 PBxC_xB,
-                 B,
-                 C,
-                 PC );
+                 PSxT_xS,
+                 S,
+                 T,
+                 PT );
     
-    ## {}_C: C ↪ PC
+    ## {}_T: T ↪ PT
     sing := SingletonMorphismWithGivenPowerObject( cat,
-                    C,
-                    PC );
+                    T,
+                    PT );
     
-    ## σ_C: PC → Ω
+    ## σ_T: PT → Ω
     sigma := ClassifyingMorphismOfSubobject( cat,
                      sing );
     
-    ## v σ_C: P(B × C) × B → Ω
+    ## v σ_T: P(S × T) × S → Ω
     v_sigma := PreCompose( cat,
                        v,
                        sigma );
     
-    ## u: P(B × C) → PB, where
-    ## u(R) = { b ∈ B | v(R, b) is a singleton } ∈ PB,
-    ## i.e., u(R) is the set of base points b, over which R is a singleton
+    ## u: P(S × T) → PS, where
+    ## u(R) = { s ∈ S | v(R, s) is a singleton } ∈ PS,
+    ## i.e., u(R) is the set of base points s, over which R is a singleton
     return PLeftTransposeMorphismWithGivenRange( cat,
-                   PBxC,
-                   B,
+                   PSxT,
+                   S,
                    v_sigma,
-                   PB );
+                   PS );
     
 end );
 
@@ -1247,16 +1247,16 @@ InstallMethod( SingletonLeftSupportOfRelations,
         "for two category objects",
         [ IsCapCategoryObject, IsCapCategoryObject ],
         
-  function( B, C )
-    local cat, PBxC, PB;
+  function( S, T )
+    local cat, PSxT, PS;
     
-    cat := CapCategory( B );
+    cat := CapCategory( S );
     
-    PBxC := PowerObject( cat, DirectProduct( cat, [ B, C ] ) );
+    PSxT := PowerObject( cat, DirectProduct( cat, [ S, T ] ) );
     
-    PB := PowerObject( cat, B );
+    PS := PowerObject( cat, S );
     
-    return SingletonLeftSupportOfRelationsWithGivenObjects( cat, PBxC, B, C, PB );
+    return SingletonLeftSupportOfRelationsWithGivenObjects( cat, PSxT, S, T, PS );
     
 end );
 
@@ -1274,34 +1274,34 @@ AddDerivationToCAP( ExponentialOnObjects,
           [ RelativeTruthMorphismOfTrueWithGivenObjects, 1 ],
           [ FiberProduct, 1 ] ],
         
-  function( cat, B, C )
-    local PB, BxC, PBxC, u, true_B;
+  function( cat, S, T )
+    local PS, SxT, PSxT, u, true_S;
     
-    PB := PowerObject( cat, B );
+    PS := PowerObject( cat, S );
     
-    ## B × C
-    BxC := DirectProduct( cat, [ B, C ] );
+    ## S × T
+    SxT := DirectProduct( cat, [ S, T ] );
     
-    ## P(B × C)
-    PBxC := PowerObject( cat, BxC );
+    ## P(S × T)
+    PSxT := PowerObject( cat, SxT );
     
-    ## u: P(B × C) → PB, where
-    ## u(R) = { b ∈ B | v(R, b) is a singleton } ∈ PB,
-    ## i.e., u(R) is the set of base points b, over which R is a singleton
+    ## u: P(S × T) → PS, where
+    ## u(R) = { s ∈ S | v(R, s) is a singleton } ∈ PS,
+    ## i.e., u(R) is the set of base points s, over which R is a singleton
     u := SingletonLeftSupportOfRelationsWithGivenObjects( cat,
-                 PBxC,
-                 B, C,
-                 PB );
+                 PSxT,
+                 S, T,
+                 PS );
     
-    ## 𝟙 ↪ PB, * ↦ B
-    true_B := RelativeTruthMorphismOfTrueWithGivenObjects( cat,
+    ## 𝟙 ↪ PS, * ↦ S
+    true_S := RelativeTruthMorphismOfTrueWithGivenObjects( cat,
                       TerminalObject( cat ),
-                      B,
-                      PB );
+                      S,
+                      PS );
     
     ## the set of all relations that are graphs of functions
     return FiberProduct( cat,
-                   [ u, true_B ] );
+                   [ u, true_S ] );
     
 end );
 
@@ -1322,73 +1322,73 @@ AddDerivationToCAP( CartesianLeftEvaluationMorphismWithGivenSource,
           [ IdentityMorphism, 1 ],
           [ LiftAlongMonomorphism, 1 ] ],
         
-  function( cat, B, C, CB_xB ) ## CB_xB = Cᴮ × B
-    local PB, PC, BxC, PBxC, PBxC_B, PBxC_xB, v, sing, sigma, v_sigma, u, true_B, m, mx1;
+  function( cat, S, T, TS_xS ) ## TS_xS = T^S × S
+    local PS, PT, SxT, PSxT, PSxT_S, PSxT_xS, v, sing, sigma, v_sigma, u, true_S, m, m_x_id;
     
-    PB := PowerObject( B );
+    PS := PowerObject( S );
     
-    PC := PowerObject( C );
+    PT := PowerObject( T );
     
-    ## B × C
-    BxC := DirectProduct( cat, [ B, C ] );
+    ## S × T
+    SxT := DirectProduct( cat, [ S, T ] );
     
-    ## P(B × C)
-    PBxC := PowerObject( cat, BxC );
+    ## P(S × T)
+    PSxT := PowerObject( cat, SxT );
     
-    PBxC_B := [ PBxC, B ];
+    PSxT_S := [ PSxT, S ];
     
-    ## P(B × C) × B
-    PBxC_xB := DirectProduct( cat,
-                       PBxC_B );
+    ## P(S × T) × S
+    PSxT_xS := DirectProduct( cat,
+                       PSxT_S );
     
-    ## v: P(B × C) × B → PC, where
-    ## v(R, b) = π_B⁻¹(b) ∩ R = { c ∈ C | (b,c) ∈ R } ∈ PC
+    ## v: P(S × T) × S → PT, where
+    ## v(R, s) = π_S⁻¹(s) ∩ R = { t ∈ T | (s,t) ∈ R } ∈ PT
     v := LeftFiberMorphismWithGivenObjects( cat,
-                 PBxC_xB,
-                 B, C,
-                 PC );
+                 PSxT_xS,
+                 S, T,
+                 PT );
     
-    ## {}_C: C ↪ PC
+    ## {}_T: T ↪ PT
     sing := SingletonMorphismWithGivenPowerObject( cat,
-                    C,
-                    PC );
+                    T,
+                    PT );
     
-    ## u: P(B × C) → PB, where
-    ## u(R) = { b ∈ B | v(R, b) is a singleton } ∈ PB,
-    ## i.e., u(R) is the set of base points b, over which R is a singleton
+    ## u: P(S × T) → PS, where
+    ## u(R) = { s ∈ S | v(R, s) is a singleton } ∈ PS,
+    ## i.e., u(R) is the set of base points s, over which R is a singleton
     u := SingletonLeftSupportOfRelationsWithGivenObjects( cat,
-                 PBxC,
-                 B, C,
-                 PB );
+                 PSxT,
+                 S, T,
+                 PS );
     
-    ## 𝟙 ↪ PB, * ↦ B
-    true_B := RelativeTruthMorphismOfTrueWithGivenObjects( cat,
+    ## 𝟙 ↪ PS, * ↦ S
+    true_S := RelativeTruthMorphismOfTrueWithGivenObjects( cat,
                       TerminalObject( cat ),
-                      B,
-                      PB );
+                      S,
+                      PS );
     
-    ## m: Cᴮ → P(B × C)
+    ## m: T^S → P(S × T)
     m := ProjectionInFactorOfFiberProduct( cat,
-                 [ u, true_B ],
+                 [ u, true_S ],
                  1 );
     
-    ## m × 1_B : Cᴮ × B → P(B × C) × B
-    mx1 := DirectProductFunctorialWithGivenDirectProducts( cat,
-                   CB_xB,
-                   [ Source( m ), B ],
-                   [ m, IdentityMorphism( cat, B ) ],
-                   PBxC_B,
-                   PBxC_xB );
+    ## m × 1_S : T^S × S → P(S × T) × S
+    m_x_id := DirectProductFunctorialWithGivenDirectProducts( cat,
+                      TS_xS,
+                      [ Source( m ), S ],
+                      [ m, IdentityMorphism( cat, S ) ],
+                      PSxT_S,
+                      PSxT_xS );
     
-    ## Cᴮ × B → C
+    ## T^S × S → T
     return LiftAlongMonomorphism( cat,
-                   ## {}: C ↪ PC
+                   ## {}: T ↪ PT
                    sing,
-                   ## Cᴮ × B → PC
+                   ## T^S × S → PT
                    PreCompose( cat,
-                           ## Cᴮ × B → P(B × C) × B
-                           mx1,
-                           ## P(B × C) × B → PC
+                           ## T^S × S → P(S × T) × S
+                           m_x_id,
+                           ## P(S × T) × S → PT
                            v ) );
     
 end );
