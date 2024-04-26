@@ -619,10 +619,10 @@ DeclareOperation( "LeftFiberMorphismWithGivenObjects",
 #!  computes the subset of <A>b</A> over which $R$ is a singleton.
 #! @Returns a morphism in $\mathrm{Hom}( Pbxc, Pb )$
 #! @Arguments Pbxc, b, c, Pb
-DeclareOperation( "SingletonSupportOfRelationsWithGivenObjects",
+DeclareOperation( "SingletonLeftSupportOfRelationsWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
-DeclareOperation( "SingletonSupportOfRelations",
+DeclareOperation( "SingletonLeftSupportOfRelations",
         [ IsCapCategoryObject, IsCapCategoryObject ] );
 
 ####################################
