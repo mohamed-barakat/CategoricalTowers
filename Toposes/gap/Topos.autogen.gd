@@ -469,7 +469,7 @@ DeclareOperation( "AddLawvereTierneySubobjects",
 #! The arguments are a category $C$ and a function $F$.
 #! This operation adds the given function $F$
 #! to the category for the basic operation `LeftFiberMorphism`.
-#! $F: ( b, c ) \mapsto \mathtt{LeftFiberMorphism}(b, c)$.
+#! $F: ( s, t ) \mapsto \mathtt{LeftFiberMorphism}(s, t)$.
 #! @Returns nothing
 #! @Arguments C, F
 DeclareOperation( "AddLeftFiberMorphism",
@@ -488,7 +488,7 @@ DeclareOperation( "AddLeftFiberMorphism",
 #! The arguments are a category $C$ and a function $F$.
 #! This operation adds the given function $F$
 #! to the category for the basic operation `LeftFiberMorphismWithGivenObjects`.
-#! $F: ( Pbxc_b, b, c, Pc ) \mapsto \mathtt{LeftFiberMorphismWithGivenObjects}(Pbxc_b, b, c, Pc)$.
+#! $F: ( Psxt_xs, s, t, Pt ) \mapsto \mathtt{LeftFiberMorphismWithGivenObjects}(Psxt_xs, s, t, Pt)$.
 #! @Returns nothing
 #! @Arguments C, F
 DeclareOperation( "AddLeftFiberMorphismWithGivenObjects",
