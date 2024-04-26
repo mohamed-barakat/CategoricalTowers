@@ -900,9 +900,9 @@ AddDerivationToCAP( LeftFiberMorphismWithGivenObjects,
                     [
                         [ LeftFiberMorphism, 1 ],
                     ],
-  function( cat, Pbxc_b, b, c, Pc )
+  function( cat, Psxt_xs, s, t, Pt )
     
-    return LeftFiberMorphism( cat, b, c );
+    return LeftFiberMorphism( cat, s, t );
         
 end : is_with_given_derivation := true );
 
@@ -913,9 +913,9 @@ AddDerivationToCAP( LeftFiberMorphism,
                         [ DirectProduct, 2 ],
                         [ PowerObject, 2 ],
                     ],
-  function( cat, b, c )
+  function( cat, s, t )
     
-    return LeftFiberMorphismWithGivenObjects( cat, DirectProduct( cat, [ PowerObject( cat, DirectProduct( cat, [ b, c ] ) ), b ] ), b, c, PowerObject( cat, c ) );
+    return LeftFiberMorphismWithGivenObjects( cat, DirectProduct( cat, [ PowerObject( cat, DirectProduct( cat, [ s, t ] ) ), s ] ), s, t, PowerObject( cat, t ) );
     
 end : is_with_given_derivation := true );
 

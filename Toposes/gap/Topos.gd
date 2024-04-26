@@ -594,31 +594,31 @@ DeclareOperation( "RightFiberMorphismWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
 #! @Description
-#!  The arguments are two objects <A>b</A>, <A>c</A>.
-#!  The output is the morphism <C>PowerObject</C>(b \times c) $\times$ <A>b</A> $\to$ <C>PowerObject</C>( <A>c</A> )
-#!  that for a given relation $R \subseteq$ <A>b</A> $\times$ <A>c</A>
-#!  and an element $x$ in the base <A>b</A> computes the fiber over $x$ as subset of <A>c</A>.
-#! @Returns a morphism in $\mathrm{Hom}( P(b \times c) \times b, P(c) )$
-#! @Arguments b, c
+#!  The arguments are two objects <A>s</A>, <A>t</A>.
+#!  The output is the morphism <C>PowerObject</C>(s \times t) $\times$ <A>s</A> $\to$ <C>PowerObject</C>( <A>t</A> )
+#!  that for a given relation $R \subseteq$ <A>s</A> $\times$ <A>t</A>
+#!  and an element $x$ in <A>s</A> computes the fiber over $x$ as subset of <A>t</A>.
+#! @Returns a morphism in $\mathrm{Hom}( P(s \times t) \times s, P(t) )$
+#! @Arguments s, t
 DeclareOperation( "LeftFiberMorphism",
         [ IsCapCategoryObject, IsCapCategoryObject ] );
 #! @InsertChunk LeftFiberMorphism
 
 #! @Description
-#!  The arguments are four objects <A>Pbxc_xb</A>, <A>b</A>, <A>c</A>, <A>Pc</A>,
-#!  where <A>Pbxc_xb</A> = $P(b \times c) \times b$ and <A>Pc</A> = <C>PowerObject</C>( <A>c</A> ).
-#!  The output is the morphism that for a given relation $R \subseteq$ <A>b</A> $\times$ <A>c</A>
-#!  and an element $x$ in the base <A>b</A> computes the fiber over $x$ as subset of <A>c</A>.
-#! @Returns a morphism in $\mathrm{Hom}( Pbxc_xb, Pc )$
-#! @Arguments Pbxc_xb, b, c, Pc
+#!  The arguments are four objects <A>Psxt_xs</A>, <A>s</A>, <A>t</A>, <A>Pt</A>,
+#!  where <A>Psxt_xs</A> = $P(s \times t) \times s$ and <A>Pt</A> = <C>PowerObject</C>( <A>t</A> ).
+#!  The output is the morphism that for a given relation $R \subseteq$ <A>s</A> $\times$ <A>t</A>
+#!  and an element $x$ in <A>s</A> computes the fiber over $x$ as subset of <A>t</A>.
+#! @Returns a morphism in $\mathrm{Hom}( Psxt_xs, Pt )$
+#! @Arguments Psxt_xs, s, t, Pt
 DeclareOperation( "LeftFiberMorphismWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
 #! @Description
-#!  Return the morphism that for a given relation $R \subseteq$ <A>b</A> $\times$ <A>c</A>
-#!  computes the subset of <A>b</A> over which $R$ is a singleton.
-#! @Returns a morphism in $\mathrm{Hom}( Pbxc, Pb )$
-#! @Arguments Pbxc, b, c, Pb
+#!  Return the morphism that for a given relation $R \subseteq$ <A>s</A> $\times$ <A>t</A>
+#!  computes the subset of <A>s</A> over which $R$ is a singleton.
+#! @Returns a morphism in $\mathrm{Hom}( Psxt, Ps )$
+#! @Arguments Psxt, s, t, Ps
 DeclareOperation( "SingletonLeftSupportOfRelationsWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
