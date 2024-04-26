@@ -1156,7 +1156,7 @@ DeclareOperation( "AddRelativeTruthMorphismOfTrueWithGivenObjects",
 #! to the category for the basic operation `RightFiberMorphism`.
 #! Optionally, a weight (default: 100) can be specified which should roughly correspond
 #! to the computational complexity of the function (lower weight = less complex = faster execution).
-#! $F: ( b, c ) \mapsto \mathtt{RightFiberMorphism}(b, c)$.
+#! $F: ( s, t ) \mapsto \mathtt{RightFiberMorphism}(s, t)$.
 #! @Returns nothing
 #! @Arguments C, F
 DeclareOperation( "AddRightFiberMorphism",
@@ -1175,7 +1175,7 @@ DeclareOperation( "AddRightFiberMorphism",
 #! to the category for the basic operation `RightFiberMorphismWithGivenObjects`.
 #! Optionally, a weight (default: 100) can be specified which should roughly correspond
 #! to the computational complexity of the function (lower weight = less complex = faster execution).
-#! $F: ( cxPbxc, b, c, Pb ) \mapsto \mathtt{RightFiberMorphismWithGivenObjects}(cxPbxc, b, c, Pb)$.
+#! $F: ( sxPtxs, s, t, Pt ) \mapsto \mathtt{RightFiberMorphismWithGivenObjects}(sxPtxs, s, t, Pt)$.
 #! @Returns nothing
 #! @Arguments C, F
 DeclareOperation( "AddRightFiberMorphismWithGivenObjects",
