@@ -563,20 +563,20 @@ RelativeTruthMorphismOfImpliesWithGivenObjects := rec(
 RightFiberMorphism := rec(
   filter_list := [ "category", "object", "object" ],
   return_type := "morphism",
-  input_arguments_names := [ "cat", "b", "c" ],
-  output_source_getter_string := "DirectProduct( cat, [ c, PowerObject( cat, DirectProduct( cat, [ b, c ] ) ) ] )",
+  input_arguments_names := [ "cat", "s", "t" ],
+  output_source_getter_string := "DirectProduct( cat, [ s, PowerObject( cat, DirectProduct( cat, [ t, s ] ) ) ] )",
   output_source_getter_preconditions := [ [ "DirectProduct", 2 ], [ "PowerObject", 1 ] ],
-  output_range_getter_string := "PowerObject( cat, b )",
+  output_range_getter_string := "PowerObject( cat, t )",
   output_range_getter_preconditions := [ [ "PowerObject", 1 ] ],
   with_given_object_position := "both" ),
 
 RightFiberMorphismWithGivenObjects := rec(
   filter_list := [ "category", "object", "object", "object", "object" ],
   return_type := "morphism",
-  input_arguments_names := [ "cat", "cxPbxc", "b", "c", "Pb" ],
-  output_source_getter_string := "cxPbxc",
+  input_arguments_names := [ "cat", "sxPtxs", "s", "t", "Pt" ],
+  output_source_getter_string := "sxPtxs",
   output_source_getter_preconditions := [ ],
-  output_range_getter_string := "Pb",
+  output_range_getter_string := "Pt",
   output_range_getter_preconditions := [ ] ),
 
 LeftFiberMorphism := rec(
