@@ -1183,6 +1183,85 @@ end );
 
 ##
 CAP_INTERNAL_ADD_REPLACEMENTS_FOR_METHOD_RECORD(
+        rec( SingletonRightSupportOfRelationsWithGivenObjects :=
+             [ [ "PowerObject", 1 ],
+               [ "DirectProduct", 2 ],
+               [ "RightFiberMorphismWithGivenObjects", 1 ],
+               [ "SingletonMorphismWithGivenPowerObject", 1 ],
+               [ "ClassifyingMorphismOfSubobjectWithGivenSubobjectClassifier", 1 ],
+               [ "PreCompose", 1 ],
+               [ "PRightTransposeMorphismWithGivenRange", 1 ] ] ) );
+
+##
+InstallOtherMethodForCompilerForCAP( SingletonRightSupportOfRelationsWithGivenObjects,
+        "for a category and four category objects",
+        [ IsCapCategory, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ],
+        
+  function( cat, PTxS, S, T, PS )
+    local PT, TxS, Sx_PTxS, v, sing, sigma, v_sigma;
+    
+    PT := PowerObject( cat, T );
+    
+    ## T × S
+    TxS := DirectProduct( cat, [ T, S ] );
+    
+    ## S × P(T × S)
+    Sx_PTxS := DirectProduct( cat,
+                       [ S, PTxS ] );
+    
+    ## v: S × P(T × S) → PT, where
+    ## v(R, s) = π_S⁻¹(s) ∩ R = { t ∈ T | (t,s) ∈ R } ∈ PT
+    v := RightFiberMorphismWithGivenObjects( cat,
+                 Sx_PTxS,
+                 S,
+                 T,
+                 PT );
+    
+    ## {}_T: T ↪ PT
+    sing := SingletonMorphismWithGivenPowerObject( cat,
+                    T,
+                    PT );
+    
+    ## σ_T: PT → Ω
+    sigma := ClassifyingMorphismOfSubobject( cat,
+                     sing );
+    
+    ## v σ_T: S × P(T × S) → Ω
+    v_sigma := PreCompose( cat,
+                       v,
+                       sigma );
+    
+    ## u: P(T × S) → PS, where
+    ## u(R) = { s ∈ S | v(R, s) is a singleton } ∈ PS,
+    ## i.e., u(R) is the set of base points s, over which R is a singleton
+    return PRightTransposeMorphismWithGivenRange( cat,
+                   S,
+                   PTxS,
+                   v_sigma,
+                   PS );
+    
+end );
+
+##
+InstallMethod( SingletonRightSupportOfRelations,
+        "for two category objects",
+        [ IsCapCategoryObject, IsCapCategoryObject ],
+        
+  function( S, T )
+    local cat, PTxS, PS;
+    
+    cat := CapCategory( S );
+    
+    PTxS := PowerObject( cat, DirectProduct( cat, [ T, S ] ) );
+    
+    PS := PowerObject( cat, S );
+    
+    return SingletonRightSupportOfRelationsWithGivenObjects( cat, PTxS, S, T, PS );
+    
+end );
+
+##
+CAP_INTERNAL_ADD_REPLACEMENTS_FOR_METHOD_RECORD(
         rec( SingletonLeftSupportOfRelationsWithGivenObjects :=
              [ [ "PowerObject", 1 ],
                [ "DirectProduct", 2 ],

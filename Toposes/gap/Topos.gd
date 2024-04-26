@@ -624,6 +624,17 @@ DeclareOperation( "LeftFiberMorphismWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
 #! @Description
+#!  Return the morphism that for a given relation $R \subseteq$ <A>t</A> $\times$ <A>s</A>
+#!  computes the subset of <A>s</A> over which $R$ is a singleton.
+#! @Returns a morphism in $\mathrm{Hom}( Ptxs, Ps )$
+#! @Arguments Ptxs, s, t, Ps
+DeclareOperation( "SingletonRightSupportOfRelationsWithGivenObjects",
+        [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
+
+DeclareOperation( "SingletonRightSupportOfRelations",
+        [ IsCapCategoryObject, IsCapCategoryObject ] );
+
+#! @Description
 #!  Return the morphism that for a given relation $R \subseteq$ <A>s</A> $\times$ <A>t</A>
 #!  computes the subset of <A>s</A> over which $R$ is a singleton.
 #! @Returns a morphism in $\mathrm{Hom}( Psxt, Ps )$
