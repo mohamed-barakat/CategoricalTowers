@@ -2082,9 +2082,9 @@ AddDerivationToCAP( RightFiberMorphismWithGivenObjects,
                     [
                         [ RightFiberMorphism, 1 ],
                     ],
-  function( cat, cxPbxc, b, c, Pb )
+  function( cat, sxPtxs, s, t, Pt )
     
-    return RightFiberMorphism( cat, b, c );
+    return RightFiberMorphism( cat, s, t );
         
 end : is_with_given_derivation := true );
 
@@ -2095,9 +2095,9 @@ AddDerivationToCAP( RightFiberMorphism,
                         [ DirectProduct, 2 ],
                         [ PowerObject, 2 ],
                     ],
-  function( cat, b, c )
+  function( cat, s, t )
     
-    return RightFiberMorphismWithGivenObjects( cat, DirectProduct( cat, [ c, PowerObject( cat, DirectProduct( cat, [ b, c ] ) ) ] ), b, c, PowerObject( cat, b ) );
+    return RightFiberMorphismWithGivenObjects( cat, DirectProduct( cat, [ s, PowerObject( cat, DirectProduct( cat, [ t, s ] ) ) ] ), s, t, PowerObject( cat, t ) );
     
 end : is_with_given_derivation := true );
 
