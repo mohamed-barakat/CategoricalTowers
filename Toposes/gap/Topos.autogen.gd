@@ -1115,7 +1115,7 @@ DeclareOperation( "AddRelativeTruthMorphismOfTrueWithGivenObjects",
 #! The arguments are a category $C$ and a function $F$.
 #! This operation adds the given function $F$
 #! to the category for the basic operation `RightFiberMorphism`.
-#! $F: ( b, c ) \mapsto \mathtt{RightFiberMorphism}(b, c)$.
+#! $F: ( s, t ) \mapsto \mathtt{RightFiberMorphism}(s, t)$.
 #! @Returns nothing
 #! @Arguments C, F
 DeclareOperation( "AddRightFiberMorphism",
@@ -1134,7 +1134,7 @@ DeclareOperation( "AddRightFiberMorphism",
 #! The arguments are a category $C$ and a function $F$.
 #! This operation adds the given function $F$
 #! to the category for the basic operation `RightFiberMorphismWithGivenObjects`.
-#! $F: ( cxPbxc, b, c, Pb ) \mapsto \mathtt{RightFiberMorphismWithGivenObjects}(cxPbxc, b, c, Pb)$.
+#! $F: ( sxPtxs, s, t, Pt ) \mapsto \mathtt{RightFiberMorphismWithGivenObjects}(sxPtxs, s, t, Pt)$.
 #! @Returns nothing
 #! @Arguments C, F
 DeclareOperation( "AddRightFiberMorphismWithGivenObjects",
