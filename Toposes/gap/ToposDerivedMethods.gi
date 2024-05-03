@@ -1370,15 +1370,15 @@ AddDerivationToCAP( ExponentialOnObjects,
 end );
 
 ##
-AddDerivationToCAP( CartesianLeftEvaluationMorphismWithGivenSource,
-        "CartesianLeftEvaluationMorphismWithGivenSource from the power object, the power object evaluation morphism, and the P-transpose",
+AddDerivationToCAP( CartesianRightEvaluationMorphismWithGivenSource,
+        "CartesianRightEvaluationMorphismWithGivenSource from the power object, the power object evaluation morphism, and the P-transpose",
         [ [ PowerObject, 4 ],
           [ DirectProduct, 4 ],
-          [ LeftFiberMorphismWithGivenObjects, 2 ],
+          [ RightFiberMorphismWithGivenObjects, 2 ],
           [ SingletonMorphismWithGivenPowerObject, 2 ],
           [ ClassifyingMorphismOfSubobjectWithGivenSubobjectClassifier, 1 ],
           [ PreCompose, 2 ],
-          [ PLeftTransposeMorphismWithGivenRange, 1 ],
+          [ PRightTransposeMorphismWithGivenRange, 1 ],
           [ TerminalObject, 1 ],
           [ RelativeTruthMorphismOfTrueWithGivenObjects, 1 ],
           [ ProjectionInFactorOfFiberProduct, 1 ],
@@ -1386,29 +1386,29 @@ AddDerivationToCAP( CartesianLeftEvaluationMorphismWithGivenSource,
           [ IdentityMorphism, 1 ],
           [ LiftAlongMonomorphism, 1 ] ],
         
-  function( cat, S, T, TS_xS ) ## TS_xS = T^S × S
-    local PS, PT, SxT, PSxT, PSxT_S, PSxT_xS, v, sing, sigma, v_sigma, u, true_S, m, m_x_id;
+  function( cat, S, T, Sx_TS ) ## Sx_TS = T × S^S
+    local PS, PT, TxS, PTxS, S_PTxS, Sx_PTxS, v, sing, sigma, v_sigma, u, true_S, m, id_x_m;
     
     PS := PowerObject( S );
     
     PT := PowerObject( T );
     
-    ## S × T
-    SxT := DirectProduct( cat, [ S, T ] );
+    ## T × S
+    TxS := DirectProduct( cat, [ T, S ] );
     
-    ## P(S × T)
-    PSxT := PowerObject( cat, SxT );
+    ## P(T × S)
+    PTxS := PowerObject( cat, TxS );
     
-    PSxT_S := [ PSxT, S ];
+    S_PTxS := [ S, PTxS ];
     
-    ## P(S × T) × S
-    PSxT_xS := DirectProduct( cat,
-                       PSxT_S );
+    ## S × P(T × S)
+    Sx_PTxS := DirectProduct( cat,
+                       S_PTxS );
     
-    ## v: P(S × T) × S → PT, where
-    ## v(R, s) = π_S⁻¹(s) ∩ R = { t ∈ T | (s,t) ∈ R } ∈ PT
-    v := LeftFiberMorphismWithGivenObjects( cat,
-                 PSxT_xS,
+    ## v: S × P(T × S) → PT, where
+    ## v(R, s) = π_S⁻¹(s) ∩ R = { t ∈ T | (t,s) ∈ R } ∈ PT
+    v := RightFiberMorphismWithGivenObjects( cat,
+                 Sx_PTxS,
                  S, T,
                  PT );
     
@@ -1417,11 +1417,11 @@ AddDerivationToCAP( CartesianLeftEvaluationMorphismWithGivenSource,
                     T,
                     PT );
     
-    ## u: P(S × T) → PS, where
+    ## u: P(T × S) → PS, where
     ## u(R) = { s ∈ S | v(R, s) is a singleton } ∈ PS,
     ## i.e., u(R) is the set of base points s, over which R is a singleton
-    u := SingletonLeftSupportOfRelationsWithGivenObjects( cat,
-                 PSxT,
+    u := SingletonRightSupportOfRelationsWithGivenObjects( cat,
+                 PTxS,
                  S, T,
                  PS );
     
@@ -1431,28 +1431,28 @@ AddDerivationToCAP( CartesianLeftEvaluationMorphismWithGivenSource,
                       S,
                       PS );
     
-    ## m: T^S → P(S × T)
+    ## m: T^S → P(T × S)
     m := ProjectionInFactorOfFiberProduct( cat,
                  [ u, true_S ],
                  1 );
     
-    ## m × 1_S : T^S × S → P(S × T) × S
-    m_x_id := DirectProductFunctorialWithGivenDirectProducts( cat,
-                      TS_xS,
-                      [ Source( m ), S ],
-                      [ m, IdentityMorphism( cat, S ) ],
-                      PSxT_S,
-                      PSxT_xS );
+    ## 1_S × m : S × T^S → S × P(T × S)
+    id_x_m := DirectProductFunctorialWithGivenDirectProducts( cat,
+                   Sx_TS,
+                   [ S, Source( m ) ],
+                   [ IdentityMorphism( cat, S ), m ],
+                   S_PTxS,
+                   Sx_PTxS );
     
-    ## T^S × S → T
+    ## S × T^S → T
     return LiftAlongMonomorphism( cat,
                    ## {}: T ↪ PT
                    sing,
-                   ## T^S × S → PT
+                   ## S × T^S → PT
                    PreCompose( cat,
-                           ## T^S × S → P(S × T) × S
-                           m_x_id,
-                           ## P(S × T) × S → PT
+                           ## S × T^S → S × P(T × S)
+                           id_x_m,
+                           ## S × P(T × S) → PT
                            v ) );
     
 end );
