@@ -537,6 +537,15 @@ DeclareOperation( "IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
 #! @Description
+#!  The input is a morphism <A>f</A>: $A \to B$,
+#!  and the power object <A>PA</A> = <C>PowerObject</C>($A$).
+#!  The output is the morphism <A>B</A> $\rightarrow$ <A>PA</A>, $b \mapsto f^{-1}(b)$.
+#! @Arguments f, PA
+#! @Returns a morphism $\mathrm{Hom}( B, PA )$
+DeclareOperation( "FiberMorphismWithGivenPowerObject",
+        [ IsCapCategoryMorphism, IsCapCategoryObject ] );
+
+#! @Description
 #!  The input is the direct product <A>PAxB</A> = <A>PA</A> $\times B$, a morphism <A>f</A>: $A \to B$,
 #!  and the power object <A>PA</A> = <C>PowerObject</C>($A$).
 #!  The output is the morphism <A>PAxB</A> $\rightarrow$ <A>PA</A>, $(T, b) \mapsto T \cap f^{-1}(b)$.

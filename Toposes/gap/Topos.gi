@@ -7,6 +7,28 @@
 InstallTrueMethod( IsFiniteBicompleteCategory, IsElementaryTopos );
 InstallTrueMethod( IsBicartesianClosedCategory, IsElementaryTopos );
 
+##
+InstallOtherMethodForCompilerForCAP( FiberMorphismWithGivenPowerObject,
+        "for a category, a morphism, and an object",
+        [ IsCapCategory, IsCapCategoryMorphism, IsCapCategoryObject ],
+        
+ function( C, f, PA )
+    local B, PB;
+    
+    B := Target( f );
+    
+    PB := PowerObject( C, B );
+    
+    ## the preimage of singletons:
+    ## {⋅}_B Pf: B → PA, b ↦ f⁻¹(b) ∈ PA
+    return PreCompose( C,
+                   ## {⋅}_B: B ↪ PB, b ↦ {b}
+                   SingletonMorphism( C, B ),
+                   ## Pf: PB → PA, S ↦ f⁻¹(S)
+                   PowerObjectFunctorialWithGivenPowerObjects( C, PB, f, PA ) );
+    
+end );
+
 ## MacLane-Moerdijk, Proof of Thm IV.7.1, page 192, diagram (5)
 InstallOtherMethodForCompilerForCAP( IntersectWithPreimagesWithGivenObjects,
         "for a category, two objects, and a morphism",
@@ -22,11 +44,7 @@ InstallOtherMethodForCompilerForCAP( IntersectWithPreimagesWithGivenObjects,
     
     ## the preimage of singletons:
     ## {⋅}_B Pf: B → PA, b ↦ f⁻¹(b) ∈ PA
-    f_ := PreCompose( C,
-                  ## {⋅}_B: B ↪ PB
-                  SingletonMorphism( C, B ),
-                  ## Pf: PB → PA
-                  PowerObjectFunctorialWithGivenPowerObjects( C, PB, f, PA ) );
+    f_ := FiberMorphismWithGivenPowerObject( C, f, PA );
     
     PA_PA := [ PA, PA ];
     PAxPA := DirectProduct( C, PA_PA );
