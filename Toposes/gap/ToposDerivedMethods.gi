@@ -1369,6 +1369,121 @@ AddDerivationToCAP( ExponentialOnObjects,
     
 end );
 
+AddDerivationToCAP( ExponentialOnMorphismsWithGivenExponentials,
+        "ExponentialOnObjects from the power object, the power object evaluation morphism, and the P-transpose",
+        [ [ PowerObject, 6 ],
+          [ DirectProduct, 7 ],
+          [ DirectProductFunctorialWithGivenDirectProducts, 2 ],
+          [ TerminalObject, 1 ],
+          [ RightFiberMorphismWithGivenObjects, 2 ],
+          [ SingletonMorphismWithGivenPowerObject, 2 ],
+          [ ClassifyingMorphismOfSubobjectWithGivenSubobjectClassifier, 2 ],
+          [ IdentityMorphism, 3 ],
+          [ PreCompose, 3 ],
+          [ PRightTransposeMorphismWithGivenRange, 2 ],
+          [ RelativeTruthMorphismOfTrueWithGivenObjects, 2 ],
+          [ FiberProductFunctorialWithGivenFiberProducts, 1 ] ],
+        
+  function( cat, source_exp, alpha, beta, target_exp )
+    local terminal_object,
+          A, B, PA, B_A, BxA, PBxA, u_A, true_A, diagram_source,
+          S, T, PS, T_S, TxS, PTxS, u_S, true_S, diagram_target,
+          T_A, TxA, mors;
+    
+    terminal_object := TerminalObject( cat );
+    
+    ## α: S → A, β: B → T
+    
+    A := Target( alpha );
+    B := Source( beta );
+
+    PA := PowerObject( cat, A );
+    
+    B_A := [ B, A ];
+    
+    ## B × A
+    BxA := DirectProduct( cat, B_A );
+    
+    ## P(B × A)
+    PBxA := PowerObject( cat, BxA );
+    
+    ## u_A: P(B × A) → PA, where
+    ## u_A(R) = { a ∈ A | v(R, a) is a singleton } ∈ PA,
+    ## i.e., u_A(R) is the set of base points a, over which R is a singleton
+    u_A := SingletonRightSupportOfRelationsWithGivenObjects( cat,
+                   PBxA,
+                   A, B,
+                   PA );
+    
+    ## 𝟙 ↪ PA, * ↦ A
+    true_A := RelativeTruthMorphismOfTrueWithGivenObjects( cat,
+                      terminal_object,
+                      A,
+                      PA );
+    
+    diagram_source := [ u_A, true_A ];
+    
+    S := Source( alpha );
+    T := Target( beta );
+    
+    PS := PowerObject( cat, S );
+    
+    T_S := [ T, S ];
+    
+    ## T × S
+    TxS := DirectProduct( cat, T_S );
+    
+    ## P(T × S)
+    PTxS := PowerObject( cat, TxS );
+    
+    ## u_S: P(T × S) → PS, where
+    ## u_S(R) = { s ∈ S | v(R, s) is a singleton } ∈ PS,
+    ## i.e., u_S(R) is the set of base points s, over which R is a singleton
+    u_S := SingletonRightSupportOfRelationsWithGivenObjects( cat,
+                   PTxS,
+                   S, T,
+                   PS );
+    
+    ## 𝟙 ↪ PS, * ↦ S
+    true_S := RelativeTruthMorphismOfTrueWithGivenObjects( cat,
+                      terminal_object,
+                      S,
+                      PS );
+    
+    diagram_target := [ u_S, true_S ];
+    
+    T_A := [ T, A ];
+    
+    ## T × A
+    TxA := DirectProduct( cat, T_A );
+    
+    mors := [ PreCompose( cat,
+                    ExistentialQuantifierOfMorphism( cat,
+                            DirectProductFunctorialWithGivenDirectProducts( cat,
+                                    BxA,
+                                    B_A,
+                                    [ beta, IdentityMorphism( cat, A ) ],
+                                    T_A,
+                                    TxA ) ),
+                    ExistentialQuantifierOfMorphism( cat,
+                            DirectProductFunctorialWithGivenDirectProducts( cat,
+                                    TxA,
+                                    T_A,
+                                    [ IdentityMorphism( cat, T ), alpha ],
+                                    T_S,
+                                    TxS ) ) ),
+              IdentityMorphism( cat, terminal_object ) ];
+    
+    ## Exponential(A,B) → Exponential(S,T)
+    return FiberProductFunctorialWithGivenFiberProducts( cat,
+                   source_exp,
+                   diagram_source,
+                   mors,
+                   diagram_target,
+                   target_exp );
+    
+end );
+
 ##
 AddDerivationToCAP( CartesianRightEvaluationMorphismWithGivenSource,
         "CartesianRightEvaluationMorphismWithGivenSource from the power object, the power object evaluation morphism, and the P-transpose",
