@@ -129,6 +129,18 @@ DeclareAttribute( "AmbientAlgebra",
 DeclareAttribute( "AssociatedFunctorOfLinearClosuresOfPathCategoriesData",
         IsMorphismInCategoryOfFpAlgebras );
 
+#!
+DeclareAttribute( "Unit",
+        IsObjectInCategoryOfFpAlgebras );
+
+#!
+DeclareAttribute( "Multiplication",
+        IsObjectInCategoryOfFpAlgebras );
+
+#!
+DeclareAttribute( "OppositeAlgebra",
+        IsObjectInCategoryOfFpAlgebras );
+
 ####################################
 ##
 #! @Section Operations
@@ -146,6 +158,22 @@ DeclareOperation( "Counit",
 #! @Arguments fp_algebra, list
 DeclareOperation( "Comultiplication",
         [ IsObjectInCategoryOfFpAlgebras, IsList ] );
+
+#!
+DeclareOperation( "Antipode",
+        [ IsObjectInCategoryOfFpAlgebras, IsList ] );
+
+#!
+DeclareOperation( "LeftAntipodeLawOfHopfMonoid",
+        [ IsCategoryOfFpAlgebras,
+          IsObjectInCategoryOfFpAlgebras,
+          IsMorphismInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras ] );
+
+#!
+DeclareOperation( "RightAntipodeLawOfHopfMonoid",
+        [ IsCategoryOfFpAlgebras,
+          IsObjectInCategoryOfFpAlgebras,
+          IsMorphismInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras ] );
 
 ####################################
 ##

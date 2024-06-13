@@ -160,6 +160,14 @@ cart_fact := LeftCartesianDistributivityFactoring( A1, [ A1, A2 ] );
 #! <A morphism in CategoryOfFpAlgebras( GF(2) )>
 cocart_expand := LeftCocartesianCodistributivityExpanding( A1, [ A1, A2 ] );
 #! <A morphism in CategoryOfFpAlgebras( GF(2) )>
+LoadPackage( "InternalModules", false );
+#! true
+BiAlg_F2 := CategoryOfComonoids( Alg_F2 );
+#! CategoryOfComonoids( CategoryOfFpAlgebras( GF(2) ) )
+B1 := ObjectConstructor( BiAlg_F2, Triple( A1, counit1, comult1 ) );
+#! <An object in CategoryOfComonoids( CategoryOfFpAlgebras( GF(2) ) )>
+IsWellDefined( B1 );
+#! true
 #! @EndExample
 
 #! @EndChunk

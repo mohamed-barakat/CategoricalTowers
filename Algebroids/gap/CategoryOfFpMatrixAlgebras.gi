@@ -780,6 +780,71 @@ InstallMethod( \.,
 end );
 
 ##
+InstallOtherMethodForCompilerForCAP( Unit,
+        "for a category of finitely presented matrix algebras and an algebra therein",
+        [ IsCategoryOfFpMatrixAlgebras, IsObjectInCategoryOfFpMatrixAlgebras ],
+        
+  function( FpMatAlg_k, fp_matrix_algebra )
+    local FpAlg_k, U, fp_algebra;
+    
+    FpAlg_k := UnderlyingCategoryOfFpAlgebras( FpMatAlg_k );
+    
+    U := TensorUnit( FpMatAlg_k );
+    
+    fp_algebra := DefiningPairOfFinitelyPresentedMatrixAlgebra( fp_matrix_algebra )[1];
+    
+    return MorphismConstructor( FpMatAlg_k,
+                   U,
+                   [ Unit( FpAlg_k, fp_algebra ) ],
+                   fp_matrix_algebra );
+    
+end );
+
+##
+InstallMethod( Unit,
+        "for a finitely presented matrix algebra",
+        [ IsObjectInCategoryOfFpMatrixAlgebras ],
+        
+  function( fp_matrix_algebra )
+    
+    return Unit( CapCategory( fp_matrix_algebra ), fp_matrix_algebra );
+    
+end );
+
+##
+InstallOtherMethodForCompilerForCAP( Multiplication,
+        "for a category of finitely presented matrix algebras and an algebra therein",
+        [ IsCategoryOfFpMatrixAlgebras, IsObjectInCategoryOfFpMatrixAlgebras ],
+        
+  function( FpMatAlg_k, fp_matrix_algebra )
+    local FpAlg_k, fp_matrix_algebra2, fp_algebra;
+    
+    FpAlg_k := UnderlyingCategoryOfFpAlgebras( FpMatAlg_k );
+    
+    fp_matrix_algebra2 := TensorProductOnObjects( FpMatAlg_k, fp_matrix_algebra, fp_matrix_algebra );
+    
+    fp_algebra := DefiningPairOfFinitelyPresentedMatrixAlgebra( fp_matrix_algebra )[1];
+    
+    ## this is an algebra morphism iff the algebra is commutative
+    return MorphismConstructor( FpMatAlg_k,
+                   fp_matrix_algebra2,
+                   [ Multiplication( FpAlg_k, fp_algebra ) ],
+                   fp_matrix_algebra );
+    
+end );
+
+##
+InstallMethod( Multiplication,
+        "for a finitely presented matrix algebra",
+        [ IsObjectInCategoryOfFpMatrixAlgebras ],
+        
+  function( fp_matrix_algebra )
+    
+    return Multiplication( CapCategory( fp_matrix_algebra ), fp_matrix_algebra );
+    
+end );
+
+##
 InstallMethod( Counit,
         "for a finitely presented matrix algebra and a list",
         [ IsObjectInCategoryOfFpMatrixAlgebras, IsList ],
@@ -818,6 +883,62 @@ InstallMethod( Comultiplication,
                    fp_matrix_algebra,
                    [ Comultiplication( fp_algebra, list_of_images_of_comult ) ],
                    fp_matrix_algebra2 );
+    
+end );
+
+##
+InstallMethod( Antipode,
+        "for a finitely presented matrix algebra and a list",
+        [ IsObjectInCategoryOfFpMatrixAlgebras, IsList ],
+        
+  function( fp_matrix_algebra, list_of_images_of_antipode )
+    local fp_algebra;
+    
+    fp_algebra := DefiningPairOfFinitelyPresentedMatrixAlgebra( fp_matrix_algebra )[1];
+    
+    ## this is an algebra morphism if algebra is commutative
+    return MorphismConstructor(
+                   fp_matrix_algebra,
+                   [ Antipode( fp_algebra, list_of_images_of_antipode ) ],
+                   fp_matrix_algebra );
+    
+end );
+
+##
+InstallMethodForCompilerForCAP( LeftAntipodeLawOfHopfMonoid,
+        "for a category of finitely presented matrix algebras and an algebra and three morphisms therein",
+        [ IsCategoryOfFpMatrixAlgebras, IsObjectInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras ],
+        
+  function( FpMatAlg_k, fp_matrix_algebra, counit, comult, antipode )
+    local unit, mult;
+    
+    unit := Unit( FpMatAlg_k, fp_matrix_algebra );
+    mult := Multiplication( FpMatAlg_k, fp_matrix_algebra );
+    
+    return LeftAntipodeLawOfHopfMonoid( FpMatAlg_k,
+                   fp_matrix_algebra,
+                   Pair( unit, mult ),
+                   Pair( counit, comult ),
+                   antipode );
+    
+end );
+
+##
+InstallMethodForCompilerForCAP( RightAntipodeLawOfHopfMonoid,
+        "for a category of finitely presented matrix algebras and an algebra and three morphisms therein",
+        [ IsCategoryOfFpMatrixAlgebras, IsObjectInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras ],
+        
+  function( FpMatAlg_k, fp_matrix_algebra, counit, comult, antipode )
+    local unit, mult;
+    
+    unit := Unit( FpMatAlg_k, fp_matrix_algebra );
+    mult := Multiplication( FpMatAlg_k, fp_matrix_algebra );
+    
+    return RightAntipodeLawOfHopfMonoid( FpMatAlg_k,
+                   fp_matrix_algebra,
+                   Pair( unit, mult ),
+                   Pair( counit, comult ),
+                   antipode );
     
 end );
 

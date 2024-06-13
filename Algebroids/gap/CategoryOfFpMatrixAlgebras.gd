@@ -177,6 +177,18 @@ DeclareAttribute( "Dimension",
 DeclareAttribute( "AmbientAlgebra",
         IsObjectInCategoryOfFpMatrixAlgebras );
 
+#!
+DeclareAttribute( "Unit",
+        IsObjectInCategoryOfFpMatrixAlgebras );
+
+#!
+DeclareAttribute( "Multiplication",
+        IsObjectInCategoryOfFpMatrixAlgebras );
+
+#!
+DeclareAttribute( "OppositeAlgebra",
+        IsObjectInCategoryOfFpMatrixAlgebras );
+
 ####################################
 ##
 #! @Section Operations
@@ -190,6 +202,22 @@ DeclareOperation( "Counit",
 #! @Arguments fp_matrix_algebra, list
 DeclareOperation( "Comultiplication",
         [ IsObjectInCategoryOfFpMatrixAlgebras, IsList ] );
+
+#!
+DeclareOperation( "Antipode",
+        [ IsObjectInCategoryOfFpMatrixAlgebras, IsList ] );
+
+#!
+DeclareOperation( "LeftAntipodeLawOfHopfMonoid",
+        [ IsCategoryOfFpMatrixAlgebras,
+          IsObjectInCategoryOfFpMatrixAlgebras,
+          IsMorphismInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras ] );
+
+#!
+DeclareOperation( "RightAntipodeLawOfHopfMonoid",
+        [ IsCategoryOfFpMatrixAlgebras,
+          IsObjectInCategoryOfFpMatrixAlgebras,
+          IsMorphismInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras, IsMorphismInCategoryOfFpMatrixAlgebras ] );
 
 ####################################
 ##

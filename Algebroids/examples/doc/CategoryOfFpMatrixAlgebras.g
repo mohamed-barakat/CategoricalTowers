@@ -242,6 +242,14 @@ Perform( ListOfMatrixImages( comult ), Display );
 #! A row module over GF(2) of rank 16
 #! 
 #! A morphism in Rows( GF(2) )
+LoadPackage( "InternalModules", false );
+#! true
+BiMatAlg_F2 := CategoryOfComonoids( MatAlg_F2 );
+#! CategoryOfComonoids( CategoryOfFpMatrixAlgebras( GF(2) ) )
+B := ObjectConstructor( BiMatAlg_F2, Triple( M, counit, comult ) );
+#! <An object in CategoryOfComonoids( CategoryOfFpMatrixAlgebras( GF(2) ) )>
+IsWellDefined( B );
+#! true
 #! @EndExample
 
 #! @EndChunk

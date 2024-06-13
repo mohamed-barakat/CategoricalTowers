@@ -1234,6 +1234,66 @@ InstallMethod( AssociatedFunctorOfLinearClosuresOfPathCategoriesData,
 end );
 
 ##
+InstallOtherMethodForCompilerForCAP( Unit,
+        "for a category of finitely presented algebras and an algebra therein",
+        [ IsCategoryOfFpAlgebras, IsObjectInCategoryOfFpAlgebras ],
+        
+  function( FpAlg_k, fp_algebra )
+    local U, L;
+    
+    U := TensorUnit( FpAlg_k );
+    
+    L := DefiningSeptupleOfFinitelyPresentedAlgebra( fp_algebra )[1];
+    
+    return MorphismConstructor( FpAlg_k,
+                   U,
+                   CapJitTypedExpression( [ ], cat -> CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( L ) ) ),
+                   fp_algebra );
+    
+end );
+
+InstallMethod( Unit,
+        "for a finitely presented algebra",
+        [ IsObjectInCategoryOfFpAlgebras ],
+        
+  function( fp_algebra )
+    
+    return Unit( CapCategory( fp_algebra ), fp_algebra );
+    
+end );
+
+##
+InstallOtherMethodForCompilerForCAP( Multiplication,
+        "for a category of finitely presented algebras and an algebra therein",
+        [ IsCategoryOfFpAlgebras, IsObjectInCategoryOfFpAlgebras ],
+        
+  function( FpAlg_k, fp_algebra )
+    local fp_algebra2, gens;
+    
+    fp_algebra2 := TensorProductOnObjects( FpAlg_k, fp_algebra, fp_algebra );
+    
+    gens := Generators( fp_algebra );
+    
+    ## this is an algebra morphism iff the algebra is commutative
+    return MorphismConstructor( FpAlg_k,
+                   fp_algebra2,
+                   Concatenation( gens, gens ),
+                   fp_algebra );
+    
+end );
+
+##
+InstallMethod( Multiplication,
+        "for a finitely presented algebra",
+        [ IsObjectInCategoryOfFpAlgebras ],
+        
+  function( fp_algebra )
+    
+    return Multiplication( CapCategory( fp_algebra ), fp_algebra );
+    
+end );
+
+##
 InstallMethodForCompilerForCAP( EvaluateFpAlgebraMorphism,
         "for a category of finitely presented algebras, a morphism therein, a linear category, an object therein, and a list of endomorphisms thereof",
         [ IsCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras, IsCapCategory, IsCapCategoryObject, IsList ],
@@ -1278,8 +1338,8 @@ InstallMethod( Comultiplication,
         [ IsObjectInCategoryOfFpAlgebras, IsList ],
         
   function( fp_algebra, list_of_images_of_comult )
-    local FpAlg_k, fp_algebra2, nrgens, nrgens2, L, gens, gens1, gens2,
-          ambient, ambient2, mor1, mor2, functor1_on_mors, functor2_on_mors, o;
+    local FpAlg_k, fp_algebra2, nrgens, nrgens2, Q, Qo, basis, d, basis2, normalize_input, gens, gens1, gens2,
+          ambient, ambient2, mor1, mor2, functor1_on_mors, functor2_on_mors, o2;
     
     FpAlg_k := CapCategory( fp_algebra );
     
@@ -1287,14 +1347,41 @@ InstallMethod( Comultiplication,
     
     nrgens := NrGenerators( fp_algebra );
     
-    Assert( 0, nrgens = Length( list_of_images_of_comult ) and ForAll( list_of_images_of_comult, IsList ) );
-    Assert( 0, ForAll( list_of_images_of_comult, list -> ForAll( list, pair -> Length( pair ) = 2 and ForAll( pair, IsLinearClosureMorphism ) ) ) );
-    
     nrgens2 := NrGenerators( fp_algebra2 );
     
     Assert( 0, 2 * nrgens = nrgens2 );
     
-    L := AssociatedLinearClosureOfPathCategory( fp_algebra2 );
+    if ForAny( list_of_images_of_comult, image -> ForAny( image, IsRingElement ) ) then
+        
+        Q := AssociatedQuotientCategoryOfLinearClosureOfPathCategory( fp_algebra );
+        
+        Qo := SetOfObjects( Q )[1];
+        
+        if CanCompute( Q, "BasisOfExternalHom" ) then
+            
+            basis := List( BasisOfExternalHom( Qo, Qo ), MorphismDatum );
+            
+            d := Length( basis );
+            
+            basis2 := Concatenation( List( basis, r -> List( basis, l -> [ l, r ] ) ) );
+            
+            normalize_input :=
+              function( image )
+                if IsList( image ) and Length( image ) = d^2 and ForAll( image, IsRingElement ) then
+                    return List( [ 1 .. d^2 ], i -> [ image[i] * basis2[i][1], basis2[i][2] ] );
+                else
+                    return image;
+                fi;
+            end;
+            
+            list_of_images_of_comult := List( list_of_images_of_comult, normalize_input );
+            
+        fi;
+        
+    fi;
+    
+    Assert( 0, nrgens = Length( list_of_images_of_comult ) and ForAll( list_of_images_of_comult, IsList ) );
+    Assert( 0, ForAll( list_of_images_of_comult, list -> ForAll( list, pair -> Length( pair ) = 2 and ForAll( pair, IsLinearClosureMorphism ) ) ) );
     
     gens := Generators( fp_algebra2 );
     
@@ -1310,12 +1397,121 @@ InstallMethod( Comultiplication,
     functor1_on_mors := AssociatedFunctorOfLinearClosuresOfPathCategoriesData( FpAlg_k, mor1 )[2][2];
     functor2_on_mors := AssociatedFunctorOfLinearClosuresOfPathCategoriesData( FpAlg_k, mor2 )[2][2];
     
-    o := SetOfObjects( L )[1];
+    o2 := SetOfObjects( AssociatedLinearClosureOfPathCategory( fp_algebra2 ) )[1];
     
     return MorphismConstructor( FpAlg_k,
                    fp_algebra,
-                   List( list_of_images_of_comult, list -> Sum( list, pair -> functor1_on_mors( o, pair[1], o ) * functor2_on_mors( o, pair[2], o ) ) ),
+                   List( list_of_images_of_comult, list -> Sum( list, pair -> functor1_on_mors( o2, pair[1], o2 ) * functor2_on_mors( o2, pair[2], o2 ) ) ),
                    fp_algebra2 );
+    
+end );
+
+##
+InstallMethod( OppositeAlgebra,
+        "for a finitely presented algebra",
+        [ IsObjectInCategoryOfFpAlgebras ],
+        
+  function( algebra )
+    local FpAlg_k, datum, L, L_o, P, P_o, opposite;
+    
+    FpAlg_k := CapCategory( algebra );
+    
+    datum := ObjectDatum( FpAlg_k, algebra );
+    
+    L := datum[1];
+    L_o := datum[2];
+    
+    P := UnderlyingCategory( L );
+    P_o := ObjectDatum( L, L_o );
+    
+    opposite :=
+      function( rel )
+        local pair, op;
+        
+        pair := MorphismDatum( L, rel );
+        
+        op := length_indices -> Pair( length_indices[1], Reversed( length_indices[2] ) );
+        
+        return Pair( pair[1],
+                     List( pair[2], mor ->
+                           MorphismConstructor( P,
+                                   P_o,
+                                   op( MorphismDatum( P, mor ) ),
+                                   P_o ) ) );
+        
+    end;
+    
+    return ObjectConstructor( FpAlg_k,
+                   NTuple( 7,
+                           L,
+                           L_o,
+                           datum[3],
+                           datum[4],
+                           datum[5],
+                           List( datum[6], rel ->
+                                 MorphismConstructor( L,
+                                         L_o,
+                                         opposite( rel ),
+                                         L_o ) ),
+                           datum[7] ) );
+    
+end );
+
+##
+InstallMethod( Antipode,
+        "for a finitely presented algebra and a list",
+        [ IsObjectInCategoryOfFpAlgebras, IsList ],
+        
+  function( fp_algebra, list_of_images_of_antipode )
+    local nrgens;
+    
+    nrgens := NrGenerators( fp_algebra );
+    
+    Assert( 0, nrgens = Length( list_of_images_of_antipode ) and ForAll( list_of_images_of_antipode, IsLinearClosureMorphism ) );
+    
+    ## this is an algebra morphism if algebra is commutative
+    return MorphismConstructor(
+                   fp_algebra,
+                   list_of_images_of_antipode,
+                   fp_algebra );
+    
+end );
+
+##
+InstallMethodForCompilerForCAP( LeftAntipodeLawOfHopfMonoid,
+        "for a category of finitely presented algebras and an algebra and three morphisms therein",
+        [ IsCategoryOfFpAlgebras, IsObjectInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras ],
+        
+  function( FpAlg_k, fp_algebra, counit, comult, antipode )
+    local unit, mult;
+    
+    unit := Unit( FpAlg_k, fp_algebra );
+    mult := Multiplication( FpAlg_k, fp_algebra );
+    
+    return LeftAntipodeLawOfHopfMonoid( FpAlg_k,
+                   fp_algebra,
+                   Pair( unit, mult ),
+                   Pair( counit, comult ),
+                   antipode );
+    
+end );
+
+##
+InstallMethodForCompilerForCAP( RightAntipodeLawOfHopfMonoid,
+        "for a category of finitely presented algebras and an algebra and three morphisms therein",
+        [ IsCategoryOfFpAlgebras, IsObjectInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras, IsMorphismInCategoryOfFpAlgebras ],
+        
+  function( FpAlg_k, fp_algebra, counit, comult, antipode )
+    local unit, mult;
+    
+    unit := Unit( FpAlg_k, fp_algebra );
+    mult := Multiplication( FpAlg_k, fp_algebra );
+    
+    return RightAntipodeLawOfHopfMonoid( FpAlg_k,
+                   fp_algebra,
+                   Pair( unit, mult ),
+                   Pair( counit, comult ),
+                   antipode );
     
 end );
 
