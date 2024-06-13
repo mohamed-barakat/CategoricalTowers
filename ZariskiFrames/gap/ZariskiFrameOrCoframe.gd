@@ -196,7 +196,7 @@ DeclareOperation( "RingEpimorphismOntoResidueClassRingOfClosedSuperset",
 #!  of the closure of <A>A</A> in its ambient space.
 #! @Arguments A
 #! @Returns a homalg ring map
-DeclareOperation( "RingEpimorphismOfClosedSuperset",
+DeclareOperation( "RingEpimorphismOfClosedSupersetEmbeddedIntoSmallerAmbientSpace",
         [ IsObjectInThinCategory ] );
 
 #! @Description
@@ -205,7 +205,7 @@ DeclareOperation( "RingEpimorphismOfClosedSuperset",
 #!  of the closure of <A>A</A> in its ambient space.
 #! @Arguments A
 #! @Returns a homalg ring map
-DeclareOperation( "RingEpimorphismOfClosure",
+DeclareOperation( "RingEpimorphismOfClosureEmbeddedInSmallerAmbientSpace",
         [ IsObjectInThinCategory ] );
 
 #! @Description
@@ -229,6 +229,13 @@ DeclareOperation( "EmbedInSmallerAmbientSpaceByEmbeddingAClosedSuperset",
 DeclareOperation( "EmbedInSmallerAmbientSpace",
         [ IsObjectInThinCategory ] );
 #! @InsertChunk EmbedInSmallerAmbientSpace
+
+#! @Description
+#!  Embed <A>A</A> by embdeding its closure in a smaller ambient space by exclusively using linear relations.
+#! @Arguments A
+#! @Returns an object in a thin category
+DeclareOperation( "EmbedInSmallerAmbientSpaceUsingLinearRelations",
+        [ IsObjectInThinCategory ] );
 
 #! @Description
 #!  If <C>IsInitial</C>( <A>A</A> ) = <C>true</C> an error is raised.
