@@ -108,7 +108,7 @@ Dependencies := rec(
                    [ "ToolsForHomalg", ">= 2021.10-02" ],
                    [ "MatricesForHomalg", ">= 2019.07.01" ],
                    [ "GaussForHomalg", ">= 2019.01.10" ],
-                   [ "RingsForHomalg", ">= 2018.12.07" ],
+                   [ "RingsForHomalg", ">= 2024.06-01" ],
                    [ "GradedRingForHomalg", ">= 2018.12.04" ],
                    [ "FreydCategoriesForCAP", ">= 2024.01-03" ],
                    ],

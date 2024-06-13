@@ -4,6 +4,11 @@
 # Reading the implementation part of the package.
 #
 
+ReadPackage( "InternalModules", "gap/precompiled_categories/CategoryOfBimonoidsPrecompiled.gi" );
+ReadPackage( "InternalModules", "gap/InternalMonoids.gi" );
+ReadPackage( "InternalModules", "gap/InternalComonoids.gi" );
+ReadPackage( "InternalModules", "gap/InternalBimonoids.gi" );
+ReadPackage( "InternalModules", "gap/InternalHopfMonoids.gi" );
 ReadPackage( "InternalModules", "gap/AlgebraElements.gi" );
 ReadPackage( "InternalModules", "gap/InternalModules.gi" );
 ReadPackage( "InternalModules", "gap/ModuleElements.gi" );
