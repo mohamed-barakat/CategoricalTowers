@@ -851,7 +851,7 @@ InstallGlobalFunction( ADD_FUNCTIONS_FOR_HOM_STRUCTURE_OF_ALGEBROID,
                 p ->
                 Sum(
                     [ 1 .. Length( basis_b_bp ) ],
-                    q -> coeffs_alpha[p] * coeffs_beta[q] * hom_structure_on_basis_paths[ a ][ b ][ ap ][ bp ][ p ][ q ]
+                    q -> coeffs_alpha[p] * coeffs_beta[q] * HomStructureOnBasisPaths( algebroid )[ a ][ b ][ ap ][ bp ][ p ][ q ]
                 )
             );
             
