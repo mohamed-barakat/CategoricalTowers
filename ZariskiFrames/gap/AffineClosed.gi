@@ -480,7 +480,8 @@ InstallMethod( AClosedSingleton,
     
     C := CapCategory( A );
     
-    A := UnderlyingStandardColumn( A );
+    #A := UnderlyingStandardColumn( A );
+    A := UnderlyingColumn( A );
     
     A := AMaximalIdealContaining( A );
     
@@ -537,6 +538,26 @@ InstallMethod( RabinowitschCover,
 end );
 
 ##
+InstallMethod( \in,
+        "for homalg matrix and an object in a Zariski coframe of an affine variety",
+        [ IsHomalgMatrix, IsObjectInZariskiCoframeOfAnAffineVariety ],
+        
+  function( point, gamma )
+    local R, var;
+    
+    R := UnderlyingRing( gamma );
+    
+    var := Indeterminates( R );
+    
+    gamma := UnderlyingColumn( gamma );
+    
+    point := HomalgMatrix( var, Length( var ), 1, R ) - R * point;
+    
+    return IsZero( DecideZeroRows( gamma, point ) );
+    
+end );
+
+##
 InstallMethod( TangentSpaceAtPoint,
         "for an object in a Zariski coframe of an affine variety and a homalg matrix",
         [ IsObjectInZariskiCoframeOfAnAffineVariety, IsHomalgMatrix ],
@@ -546,7 +567,8 @@ InstallMethod( TangentSpaceAtPoint,
     
     R := UnderlyingRing( gamma );
     
-    gamma := BestUnderlyingColumn( gamma );
+    #gamma := BestUnderlyingColumn( gamma );
+    gamma := UnderlyingColumn( gamma );
     
     T := TangentSpaceByEquationsAtPoint( gamma, point );
     
@@ -577,6 +599,47 @@ InstallMethod( TangentSpaceAtPoint,
 end );
 
 ##
+InstallMethod( EmbeddedTangentSpaceAtPoint,
+        "for an object in a Zariski coframe of an affine variety and a homalg matrix",
+        [ IsObjectInZariskiCoframeOfAnAffineVariety, IsHomalgMatrix ],
+        
+  function( gamma, point )
+    local R, T, var;
+    
+    R := UnderlyingRing( gamma );
+    
+    #gamma := BestUnderlyingColumn( gamma );
+    gamma := UnderlyingColumn( gamma );
+    
+    T := TangentSpaceByEquationsAtPoint( gamma, point );
+    
+    var := Indeterminates( R );
+    
+    T := ( R * T ) * ( HomalgMatrix( var, Length( var ), 1, R ) - R * point );
+    
+    return ClosedSubsetOfSpecByRadicalColumn( T );
+    
+end );
+
+##
+InstallMethod( EmbeddedTangentSpaceAtPoint,
+        "for an object in a Zariski coframe of an affine variety and a list",
+        [ IsObjectInZariskiCoframeOfAnAffineVariety, IsList ],
+        
+  function( gamma, point )
+    local R, k;
+    
+    R := UnderlyingRing( gamma );
+    
+    k := CoefficientsRing( R );
+    
+    point := HomalgMatrix( point, Length( point ), 1, k );
+    
+    return EmbeddedTangentSpaceAtPoint( gamma, point );
+    
+end );
+
+##
 InstallMethod( ComplementOfTangentSpaceAtPoint,
         "for an object in a Zariski coframe of an affine variety and a homalg matrix",
         [ IsObjectInZariskiCoframeOfAnAffineVariety, IsHomalgMatrix ],
@@ -586,7 +649,8 @@ InstallMethod( ComplementOfTangentSpaceAtPoint,
     
     R := UnderlyingRing( gamma );
     
-    gamma := BestUnderlyingColumn( gamma );
+    #gamma := BestUnderlyingColumn( gamma );
+    gamma := UnderlyingColumn( gamma );
     
     T := TangentSpaceByEquationsAtPoint( gamma, point );
     
@@ -609,5 +673,75 @@ InstallMethod( ComplementOfTangentSpaceAtPoint,
     point := HomalgMatrix( point, Length( point ), 1, k );
     
     return ComplementOfTangentSpaceAtPoint( gamma, point );
+    
+end );
+
+##
+InstallMethod( SplitOnceByFactoringEquation,
+        "for an object in a Zariski coframe of an affine variety",
+        [ IsObjectInZariskiCoframeOfAnAffineVariety ],
+        
+  function( gamma )
+    local R, indets, I, F, func, r, factors, f, branch;
+    
+    R := UnderlyingRing( gamma );
+    
+    indets := Indeterminates( R );
+    
+    I := UnderlyingColumn( gamma );
+    
+    F := CertainRows( I, Filtered( [  1 .. NumberRows( I ) ], i -> Length( Factors( I[i, 1] ) ) > 1 ) );
+    
+    F := BasisOfRows( F );
+    
+    func :=
+      function( r )
+        local factors;
+        
+        factors := Factors( F[r,1] );
+        
+        return ForAny( factors, factor -> Degree( factor ) = 1 and factor in indets );
+        
+    end;
+    
+    r := First( [ 1 .. NumberRows( F ) ], func );
+    
+    if IsInt( r ) then
+        factors := Factors( F[r,1] );
+        f := First( factors, factor -> Degree( factor ) = 1 and factor in indets );
+        Display( f );
+        f := HomalgMatrix( [ f ], 1, 1, R );
+        branch := ClosedSubsetOfSpec( UnionOfRows( f, I ) );
+        if HasParametrizedObject( gamma ) then
+            SetParametrizedObject( branch, ParametrizedObject( gamma ) );
+        fi;
+        return EmbedInSmallerAmbientSpaceUsingLinearRelations( branch );
+    fi;
+    
+    return gamma;
+    
+end );
+
+##
+InstallMethod( SplitByFactoringEquation,
+        "for an object in a Zariski coframe of an affine variety",
+        [ IsObjectInZariskiCoframeOfAnAffineVariety ],
+        
+  function( gamma )
+    local branch;
+    
+    gamma := EmbedInSmallerAmbientSpaceUsingLinearRelations( gamma );
+    
+    while true do
+        
+        branch := SplitOnceByFactoringEquation( gamma );
+        
+        if IsIdenticalObj( gamma, branch ) then
+            return branch;
+        fi;
+        
+        gamma := branch;
+        
+    od;
     
 end );

@@ -625,7 +625,11 @@ InstallMethod( RingEpimorphismOntoResidueClassRingOfClosedSuperset,
     
     R := UnderlyingRing( A );
     
-    A := UnderlyingStandardColumn( A );
+    A := UnderlyingColumn( A );
+    
+    A := CertainRows( A, NonZeroRows( A ) );
+    
+    #A := BasisOfRows( A );
     
     T := R / A;
     
@@ -634,7 +638,7 @@ InstallMethod( RingEpimorphismOntoResidueClassRingOfClosedSuperset,
 end );
 
 ##
-InstallMethod( RingEpimorphismOfClosedSuperset,
+InstallMethod( RingEpimorphismOfClosedSupersetEmbeddedIntoSmallerAmbientSpace,
         "for an object in a thin category",
         [ IsObjectInThinCategory ],
         
@@ -648,7 +652,7 @@ InstallMethod( RingEpimorphismOfClosedSuperset,
 end );
 
 ##
-InstallMethod( RingEpimorphismOfClosure,
+InstallMethod( RingEpimorphismOfClosureEmbeddedInSmallerAmbientSpace,
         "for an object in a thin category",
         [ IsObjectInThinCategory ],
         
@@ -657,7 +661,7 @@ InstallMethod( RingEpimorphismOfClosure,
     
     Closure( A );
     
-    return RingEpimorphismOfClosedSuperset( A );
+    return RingEpimorphismOfClosedSupersetEmbeddedIntoSmallerAmbientSpace( A );
     
 end );
 
@@ -690,6 +694,8 @@ InstallMethod( Pullback,
     fi;
     
     B := Pullback( phi, UnderlyingColumn( A ) );
+    
+    B := CertainRows( B, NonZeroRows( B ) );
     
     if HasIsIsomorphism( phi ) and IsIsomorphism( phi ) then
         if HasUnderlyingStandardColumn( A ) then
@@ -803,7 +809,7 @@ InstallMethod( EmbedInSmallerAmbientSpaceByEmbeddingAClosedSuperset,
   function( A )
     local phi, S, T;
     
-    phi := RingEpimorphismOfClosedSuperset( A );
+    phi := RingEpimorphismOfClosedSupersetEmbeddedIntoSmallerAmbientSpace( A );
     
     S := Source( phi );
     
@@ -828,13 +834,10 @@ InstallMethod( EmbedInSmallerAmbientSpace,
         [ IsObjectInThinCategory ],
         
   function( A )
-    local b;
-    
-    b := HasClosure( A );
     
     A := EmbedInSmallerAmbientSpaceByEmbeddingAClosedSuperset( A );
     
-    if not b then
+    if not HasClosure( A ) then
         # this should only be slightly more expensive than Closure( A ):
         StandardizeObject( A );
         A := EmbedInSmallerAmbientSpaceByEmbeddingAClosedSuperset( A );
@@ -843,6 +846,35 @@ InstallMethod( EmbedInSmallerAmbientSpace,
     StandardizeObject( A );
     
     return A;
+    
+end );
+
+##
+InstallMethod( EmbedInSmallerAmbientSpaceUsingLinearRelations,
+        "for an object in a thin category",
+        [ IsObjectInThinCategory ],
+        
+  function( A )
+    local R, S, T, phi;
+    
+    R := UnderlyingRing( A );
+    
+    phi := RingMapOntoSimplifiedResidueClassRingUsingLinearEquations( R / UnderlyingColumn( AClosedSuperset( A ) ) );
+    
+    S := Source( phi );
+    
+    if HasAmbientRing( S ) then
+        S := AmbientRing( S );
+    fi;
+    
+    T := Range( phi );
+    
+    if HasAmbientRing( T ) then
+        T := AmbientRing( T );
+        phi := RingMap( T * ImagesOfRingMapAsColumnMatrix( phi ), S, T );
+    fi;
+    
+    return Pullback( phi, A );
     
 end );
 
@@ -942,13 +974,14 @@ InstallMethod( RingEpimorphismOfAClosedPoint,
     
     singleton := AClosedSingleton( A );
     
-    map := RingEpimorphismOfClosure( singleton );
+    map := RingEpimorphismOfClosureEmbeddedInSmallerAmbientSpace( singleton );
     
     A := Closure( A );
     
     R := UnderlyingRing( A );
     
-    A := UnderlyingStandardColumn( A );
+    #A := UnderlyingStandardColumn( A );
+    A := UnderlyingColumn( A );
     
     S := Range( map );
     

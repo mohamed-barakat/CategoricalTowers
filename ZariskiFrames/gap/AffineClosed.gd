@@ -117,8 +117,26 @@ DeclareOperation( "TangentSpaceAtPoint",
 DeclareOperation( "TangentSpaceAtPoint",
         [ IsObjectInZariskiCoframeOfAnAffineVariety, IsList ] );
 
+#! @Description
+#!  Compute the tangent space of <A>V</A> at the closed point <A>p</A>
+#!  as an affine subspace of the ambient space of <A>V</A> intersecting <A>p</A>.
+#! @Arguments V, p
+#! @Returns an object in a Zariski coframe
+DeclareOperation( "EmbeddedTangentSpaceAtPoint",
+        [ IsObjectInZariskiCoframeOfAnAffineVariety, IsHomalgMatrix ] );
+
+#! @Arguments V, p
+DeclareOperation( "EmbeddedTangentSpaceAtPoint",
+        [ IsObjectInZariskiCoframeOfAnAffineVariety, IsList ] );
+
 DeclareOperation( "ComplementOfTangentSpaceAtPoint",
         [ IsObjectInZariskiCoframeOfAnAffineVariety, IsHomalgMatrix ] );
 
 DeclareOperation( "ComplementOfTangentSpaceAtPoint",
         [ IsObjectInZariskiCoframeOfAnAffineVariety, IsList ] );
+
+DeclareOperation( "SplitOnceByFactoringEquation",
+        [ IsObjectInZariskiCoframeOfAnAffineVariety ] );
+
+DeclareOperation( "SplitByFactoringEquation",
+        [ IsObjectInZariskiCoframeOfAnAffineVariety ] );

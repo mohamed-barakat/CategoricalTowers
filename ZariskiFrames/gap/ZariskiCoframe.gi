@@ -273,6 +273,10 @@ InstallMethod( IrreducibleComponents,
     SetIsIrreducibleObjectInZariskiCoframe( A, Length( components ) <= 1 );
     
     Perform( components, function( C ) SetIsIrreducibleObjectInZariskiCoframe( C, true ); end );
+
+    if HasParametrizedObject( A ) then
+        Perform( components, function( C ) SetParametrizedObject( C, ParametrizedObject( A ) ); end );
+    fi;
     
     if Length( components ) = 1 then
         if not HasUnderlyingRadicalColumn( A ) then
