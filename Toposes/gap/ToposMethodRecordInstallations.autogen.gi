@@ -618,6 +618,82 @@ InstallMethod( AddIntersectionSubobject,
     )
 );
 
+## IsomorphismFromCartesianSquareOfPowerObject
+InstallMethod( AddIsomorphismFromCartesianSquareOfPowerObject,
+               [ IsCapCategory, IsFunction ],
+               
+  function( category, func )
+    
+    AddCapOperation( "IsomorphismFromCartesianSquareOfPowerObject", category, func, -1 );
+    
+end );
+
+InstallMethod( AddIsomorphismFromCartesianSquareOfPowerObject,
+               [ IsCapCategory, IsFunction, IsInt ],
+               
+    FunctionWithNamedArguments(
+        [
+            [ "IsPrecompiledDerivation", false ],
+        ],
+        function( CAP_NAMED_ARGUMENTS, category, func, weight )
+            
+            AddCapOperation( "IsomorphismFromCartesianSquareOfPowerObject", category, func, weight : IsPrecompiledDerivation := CAP_NAMED_ARGUMENTS.IsPrecompiledDerivation );
+            
+        end
+    )
+);
+
+## IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects
+InstallMethod( AddIsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects,
+               [ IsCapCategory, IsFunction ],
+               
+  function( category, func )
+    
+    AddCapOperation( "IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects", category, func, -1 );
+    
+end );
+
+InstallMethod( AddIsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects,
+               [ IsCapCategory, IsFunction, IsInt ],
+               
+    FunctionWithNamedArguments(
+        [
+            [ "IsPrecompiledDerivation", false ],
+        ],
+        function( CAP_NAMED_ARGUMENTS, category, func, weight )
+            
+            AddCapOperation( "IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects", category, func, weight : IsPrecompiledDerivation := CAP_NAMED_ARGUMENTS.IsPrecompiledDerivation );
+            
+        end
+    )
+);
+
+AddDerivationToCAP( IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects,
+                    "IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects by calling IsomorphismFromCartesianSquareOfPowerObject with the WithGiven argument(s) dropped",
+                    [
+                        [ IsomorphismFromCartesianSquareOfPowerObject, 1 ],
+                    ],
+  function( cat, PaxPa, a, ExpaOmega2 )
+    
+    return IsomorphismFromCartesianSquareOfPowerObject( cat, a );
+        
+end : is_with_given_derivation := true );
+
+AddDerivationToCAP( IsomorphismFromCartesianSquareOfPowerObject,
+                    "IsomorphismFromCartesianSquareOfPowerObject by calling IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects with the WithGiven object(s)",
+                    [
+                        [ IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects, 1 ],
+                        [ DirectProduct, 1 ],
+                        [ PowerObject, 2 ],
+                        [ ExponentialOnObjects, 1 ],
+                        [ CartesianSquareOfSubobjectClassifier, 1 ],
+                    ],
+  function( cat, a )
+    
+    return IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects( cat, DirectProduct( cat, [ PowerObject( cat, a ), PowerObject( cat, a ) ] ), a, ExponentialOnObjects( cat, a, CartesianSquareOfSubobjectClassifier( cat ) ) );
+    
+end : is_with_given_derivation := true );
+
 ## IsomorphismOntoCartesianSquareOfPowerObject
 InstallMethod( AddIsomorphismOntoCartesianSquareOfPowerObject,
                [ IsCapCategory, IsFunction ],

@@ -420,6 +420,26 @@ IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects := rec(
   output_range_getter_preconditions := [ ],
 ),
 
+IsomorphismFromCartesianSquareOfPowerObject := rec(
+  filter_list := [ "category", "object" ],
+  return_type := "morphism",
+  input_arguments_names := [ "cat", "a" ],
+  output_source_getter_string := "DirectProduct( cat, [ PowerObject( cat, a ), PowerObject( cat, a ) ] )",
+  output_source_getter_preconditions := [ [ "DirectProduct", 1 ], [ "PowerObject", 2 ] ],
+  output_range_getter_string := "ExponentialOnObjects( cat, a, CartesianSquareOfSubobjectClassifier( cat ) )",
+  output_range_getter_preconditions := [ [ "ExponentialOnObjects", 1 ], [ "CartesianSquareOfSubobjectClassifier", 1 ] ],
+  with_given_object_position := "both" ),
+
+IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects := rec(
+  filter_list := [ "category", "object", "object", "object" ],
+  return_type := "morphism",
+  input_arguments_names := [ "cat", "PaxPa", "a", "ExpaOmega2" ],
+  output_source_getter_string := "PaxPa",
+  output_source_getter_preconditions := [ ],
+  output_range_getter_string := "ExpaOmega2",
+  output_range_getter_preconditions := [ ],
+),
+
 RelativeTruthMorphismOfTrue := rec(
   filter_list := [ "category", "object" ],
   return_type := "morphism",
