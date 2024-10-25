@@ -5,7 +5,7 @@
 gap> LoadPackage( "FinSetsForCAP", "2024.02-02", false );
 true
 gap> Length( ListInstalledOperationsOfCategory( SkeletalFinSets ) );
-348
+350
 gap> BooleanAlgebras := Opposite( SkeletalFinSets );
 Opposite( SkeletalFinSets )
 gap> Length( ListPrimitivelyInstalledOperationsOfCategory( BooleanAlgebras ) );
