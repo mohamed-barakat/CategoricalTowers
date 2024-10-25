@@ -767,11 +767,17 @@ AddDerivationToCAP( RelativeTruthMorphismOfAndWithGivenObjects,
           [ PreCompose, 1 ] ],
         
   function( cat, PaxPa, a, Pa )
-    local Omega2, Exp_a_Omega2, Exp_a_mor, u;
+    local Omega2, Exp_a_Omega2, u, Exp_a_mor;
     
     Omega2 := CartesianSquareOfSubobjectClassifier( cat );
     
     Exp_a_Omega2 := ExponentialOnObjects( cat, a, Omega2 );
+    
+    ## Exp(a, Ω²) ⭇ Exp(a, Ω) × Exp(a, Ω)
+    u := IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects( cat,
+                 Exp_a_Omega2,
+                 a,
+                 PaxPa );
     
     ## Exp(a, ∧): Exp(a, Ω²) → Exp(a, Ω)
     Exp_a_mor := ExponentialOnMorphismsWithGivenExponentials( cat,
@@ -779,12 +785,6 @@ AddDerivationToCAP( RelativeTruthMorphismOfAndWithGivenObjects,
                          IdentityMorphism( cat, a ),
                          TruthMorphismOfAnd( cat ),
                          Pa );
-    
-    ## Exp(a, Ω²) ⭇ Exp(a, Ω) × Exp(a, Ω)
-    u := IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects( cat,
-                 Exp_a_Omega2,
-                 a,
-                 PaxPa );
     
     ## Exp(a, Ω) × Exp(a, Ω) → Exp(a, Ω)
     return PreCompose( cat,
@@ -806,11 +806,17 @@ AddDerivationToCAP( RelativeTruthMorphismOfOrWithGivenObjects,
           [ PreCompose, 1 ] ],
         
   function( cat, PaxPa, a, Pa )
-    local Omega2, Exp_a_Omega2, Exp_a_mor, u;
+    local Omega2, Exp_a_Omega2, u, Exp_a_mor;
     
     Omega2 := CartesianSquareOfSubobjectClassifier( cat );
     
     Exp_a_Omega2 := ExponentialOnObjects( cat, a, Omega2 );
+    
+    ## Exp(a, Ω²) ⭇ Exp(a, Ω) × Exp(a, Ω)
+    u := IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects( cat,
+                 Exp_a_Omega2,
+                 a,
+                 PaxPa );
     
     ## Exp(a, ∨): Exp(a, Ω²) → Exp(a, Ω)
     Exp_a_mor := ExponentialOnMorphismsWithGivenExponentials( cat,
@@ -818,12 +824,6 @@ AddDerivationToCAP( RelativeTruthMorphismOfOrWithGivenObjects,
                          IdentityMorphism( cat, a ),
                          TruthMorphismOfOr( cat ),
                          Pa );
-    
-    ## Exp(a, Ω²) ⭇ Exp(a, Ω) × Exp(a, Ω)
-    u := IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects( cat,
-                 Exp_a_Omega2,
-                 a,
-                 PaxPa );
     
     ## Exp(a, Ω) × Exp(a, Ω) → Exp(a, Ω)
     return PreCompose( cat,
@@ -845,11 +845,17 @@ AddDerivationToCAP( RelativeTruthMorphismOfImpliesWithGivenObjects,
           [ PreCompose, 1 ] ],
         
   function( cat, PaxPa, a, Pa )
-    local Omega2, Exp_a_Omega2, Exp_a_mor, u;
+    local Omega2, Exp_a_Omega2, u, Exp_a_mor;
     
     Omega2 := CartesianSquareOfSubobjectClassifier( cat );
     
     Exp_a_Omega2 := ExponentialOnObjects( cat, a, Omega2 );
+    
+    ## Exp(a, Ω²) ⭇ Exp(a, Ω) × Exp(a, Ω)
+    u := IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects( cat,
+                 Exp_a_Omega2,
+                 a,
+                 PaxPa );
     
     ## Exp(a, ⇒): Exp(a, Ω²) → Exp(a, Ω)
     Exp_a_mor := ExponentialOnMorphismsWithGivenExponentials( cat,
@@ -857,12 +863,6 @@ AddDerivationToCAP( RelativeTruthMorphismOfImpliesWithGivenObjects,
                          IdentityMorphism( cat, a ),
                          TruthMorphismOfImplies( cat ),
                          Pa );
-    
-    ## Exp(a, Ω²) ⭇ Exp(a, Ω) × Exp(a, Ω)
-    u := IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects( cat,
-                 Exp_a_Omega2,
-                 a,
-                 PaxPa );
     
     ## Exp(a, Ω) × Exp(a, Ω) → Exp(a, Ω)
     return PreCompose( cat,
