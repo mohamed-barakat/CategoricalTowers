@@ -762,8 +762,7 @@ AddDerivationToCAP( RelativeTruthMorphismOfAndWithGivenObjects,
           [ IdentityMorphism, 1 ],
           [ TruthMorphismOfAnd, 1 ],
           [ ExponentialOnMorphismsWithGivenExponentials, 1 ],
-          [ IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects, 1 ],
-          [ InverseForMorphisms, 1 ],
+          [ IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects, 1 ],
           [ PreCompose, 1 ] ],
         
   function( cat, PaxPa, a, Pa )
@@ -773,11 +772,11 @@ AddDerivationToCAP( RelativeTruthMorphismOfAndWithGivenObjects,
     
     Exp_a_Omega2 := ExponentialOnObjects( cat, a, Omega2 );
     
-    ## Exp(a, Ω²) ⭇ Exp(a, Ω) × Exp(a, Ω)
-    u := IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects( cat,
-                 Exp_a_Omega2,
+    ## Exp(a, Ω) × Exp(a, Ω) ⭇ Exp(a, Ω²)
+    u := IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects( cat,
+                 PaxPa,
                  a,
-                 PaxPa );
+                 Exp_a_Omega2 );
     
     ## Exp(a, ∧): Exp(a, Ω²) → Exp(a, Ω)
     Exp_a_mor := ExponentialOnMorphismsWithGivenExponentials( cat,
@@ -788,7 +787,7 @@ AddDerivationToCAP( RelativeTruthMorphismOfAndWithGivenObjects,
     
     ## Exp(a, Ω) × Exp(a, Ω) → Exp(a, Ω)
     return PreCompose( cat,
-                   InverseForMorphisms( cat, u ),
+                   u,
                    Exp_a_mor );
     
 end );
@@ -1585,6 +1584,18 @@ AddDerivationToCAP( InverseOfMorphismFromCoimageToImageWithGivenObjects,
   function( cat, image, morphism, coimage )
     
     return InverseForMorphisms( cat, MorphismFromCoimageToImageWithGivenObjects( cat, coimage, morphism, image ) );
+    
+end : CategoryFilter := IsElementaryTopos );
+
+##
+AddDerivationToCAP( IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects,
+                    "IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects as the inverse of IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects",
+                    [ [ InverseForMorphisms, 1 ],
+                      [ IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects, 1 ] ],
+                    
+  function( cat, source, object, target )
+    
+    return InverseForMorphisms( cat, IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects( cat, target, object, source ) );
     
 end : CategoryFilter := IsElementaryTopos );
 

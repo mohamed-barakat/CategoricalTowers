@@ -509,12 +509,31 @@ DeclareAttribute( "IsomorphismOntoCartesianSquareOfPowerObject",
 #! @InsertChunk IsomorphismOntoCartesianSquareOfPowerObject
 
 #! @Description
-#! The arguments are an object the exponential <A>Exp_a_Omega2</A> = <C>Exponential</C>( <A>a</A>, <C>CartesianSquareOfSubobjectClassifier</C> ),
-#! an object <A>a</A> in a category $C$, and the cartesian squre <A>PaxPa</A> of the power object <C>PowerObject</C>( <A>a</A> ).
+#! The arguments are the exponential <A>Exp_a_Omega2</A> = <C>Exponential</C>( <A>a</A>, <C>CartesianSquareOfSubobjectClassifier</C> ),
+#! the object <A>a</A> in a category $C$, and the cartesian squre <A>PaxPa</A> of the power object <C>PowerObject</C>( <A>a</A> ).
 #! The output is the isomorphism $Exp\_a\_Omega2 \stackrel{\sim}{\rightarrow} PaxPa$
 #! @Arguments Exp_a_Omega2, a, PaxPa
 #! @Returns a morphism in $\mathrm{Hom}( Exp\_a\_Omega2, PaxPa )$
 DeclareOperation( "IsomorphismOntoCartesianSquareOfPowerObjectWithGivenObjects",
+        [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
+
+#! @Description
+#! The argument is an object <A>a</A> in a category $C$.
+#! The output is the isomorphism
+#! $\mathrm{DirectProduct}( \mathrm{PowerObject}(a), \mathrm{PowerObject}(a) ) \rightarrow \mathrm{Exponential}( a, \mathrm{CartesianSquareOfSubobjectClassifier}( C ) )$.
+#! @Arguments a
+#! @Returns a morphism in $\mathrm{Hom}( \mathrm{DirectProduct}( \mathrm{PowerObject}(a), \mathrm{PowerObject}(a) ), \mathrm{Exponential}( a, \mathrm{CartesianSquareOfSubobjectClassifier}( C ) ) )$
+DeclareAttribute( "IsomorphismFromCartesianSquareOfPowerObject",
+        IsCapCategoryObject );
+#! @InsertChunk IsomorphismFromCartesianSquareOfPowerObject
+
+#! @Description
+#! The arguments are the cartesian squre <A>PaxPa</A> of the power object <C>PowerObject</C>( <A>a</A> ),
+#! the object <A>a</A> in a category $C$, and the exponential <A>Exp_a_Omega2</A> = <C>Exponential</C>( <A>a</A>, <C>CartesianSquareOfSubobjectClassifier</C> ).
+#! The output is the isomorphism $PaxPa \stackrel{\sim}{\rightarrow} Exp\_a\_Omega2$
+#! @Arguments PaxPa, a, Exp_a_Omega2
+#! @Returns a morphism in $\mathrm{Hom}( PaxPa, Exp\_a\_Omega2 )$
+DeclareOperation( "IsomorphismFromCartesianSquareOfPowerObjectWithGivenObjects",
         [ IsCapCategoryObject, IsCapCategoryObject, IsCapCategoryObject ] );
 
 #! @Description
