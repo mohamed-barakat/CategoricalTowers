@@ -88,6 +88,7 @@ Dependencies := rec(
                    [ "CAP", ">= 2024.09-12" ],
                    [ "ToolsForCategoricalTowers", ">= 2024.03-02" ],
                    [ "QuotientCategories", ">= 2024.11-03" ],
+                   [ "PreSheaves", ">= 2024.11-06" ],
                    [ "FinSetsForCAP", ">= 2023.10-03" ],
                    ],
   ExternalConditions := [ ],

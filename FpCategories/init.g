@@ -5,6 +5,7 @@
 #
 
 ReadPackage( "FpCategories", "gap/Quivers.gd");
+ReadPackage( "FpCategories", "gap/PropOfPathCategory.gd");
 ReadPackage( "FpCategories", "gap/PathCategories.gd");
 ReadPackage( "FpCategories", "gap/GroebnerBasesForPathCategories.gd");
 ReadPackage( "FpCategories", "gap/QuotientsOfPathCategories.gd");

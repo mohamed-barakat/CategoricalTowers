@@ -8,6 +8,7 @@ ReadPackage( "FpCategories", "gap/precompiled_categories/CategoryFromNerveDataPr
 ReadPackage( "FpCategories", "gap/precompiled_categories/CategoryFromNerveDataHomStructureOnMorphismsPrecompiled.gi" );
 
 ReadPackage( "FpCategories", "gap/Quivers.gi");
+ReadPackage( "FpCategories", "gap/PropOfPathCategory.gi");
 ReadPackage( "FpCategories", "gap/PathCategories.gi");
 ReadPackage( "FpCategories", "gap/GroebnerBasesForPathCategories.gi");
 ReadPackage( "FpCategories", "gap/QuotientsOfPathCategories.gi");
