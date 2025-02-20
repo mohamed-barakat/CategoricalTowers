@@ -164,50 +164,52 @@ InstallMethod( GroebnerBasis,
           [ IsPathCategory, IsDenseList ],
           
   function ( C, relations )
-    local gb, indices, rels, i, g1, g2, new_rels;
+    local gb, l, i, rels, rel, g1, g2;
     
     gb := List( [ 1 .. Length( relations ) ], i -> List( [ 1, 2 ], j -> relations[i][j] ) );
+    
+    gb := Filtered( gb, rel -> not IsCongruentForMorphisms( C, rel[1], rel[2] ) );
     
     for i in [ 1 .. Length( gb ) ] do
         gb[i] := SortedList( gb[i], { g1, g2 } -> IsAscendingForMorphisms( C, g2, g1 ) );
     od;
     
-    indices := UnorderedTuples( [ 1 .. Length( gb ) ], 2 );
-    
-    rels := Concatenation( List( indices,
-                              i -> List( OverlappingCoefficients( C, gb[i[1]][1], gb[i[2]][1] ),
-                                overlap_coeffs -> NewRelation( C, gb[i[1]], gb[i[2]], overlap_coeffs ) ) ) );
+    l := Length( gb );
     
     i := 1;
     
-    while i <= Length( rels ) do
+    while i <= l do
         
-        if not IsEqualForMorphisms( C, rels[i][1], rels[i][2] ) then
+        rels := Concatenation( List( [ 1 .. i ], j ->
+                        List( OverlappingCoefficients( C, gb[i][1], gb[j][1] ), overlap_coeffs ->
+                              NewRelation( C, gb[i], gb[j], overlap_coeffs ) ) ) );
+        
+        rels := Filtered( rels, rel -> not IsCongruentForMorphisms( C, rel[1], rel[2] ) );
+        
+        rels := DuplicateFreeList( rels );
+        
+        for rel in rels do
             
-            g1 := ReductionOfMorphism( C, rels[i][1], gb );
-            g2 := ReductionOfMorphism( C, rels[i][2], gb );
+            g1 := ReductionOfMorphism( C, rel[1], gb );
+            g2 := ReductionOfMorphism( C, rel[2], gb );
             
-            if not IsEqualForMorphisms( C, g1, g2 ) then
+            if not IsCongruentForMorphisms( C, g1, g2 ) then
                 
                 if IsAscendingForMorphisms( C, g1, g2 ) then
-                    Add( gb, Pair( g2, g1 ) );
+                    if not Pair( g2, g1 ) in gb then
+                        Add( gb, Pair( g2, g1 ) );
+                        l := l + 1;
+                    fi;
                 else
-                    Add( gb, Pair( g1, g2 ) );
+                    if not Pair( g1, g2 ) in gb then
+                        Add( gb, Pair( g1, g2 ) );
+                        l := l + 1;
+                    fi;
                 fi;
                 
-                indices := Cartesian( [ 1 .. Length( gb ) ], [ Length( gb ) ] );
-                
-                new_rels :=
-                  Concatenation(
-                      List( indices,
-                        i -> List( OverlappingCoefficients( C, gb[i[1]][1], gb[i[2]][1] ),
-                                overlap_coeffs -> NewRelation( C, gb[i[1]], gb[i[2]], overlap_coeffs ) ) ) );
-                
-                rels := Concatenation( rels, new_rels );
-                
-          fi;
-          
-        fi;
+            fi;
+            
+        od;
         
         i := i + 1;
         
@@ -235,16 +237,16 @@ InstallMethod( ReducedGroebnerBasisWithGivenGroebnerBasis,
       r1 := ReductionOfMorphism( C, reduced_gb[i][1], H );
       r2 := ReductionOfMorphism( C, reduced_gb[i][2], H );
       
-      if IsEqualForMorphisms( C, r1, r2 ) then
+      if IsCongruentForMorphisms( C, r1, r2 ) then
           
           Remove( reduced_gb, i );
           
-      elif not IsEqualForMorphisms( C, r1, reduced_gb[i][1] ) or not IsEqualForMorphisms( C, r2, reduced_gb[i][2] ) then
+      elif not IsCongruentForMorphisms( C, r1, reduced_gb[i][1] ) or not IsCongruentForMorphisms( C, r2, reduced_gb[i][2] ) then
           
           if IsAscendingForMorphisms( C, r1, r2 ) then
-              reduced_gb[i] := [ r2, r1 ];
+              reduced_gb[i] := Pair( r2, r1 );
           else
-              reduced_gb[i] := [ r1, r2 ];
+              reduced_gb[i] := Pair( r1, r2 );
           fi;
           
           i := 1;
