@@ -1256,3 +1256,140 @@ InstallMethod( NaturalTransformation,
     return eta;
     
 end );
+
+##
+InstallMethod( EmbeddingOfUnderlyingQuiverData,
+        "for a syntactic category",
+        [ IsSyntacticCategory ],
+        
+  function( syntactic_cat )
+    local embedding_on_objects, embedding_on_morphisms;
+    
+    Assert( 0, HasUnderlyingQuiver( syntactic_cat ) );
+    
+    embedding_on_objects :=
+      function( o )
+        
+        return ObjectConstructor( syntactic_cat,
+                       Pair( "ObjectConstructor", [ syntactic_cat, ObjectLabel( o ) ] ) );
+        
+    end;
+    
+    embedding_on_morphisms :=
+      function( source, m, target )
+        
+        return MorphismConstructor( syntactic_cat,
+                       source,
+                       Pair( "MorphismConstructor", [ syntactic_cat, MorphismLabel( m ) ] ),
+                       target );
+        
+    end;
+    
+    return Triple( UnderlyingQuiver( syntactic_cat ),
+                   Pair( embedding_on_objects, embedding_on_morphisms ),
+                   syntactic_cat );
+    
+end );
+
+##
+InstallMethod( EmbeddingOfUnderlyingQuiver,
+        "for a syntactic category",
+        [ IsSyntacticCategory ],
+        
+  function( syntactic_cat )
+    local data, Y;
+    
+    data := EmbeddingOfUnderlyingQuiverData( syntactic_cat );
+    
+    Y := CapFunctor( "Embedding functor into a syntactic category", data[1], syntactic_cat );
+    
+    AddObjectFunction( Y, data[2][1] );
+    
+    AddMorphismFunction( Y, data[2][2] );
+    
+    return Y;
+    
+end );
+
+##
+InstallMethod( \.,
+        "for a syntactic category and a positive integer",
+        [ IsSyntacticCategory, IsPosInt ],
+        
+  function( syntactic_cat, string_as_int )
+    local name, q, cell, Y, Yc;
+    
+    name := NameRNam( string_as_int );
+    
+    q := UnderlyingQuiver( syntactic_cat );
+    
+    cell := q.(name);
+    
+    Y := EmbeddingOfUnderlyingQuiver( syntactic_cat );
+    
+    Yc := Y( cell );
+    
+    return Yc;
+    
+end );
+
+##
+InstallMethod( EmbeddingOfUnderlyingCategoryData,
+        "for a syntactic category",
+        [ IsSyntacticCategory ],
+        
+  function( syntactic_cat )
+    local P, Y, mors, embedding_on_objects, embedding_on_morphisms;
+    
+    Assert( 0, HasUnderlyingCategory( syntactic_cat ) );
+    
+    P := UnderlyingCategory( syntactic_cat );
+    
+    Assert( 0, IsPathCategory( P ) );
+    
+    Y := EmbeddingOfUnderlyingQuiver( syntactic_cat );
+    
+    mors := List( SetOfMorphisms( UnderlyingQuiver( P ) ), Y );
+    
+    embedding_on_objects :=
+      function( o )
+        
+        return Y( UnderlyingQuiverObject( o ) );
+        
+    end;
+    
+    embedding_on_morphisms :=
+      function( source, m, target )
+        
+        return PreComposeList( syntactic_cat,
+                       source,
+                       List( MorphismIndices( m ), a -> mors[a] ),
+                       target );
+        
+    end;
+    
+    return Triple( UnderlyingCategory( syntactic_cat ),
+                   Pair( embedding_on_objects, embedding_on_morphisms ),
+                   syntactic_cat );
+    
+end );
+
+##
+InstallMethod( EmbeddingOfUnderlyingCategory,
+        "for a syntactic category",
+        [ IsSyntacticCategory ],
+        
+  function( syntactic_cat )
+    local data, Y;
+    
+    data := EmbeddingOfUnderlyingCategoryData( syntactic_cat );
+    
+    Y := CapFunctor( "Embedding functor into a syntactic category", data[1], syntactic_cat );
+    
+    AddObjectFunction( Y, data[2][1] );
+    
+    AddMorphismFunction( Y, data[2][2] );
+    
+    return Y;
+    
+end );
