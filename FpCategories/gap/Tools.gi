@@ -1186,128 +1186,138 @@ InstallMethod( NaturalTransformation,
 end );
 
 ##
-InstallGlobalFunction( DefiningTripleOfUnderlyingQuiverAsString,
-  function( defining_triple_of_underlying_quiver )
-    local string;
+InstallMethod( EmbeddingOfUnderlyingQuiverData,
+        "for a syntactic category",
+        [ IsSyntacticCategory ],
+        
+  function( syntactic_cat )
+    local embedding_on_objects, embedding_on_morphisms;
     
-    string := Concatenation( Concatenation(
-                      [ "Triple( ", String( defining_triple_of_underlying_quiver[1] ), ", ", String( defining_triple_of_underlying_quiver[2] ), ", " ],
-                      [ "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( defining_triple_of_underlying_quiver[3], pair ->
-                              Concatenation( "Pair( ", String( pair[1] ), ", ", String( pair[2] ), " )" ) ), ", " ) ],
-                      [ " ], { } -> CapJitDataTypeOfListOf( IsInt ) ) )" ] ) );
+    Assert( 0, HasUnderlyingQuiver( syntactic_cat ) );
     
-    Assert( 0, EvalString( string ) = defining_triple_of_underlying_quiver );
+    embedding_on_objects :=
+      function( o )
+        
+        return ObjectConstructor( syntactic_cat,
+                       Pair( "ObjectConstructor", [ syntactic_cat, ObjectLabel( o ) ] ) );
+        
+    end;
     
-    return string;
+    embedding_on_morphisms :=
+      function( source, m, target )
+        
+        return MorphismConstructor( syntactic_cat,
+                       source,
+                       Pair( "MorphismConstructor", [ syntactic_cat, MorphismLabel( m ) ] ),
+                       target );
+        
+    end;
     
-end );
-
-##
-InstallGlobalFunction( DefiningTripleOfUnderlyingQuiverAsENHANCED_SYNTAX_TREE,
-  function( defining_triple_of_underlying_quiver )
-    
-    return ReplacedStringViaRecord(
-                   "ENHANCED_SYNTAX_TREE( x -> defining_triple_of_underlying_quiver ).bindings.BINDING_RETURN_VALUE",
-                   rec( defining_triple_of_underlying_quiver := DefiningTripleOfUnderlyingQuiverAsString( defining_triple_of_underlying_quiver ) ) );
-    
-end );
-
-##
-InstallGlobalFunction( IndicesOfGeneratingMorphismsAsString,
-  function( indices_of_generating_morphisms )
-    local string;
-    
-    string := Concatenation( "CapJitTypedExpression( ", String( indices_of_generating_morphisms ), ", { } -> CapJitDataTypeOfListOf( IsInt ) )" );
-    
-    Assert( 0, EvalString( string ) = indices_of_generating_morphisms );
-    
-    return string;
+    return Triple( UnderlyingQuiver( syntactic_cat ),
+                   Pair( embedding_on_objects, embedding_on_morphisms ),
+                   syntactic_cat );
     
 end );
 
 ##
-InstallGlobalFunction( IndicesOfGeneratingMorphismsAsENHANCED_SYNTAX_TREE,
-  function( indices_of_generating_morphisms )
+InstallMethod( EmbeddingOfUnderlyingQuiver,
+        "for a syntactic category",
+        [ IsSyntacticCategory ],
+        
+  function( syntactic_cat )
+    local data, Y;
     
-    return ReplacedStringViaRecord(
-                   "ENHANCED_SYNTAX_TREE( x -> indices_of_generating_morphisms ).bindings.BINDING_RETURN_VALUE",
-                   rec( indices_of_generating_morphisms := IndicesOfGeneratingMorphismsAsString( indices_of_generating_morphisms ) ) );
+    data := EmbeddingOfUnderlyingQuiverData( syntactic_cat );
     
-end );
-
-##
-InstallGlobalFunction( DecompositionIndicesOfAllMorphismsAsString,
-  function( decomposition_of_all_morphisms )
-    local string;
+    Y := CapFunctor( "Embedding functor into a syntactic category", data[1], syntactic_cat );
     
-    string := Concatenation( [ "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( decomposition_of_all_morphisms, s ->
-                      Concatenation( "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( s, t ->
-                              Concatenation( "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( t, mor_st ->
-                                   Concatenation( "CapJitTypedExpression( ", String( mor_st ), ", { } -> CapJitDataTypeOfListOf( IsInt ) )" ) ), ", " ),
-                                      " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) )" ) ), ", " ),
-                              " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) ) )" ) ), ", " ),
-                      " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) ) ) )" ] );
+    AddObjectFunction( Y, data[2][1] );
     
-    Assert( 0, EvalString( string ) = decomposition_of_all_morphisms );
+    AddMorphismFunction( Y, data[2][2] );
     
-    return string;
+    return Y;
     
 end );
 
 ##
-InstallGlobalFunction( DecompositionIndicesOfAllMorphismsAsENHANCED_SYNTAX_TREE,
-  function( decomposition_of_all_morphisms )
+InstallMethod( \.,
+        "for a syntactic category and a positive integer",
+        [ IsSyntacticCategory, IsPosInt ],
+        
+  function( syntactic_cat, string_as_int )
+    local name, q, cell, Y, Yc;
     
-    return ReplacedStringViaRecord(
-                   "ENHANCED_SYNTAX_TREE( x -> decomposition_of_all_morphisms ).bindings.BINDING_RETURN_VALUE",
-                   rec( decomposition_of_all_morphisms := DecompositionIndicesOfAllMorphismsAsString( decomposition_of_all_morphisms ) ) );
+    name := NameRNam( string_as_int );
     
-end );
-
-##
-InstallGlobalFunction( DataTablesAsString,
-  function( data_tables )
-    local string;
+    q := UnderlyingQuiver( syntactic_cat );
     
-    string := Concatenation( Concatenation(
-                      [ "Pair( Pair( ", String( data_tables[1][1] ), ", ", String( data_tables[1][2] ), " ), ", ],
-                      [ "NTuple( 8, " ],
-                      [ "CapJitTypedExpression( ", String( data_tables[2][1] ), ", { } -> CapJitDataTypeOfListOf( IsInt ) ), " ],
-                      [ "CapJitTypedExpression( ", String( data_tables[2][2] ), ", { } -> CapJitDataTypeOfListOf( IsInt ) ), " ],
-                      [ "CapJitTypedExpression( ", String( data_tables[2][3] ), ", { } -> CapJitDataTypeOfListOf( IsInt ) ), " ],
-                      [ "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( data_tables[2][4], pre ->
-                              Concatenation( "CapJitTypedExpression( ", String( pre ), ", { } -> CapJitDataTypeOfListOf( IsInt ) )" ) ), ", " ),
-                        " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) ), " ],
-                      [ "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( data_tables[2][5], s ->
-                              Concatenation( "CapJitTypedExpression( ", String( s ), ", { } -> CapJitDataTypeOfListOf( IsInt ) )" ) ), ", " ),
-                        " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) ), " ],
-                      [ "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( data_tables[2][6], pre ->
-                              Concatenation( "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( pre, post ->
-                                      Concatenation( "CapJitTypedExpression( ", String( post ), ", { } -> CapJitDataTypeOfListOf( IsInt ) )" ) ), ", " ),
-                                      " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) )" ) ), ", " ),
-                        " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) ) ), " ],
-                      [ "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( data_tables[2][7], mor ->
-                              Concatenation( "CapJitTypedExpression( ", String( mor ), ", { } -> CapJitDataTypeOfListOf( IsInt ) )" ) ), ", " ),
-                        " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) ), " ],
-                      [ "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( data_tables[2][8], s ->
-                              Concatenation( "CapJitTypedExpression( [ ", JoinStringsWithSeparator( List( s, t ->
-                                      Concatenation( "CapJitTypedExpression( ", String( t ), ", { } -> CapJitDataTypeOfListOf( IsInt ) )" ) ), ", " ),
-                                      " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) )" ) ), ", " ),
-                        " ], { } -> CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( CapJitDataTypeOfListOf( IsInt ) ) ) )" ],
-                      [ " ) )" ] ) );
+    cell := q.(name);
     
-    Assert( 0, EvalString( string ) = data_tables );
+    Y := EmbeddingOfUnderlyingQuiver( syntactic_cat );
     
-    return string;
+    Yc := Y( cell );
+    
+    return Yc;
     
 end );
 
 ##
-InstallGlobalFunction( DataTablesAsENHANCED_SYNTAX_TREE,
-  function( data_tables )
+InstallMethod( EmbeddingOfUnderlyingCategoryData,
+        "for a syntactic category",
+        [ IsSyntacticCategory ],
+        
+  function( syntactic_cat )
+    local P, Y, mors, embedding_on_objects, embedding_on_morphisms;
     
-    return ReplacedStringViaRecord(
-                   "ENHANCED_SYNTAX_TREE( x -> data_tables ).bindings.BINDING_RETURN_VALUE",
-                   rec( data_tables := DataTablesAsString( data_tables ) ) );
+    Assert( 0, HasUnderlyingCategory( syntactic_cat ) );
+    
+    P := UnderlyingCategory( syntactic_cat );
+    
+    Assert( 0, IsPathCategory( P ) );
+    
+    Y := EmbeddingOfUnderlyingQuiver( syntactic_cat );
+    
+    mors := List( SetOfMorphisms( UnderlyingQuiver( P ) ), Y );
+    
+    embedding_on_objects :=
+      function( o )
+        
+        return Y( UnderlyingQuiverObject( o ) );
+        
+    end;
+    
+    embedding_on_morphisms :=
+      function( source, m, target )
+        
+        return PreComposeList( syntactic_cat,
+                       source,
+                       List( MorphismIndices( m ), a -> mors[a] ),
+                       target );
+        
+    end;
+    
+    return Triple( UnderlyingCategory( syntactic_cat ),
+                   Pair( embedding_on_objects, embedding_on_morphisms ),
+                   syntactic_cat );
+    
+end );
+
+##
+InstallMethod( EmbeddingOfUnderlyingCategory,
+        "for a syntactic category",
+        [ IsSyntacticCategory ],
+        
+  function( syntactic_cat )
+    local data, Y;
+    
+    data := EmbeddingOfUnderlyingCategoryData( syntactic_cat );
+    
+    Y := CapFunctor( "Embedding functor into a syntactic category", data[1], syntactic_cat );
+    
+    AddObjectFunction( Y, data[2][1] );
+    
+    AddMorphismFunction( Y, data[2][2] );
+    
+    return Y;
     
 end );

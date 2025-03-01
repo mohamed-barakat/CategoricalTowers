@@ -146,3 +146,52 @@ InstallOtherMethod( DummyCategoryInDoctrines,
     return DummyCategoryInDoctrines( ConvertJuliaToGAP( doctrines ) );
     
 end );
+
+##
+InstallOtherMethod( SyntacticCategoryInDoctrines,
+        "for a julia object",
+        [ IsJuliaObject ],
+        
+  function( doctrines )
+    
+    return SyntacticCategoryInDoctrines( ConvertJuliaToGAP( doctrines ) );
+    
+end );
+
+##
+InstallOtherMethod( LambdaAbstraction,
+        "for a cell in a syntactic category and a julia object",
+        [ IsCellInSyntacticCategory, IsJuliaObject ],
+        
+  function( cell, list_of_arguments )
+    
+    return LambdaAbstraction( cell, ConvertJuliaToGAP( list_of_arguments ) );
+    
+end );
+
+##
+InstallOtherMethod( Visualize,
+        "for a cell in a lazy category",
+        [ IsCellInSyntacticCategory ],
+        
+  function( c )
+    
+    if IsRunningInJupyter( ) then
+        
+        return Julia.Base.display(
+                       Julia.Base.MIME( GAPToJulia( "image/svg+xml" ) ),
+                       GAPToJulia( DotToSVG( DotVertexLabelledDigraph( c ) ) ) );
+        
+    elif IsRunningInPluto( ) then
+        
+        JuliaEvalString( "import PlutoUI" );
+        
+        return Julia.PlutoUI.Show(
+                       Julia.Base.MIME( GAPToJulia( "image/svg+xml" ) ),
+                       GAPToJulia( DotToSVG( DotVertexLabelledDigraph( c ) ) ) );
+        
+    fi;
+    
+    TryNextMethod( );
+    
+end );
