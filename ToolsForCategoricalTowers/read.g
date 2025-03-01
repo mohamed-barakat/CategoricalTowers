@@ -4,6 +4,8 @@
 # Reading the implementation part of the package.
 #
 
+ReadPackage( "ToolsForCategoricalTowers", "gap/SyntacticCategory.gi" );
+
 ReadPackage( "ToolsForCategoricalTowers", "gap/Tools.gi");
 ReadPackage( "ToolsForCategoricalTowers", "gap/ToolsMethodRecord.gi");
 ReadPackage( "ToolsForCategoricalTowers", "gap/ToolsMethodRecordInstallations.autogen.gi");

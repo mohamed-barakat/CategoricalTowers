@@ -4,6 +4,8 @@
 # Reading the declaration part of the package.
 #
 
+ReadPackage( "ToolsForCategoricalTowers", "gap/SyntacticCategory.gd" );
+
 ReadPackage( "ToolsForCategoricalTowers", "gap/Tools.gd");
 ReadPackage( "ToolsForCategoricalTowers", "gap/ToolsMethodRecordDeclarations.autogen.gd");
 

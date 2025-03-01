@@ -108,3 +108,65 @@ InstallMethod( SvgString,
     return DotToSVG( DotVertexLabelledDigraph( D ) );
     
 end );
+
+##
+InstallMethod( ListOfEvaluationNodes,
+        "for a cell in a syntactic category",
+        [ IsCellInSyntacticCategory ],
+        
+  function( c )
+    local node, nodes, queue, add_to_nodes, add_to_queue, parents, D;
+    
+    node := c;
+    
+    nodes := [ ];
+    
+    queue := [ node ];
+    
+    add_to_nodes :=
+      function( a )
+        if PositionProperty( nodes, b -> AreEqualForSyntacticCells( a, b ) ) = fail then
+            Add( nodes, a );
+        fi;
+    end;
+    
+    add_to_queue :=
+      function( a )
+        if PositionProperty( Concatenation( nodes, queue ), b -> AreEqualForSyntacticCells( a, b ) ) = fail then
+            Add( queue, a );
+        fi;
+    end;
+    
+    while not IsEmpty( queue ) do
+        
+        node := Remove( queue, 1 );
+        
+        add_to_nodes( node );
+        
+        if IsList( node ) then
+            
+            Assert( 0, ForAll( node, IsCellInSyntacticCategory ) );
+            
+            Perform( node, add_to_queue );
+            
+        elif not PairOfOperationNameAndArguments( node )[1] in [ "ObjectConstructor", "MorphismConstructor" ] then
+            
+            parents := PairOfOperationNameAndArguments( node )[2];
+            
+            parents := Filtered( parents, parent -> IsCellInSyntacticCategory( parent ) or IsList( parent ) );
+            
+            Perform( parents, add_to_queue );
+            
+        fi;
+        
+    od;
+    
+    nodes := Reversed( nodes );
+    
+    D := List( nodes, node -> PositionsOfParentsOfASyntacticCell( nodes, node ) );
+    
+    D := Digraph( D );
+    
+    return nodes{DigraphTopologicalSort( D )};
+    
+end );
