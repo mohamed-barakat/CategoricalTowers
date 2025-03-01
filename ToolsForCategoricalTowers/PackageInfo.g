@@ -70,8 +70,8 @@ PackageDoc := rec(
 Dependencies := rec(
   GAP := ">= 4.13.0",
   NeededOtherPackages := [
-                   [ "CAP", ">= 2026.05-02" ],
-                   [ "MonoidalCategories", ">= 2026.06-01" ],
+                   [ "CAP", ">= 2026.07-02" ],
+                   [ "MonoidalCategories", ">= 2026.06-02" ],
                    [ "CartesianCategories", ">= 2026.06-01" ],
                    [ "ToolsForHomalg", ">= 2026.04-01" ],
                    ],

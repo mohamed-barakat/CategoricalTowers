@@ -13,8 +13,7 @@ InstallMethod( DummyCategoryInDoctrines,
         [ IsList ],
   
   FunctionWithNamedArguments(
-  [
-    [ "name", fail ],
+  [ [ "name", fail ],
     [ "minimal", false ],
     [ "with_given_objects_methods", false ],
     [ "additional_operations", Immutable( [ ] ) ],
@@ -55,9 +54,9 @@ InstallMethod( DummyCategoryInDoctrines,
     options := rec( );
     
     if CAP_NAMED_ARGUMENTS.name = fail then
-      options.name := Concatenation( "DummyCategoryInDoctrines( ", String( doctrine_names ), " )" );
+        options.name := Concatenation( "DummyCategoryInDoctrines( ", String( doctrine_names ), " )" );
     else
-      options.name := CAP_NAMED_ARGUMENTS.name;
+        options.name := CAP_NAMED_ARGUMENTS.name;
     fi;
     
     options.properties := Difference( doctrine_names, [ "IsCapCategory" ] );
@@ -81,6 +80,102 @@ InstallMethod( DummyCategoryInDoctrines,
     fi;
     
     return DummyCategory( options );
+    
+end ) );
+
+##
+InstallMethod( SyntacticCategoryInDoctrines,
+        "for a list of string",
+        [ IsList ],
+
+  FunctionWithNamedArguments(
+  [ [ "name", fail ],
+    [ "minimal", false ],
+    [ "ring", fail ],
+    [ "with_given_objects_methods", false ],
+    [ "strict_category", false ],
+    [ "additional_operations", Immutable( [ ] ) ],
+    [ "optimize", 1 ],
+  ],
+  function( CAP_NAMED_ARGUMENTS, doctrine_names )
+    local compare, options, all_operations, p;
+    
+    if IsEmpty( doctrine_names ) then
+        Error( "the list of doctrine names is empty\n" );
+    elif IsStringRep( doctrine_names ) then
+        doctrine_names := [ doctrine_names ];
+    fi;
+    
+    if not IsSubset( ListKnownDoctrines( ), doctrine_names ) then
+        Error( "the following entries are not supported doctrines: ", String( Difference( doctrine_names, ListKnownDoctrines( ) ) ), "\n" );
+    fi;
+    
+    compare :=
+      function( b, a )
+        local bool;
+        
+        bool := IsSubset( ListOfDefiningOperations( a ), ListOfDefiningOperations( b ) );
+        
+        if CAP_NAMED_ARGUMENTS.minimal and IsBoundGlobal( a ) and IsBoundGlobal( b ) then
+            return IsSpecializationOfFilter( ValueGlobal( b ), ValueGlobal( a ) ) or bool;
+        else
+            return bool;
+        fi;
+        
+    end;
+    
+    doctrine_names := MaximalObjects( doctrine_names, compare );
+    
+    options := rec( );
+    
+    if CAP_NAMED_ARGUMENTS.name = fail then
+        options.name := Concatenation( "SyntacticCategoryInDoctrines( ", String( doctrine_names ), " )" );
+    else
+        options.name := CAP_NAMED_ARGUMENTS.name;
+    fi;
+    
+    options.properties := Difference( doctrine_names, [ "EveryCategory" ] );
+    
+    if IsRing( CAP_NAMED_ARGUMENTS.ring ) then
+        options.commutative_ring_of_linear_category := CAP_NAMED_ARGUMENTS.ring;
+    fi;
+    
+    options.list_of_operations_to_install :=
+      Set( Concatenation(
+              Concatenation( List( doctrine_names, ListOfDefiningOperations ) ),
+              CAP_NAMED_ARGUMENTS.additional_operations,
+              [ "ObjectConstructor", "ObjectDatum",
+                "MorphismConstructor", "MorphismDatum",
+                "IsWellDefinedForObjects", "IsWellDefinedForMorphisms" ] ) );
+    
+    all_operations := RecNames( CAP_INTERNAL_METHOD_NAME_RECORD );
+    
+    if CAP_NAMED_ARGUMENTS.with_given_objects_methods then
+        
+        options.list_of_operations_to_install :=
+          Concatenation( List( options.list_of_operations_to_install, operation_name ->
+                  CAP_INTERNAL_CORRESPONDING_WITH_GIVEN_OBJECTS_METHOD( operation_name, all_operations ) ) );
+        
+    fi;
+    
+    if CAP_NAMED_ARGUMENTS.strict_category then
+        
+        p := Position( options.list_of_operations_to_install, "PreCompose" );
+        
+        if IsInt( p ) then
+            options.list_of_operations_to_install[p] := "PreComposeList";
+        fi;
+        
+        p := Position( options.list_of_operations_to_install, "IdentityMorphism" );
+        
+        if IsInt( p ) then
+            Remove( options.list_of_operations_to_install, p );
+        fi;
+        
+    fi;
+    
+    return SyntacticCategory( options :
+                   optimize := CAP_NAMED_ARGUMENTS.optimize );
     
 end ) );
 
