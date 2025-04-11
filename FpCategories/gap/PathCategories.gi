@@ -9,7 +9,9 @@ InstallMethod( PathCategory,
           [ IsFinQuiver ],
   
   function ( q )
-    local admissible_order, name, C, range_of_HomStructure;
+    local skeletal, admissible_order, name, C, range_of_HomStructure;
+    
+    skeletal := ValueOption( "skeletal" );
     
     admissible_order := ValueOption( "admissible_order" );
     
@@ -50,6 +52,10 @@ InstallMethod( PathCategory,
             Triple( NumberOfObjects( q ),
                     NumberOfMorphisms( q ),
                     ListN( IndicesOfSources( q ), IndicesOfTargets( q ), { s, t } -> Pair( -1 + s, -1 + t ) ) ) );
+    
+    if skeletal = true then
+        SetIsSkeletalCategory( C, true );
+    fi;
     
     C!.compiler_hints :=
       rec( category_attribute_names :=
