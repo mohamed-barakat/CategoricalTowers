@@ -128,7 +128,7 @@ DeclareAttribute( "EmbeddingOfUnderlyingCategory",
         IsFiniteStrictCoproductCompletionOfObjectFiniteCategory );
 
 DeclareOperation( "ExtendFunctorToFiniteStrictCoproductCompletionOfObjectFiniteCategoryData",
-        [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsCartesianCategory ] );
+        [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsCocartesianCategory ] );
 
 #! @Description
 #!  The full embedding functor from the category $C$ underlying
