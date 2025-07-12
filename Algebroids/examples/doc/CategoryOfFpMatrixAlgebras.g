@@ -17,6 +17,33 @@ Display( MatAlg_F2 );
 #! and not yet algorithmically
 #! * IsCategoryWithCoequalizers
 #! * IsCartesianCategory
+T := TerminalObject( MatAlg_F2 );
+#! <An object in CategoryOfFpMatrixAlgebras( GF(2) )>
+Display( T );
+#! GF(2) / [ 1*id(o) ]
+iota := UniversalMorphismFromInitialObject( T );
+#! <A morphism in CategoryOfFpMatrixAlgebras( GF(2) )>
+I := Source( iota );
+#! <An object in CategoryOfFpMatrixAlgebras( GF(2) )>
+Display( I );
+#! GF(2) / [  ]
+#! 
+#! with the above matrix generators
+Display( iota );
+#! GF(2) / [ 1*id(o) ]
+#!  ^
+#!  |
+#! [  ]
+#!  |
+#! GF(2) / [  ]
+K := TensorUnit( MatAlg_F2 );
+#! <An object in CategoryOfFpMatrixAlgebras( GF(2) )>
+Display( K );
+#! GF(2) / [  ]
+#! 
+#! with the above matrix generators
+K = I;
+#! true
 Alg_F2 := UnderlyingCategoryOfFpAlgebras( MatAlg_F2 );
 #! CategoryOfFpAlgebras( GF(2) )
 Display( Alg_F2 );
@@ -61,6 +88,20 @@ matrix_generators := Pair( 4 / Mat_F2, [ mx, my ] );
 #!   [ <A morphism in Rows( GF(2) )>, <A morphism in Rows( GF(2) )> ] ]
 M := ObjectConstructor( MatAlg_F2, Pair( A, matrix_generators ) );
 #! <An object in CategoryOfFpMatrixAlgebras( GF(2) )>
+Display( M );
+#! 1,0,0,0,
+#! 0,0,0,0,
+#! 0,0,1,0,
+#! 0,0,0,0
+#! 
+#! 0,0,0,0,
+#! 0,0,0,0,
+#! 0,0,0,1,
+#! 0,0,1,0
+#! 
+#! GF(2)<x,y> / [ 1*x^2 + 1*x, 1*y^3 + 1*y, 1*y⋅x + 1*x⋅y + 1*y ]
+#! 
+#! with the above matrix generators
 IsWellDefined( M );
 #! true
 M.x;
@@ -86,8 +127,6 @@ AssociatedQuotientCategoryOfLinearClosureOfPathCategory( M );
 GroebnerBasisOfDefiningRelations( M );
 #! [ 1*x^2 + 1*x:(o) -≻ (o), 1*y^3 + 1*y:(o) -≻ (o), \
 #!   1*y⋅x + 1*x⋅y + 1*y:(o) -≻ (o) ]
-iota := UniversalMorphismFromInitialObject( M );
-#! <A morphism in CategoryOfFpMatrixAlgebras( GF(2) )>
 
 #! @EndExample
 
