@@ -103,3 +103,71 @@ InstallGlobalFunction( SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism,
     return testList;
     
 end );
+
+##
+InstallMethodForCompilerForCAP( SchreierSimsOnASingleOrbit,
+        [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsInt, IsInt, IsInt ],
+        
+  function ( UCm, automorphisms, c, e, m )
+    local C, object, k, data, perms, autos, targets, id, initial_value, predicate, func;
+    
+    C := UnderlyingCategory( UCm );
+    
+    object := SetOfObjects( C )[c];
+    
+    k := Length( automorphisms );
+    
+    data := List( [ 1 .. k ], r -> PairOfLists( automorphisms[r] ) );
+    
+    perms := List( [ 1 .. k ], r -> PermList( 1 + data[r][1][c][2] ) );
+    
+    autos := List( [ 1 .. k ], r -> data[r][2][c] );
+    
+    id := IdentityMorphism( C, object );
+    
+    initial_value := NTuple( 4, 1, [ e ], [ id ], [ ] );
+    
+    predicate :=
+      function( tuple_old, tuple_new )
+        
+        return tuple_new[1] >= m;
+        
+    end;
+    
+    func :=
+      function( tuple )
+        local i, B, b_i, T, t_i, S, r, b, t, j;
+        
+        i := tuple[1];
+        
+        B := tuple[2];
+        b_i := B[i];
+        
+        T := tuple[3];
+        t_i := T[i];
+        
+        S := tuple[4];
+        
+        for r in [ 1 .. k ] do
+            b := b_i^perms[r];
+            
+            t := PreCompose( C, t_i, autos[r][b_i] );
+            
+            j := Position( B, b );
+            
+            if IsInt( j ) then
+                S := Concatenation( S, [ PreCompose( C, t, InverseForMorphisms( C, T[j] ) ) ] );
+            else
+                B := Concatenation( B, [ b ] );
+                T := Concatenation( T, [ t ] );
+            fi;
+            
+        od;
+        
+        return NTuple( 4, i + 1, B, T, S );
+        
+    end;
+    
+    return CapFixpoint( predicate, func, initial_value );
+    
+end );

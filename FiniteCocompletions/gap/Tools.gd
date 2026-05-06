@@ -61,3 +61,28 @@ CapJitAddTypeSignature( "SKELETAL_CATEGORY_OF_FINITE_SETS_IsMonomorphism", [ IsL
 
 DeclareGlobalFunction( "SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism" );
 CapJitAddTypeSignature( "SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism", [ IsList, IsBigInt ], CapJitDataTypeOfListOf( IsBool ) );
+
+#! @Description
+#!  The input is <A>UCm</A> $:=$ <C>FiniteStrictCoproductCompletionOfObjectFiniteCategory</C>( $C$ ) an object-finite category $C$,
+#!  a list <A>autos</A> of $k$ many automorphisms in $C$,
+#!  an index <A>c</A> of an object in $C$ (a positive integer),
+#!  and an integer $i$ and the length $m$ of its orbit under the permutation parts of the automorphisms of the object of index <A>c</A> in $C$.
+#!  The output is a pair of lists of automorphisms of $C$
+#!  corresponding to a list of $m$ transversals and to a list of $m k - (m-1)$ of generators of the stabilizier.
+#! @Arguments UCm, autos, c, e, m
+#! @Returns a list integers
+DeclareOperation( "SchreierSimsOnASingleOrbit",
+        [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsInt, IsInt, IsInt ] );
+
+CapJitAddTypeSignature( "SchreierSimsOnASingleOrbit", [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsInt, IsInt, IsInt ], function ( input_types )
+    local type_of_list;
+    
+    type_of_list := CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( input_types[1].category ) );
+    
+    return CapJitDataTypeOfNTupleOf( 4,
+                   IsInt,
+                   CapJitDataTypeOfListOf( IsInt ),
+                   type_of_list,
+                   type_of_list );
+    
+end );

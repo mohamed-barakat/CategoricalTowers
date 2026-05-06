@@ -853,6 +853,99 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
         
     fi;
     
+    if CanCompute( C, "ProjectionOntoCoequalizerOfIdentityAndAutomorphisms" ) then
+        
+        ##
+        AddProjectionOntoCoequalizerOfIdentityAndAutomorphisms( UCm,
+          function( UCm, object, automorphisms )
+            local C, objectsC, pair, multiplicities, l, k, data, perms, orbits, nr_orbits, schreier_sims, schreier_sims_orbits, schreier_sims_positions,
+                  coequalizers, coequalizer_positions, coequalizer, projections, maps, mors;
+            
+            C := UnderlyingCategory( UCm );
+            
+            objectsC := SetOfObjects( C );
+            
+            pair := ObjectDatum( UCm, object );
+            
+            multiplicities := pair[2];
+            
+            l := NumberOfObjectsOfUnderlyingCategory( UCm );
+            
+            k := Length( automorphisms );
+            
+            data :=
+              List( [ 1 .. k ], r -> PairOfLists( automorphisms[r] ) );
+            
+            perms :=
+              List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> PermList( 1 + data[r][1][c][2] ) ) );
+            
+            orbits :=
+              List( [ 1 .. l ], c -> OrbitsPerms( perms[c], [ 1 .. multiplicities[c] ] ) );
+            
+            nr_orbits :=
+              List( [ 1 .. l ], c -> Length( orbits[c] ) );
+            
+            schreier_sims :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                      SchreierSimsOnASingleOrbit( UCm, automorphisms, c, orbits[c][o][1], Length( orbits[c][o] ) ) ) );
+            
+            schreier_sims_orbits :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          schreier_sims[c][o][2] ) );
+            
+            schreier_sims_positions :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. multiplicities[c] ], i ->
+                          SafePosition( Concatenation( schreier_sims_orbits[c] ), i ) ) );
+            
+            coequalizers :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          ProjectionOntoCoequalizerOfIdentityAndAutomorphisms( C,
+                                  objectsC[c],
+                                  schreier_sims[c][o][4] ) ) );
+            
+            coequalizer_positions :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          SafePositionProperty( [ 1 .. l ], d ->
+                                  IsEqualForObjects( C, Target( coequalizers[c][o] ), objectsC[d] ) ) ) );
+            
+            coequalizer :=
+              List( [ 1 .. l ], c ->
+                    Sum( [ 1 .. l ], d -> Number( coequalizer_positions[d], i -> i = c ) ) );
+            
+            coequalizer := ObjectConstructor( UCm,
+                                   Pair( Sum( coequalizer ), coequalizer ) );
+            
+            projections :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          List( [ 1 .. Length( orbits[c][o] ) ], a ->
+                                PreCompose( C, schreier_sims[c][o][3][a], coequalizers[c][o] ) ) ) );
+            
+            maps :=
+              List( [ 1 .. l ], c ->
+                    -1 + Concatenation( List( [ 1 .. nr_orbits[c] ], o ->
+                            ListWithIdenticalEntries( Length( schreier_sims_orbits[c][o] ), coequalizer_positions[c][o] ) ) ){schreier_sims_positions[c]} );
+            
+            mors :=
+              List( [ 1 .. l ], c ->
+                    Concatenation( projections[c] ){schreier_sims_positions[c]} );
+            
+            Error( );
+            
+            return MorphismConstructor( UCm,
+                           object,
+                           Pair( maps, mors ),
+                           coequalizer );
+            
+        end );
+        
+    fi;
+    
     if HasIsFiniteCategory( C ) and IsFiniteCategory( C ) and
        IsBound( H ) and IsIntervalCategory( H ) and
        CanCompute( C, "SetOfObjectsOfCategory" ) then
