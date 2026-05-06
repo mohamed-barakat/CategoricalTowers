@@ -894,6 +894,311 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
         
     fi;
     
+    if HasIsSkeletalCategory( C ) and
+       IsSkeletalCategory( C ) and
+       CanCompute( C, "ProjectionOntoCoequalizerOfIdentityAndAutomorphisms" ) then
+        
+        ##
+        AddProjectionOntoCoequalizerOfIdentityAndAutomorphisms( UCm,
+          function( UCm, object, automorphisms )
+            local C, objectsC, multiplicities, l, k, data, perms, orbits, nr_orbits, orbit_lengths,
+                  schreier_sims, autos, trans, identities, transversals, inverses, stabilizers,
+                  coequalizer_projections, coequalizer_positions, concat_coeq_pos, coequalizer, projections,
+                  schreier_sims_orbits, schreier_sims_positions, coarse_maps, offset_orbits, fine_maps, mors;
+            
+            C := UnderlyingCategory( UCm );
+            
+            objectsC := SetOfObjectsOfCategory( C );
+            
+            multiplicities := PairOfIntAndList( object )[2];
+            
+            l := NumberOfObjectsOfUnderlyingCategory( UCm );
+            
+            k := Length( automorphisms );
+
+            data := List( automorphisms, TripleOfLists );
+            
+            perms :=
+              List( [ 1 .. l ], c -> List( data, datum -> PermList( List( datum[2][c], i -> 1 + i ) ) ) );
+            
+            orbits :=
+              List( [ 1 .. l ], c -> OrbitsPerms( perms[c], [ 1 .. multiplicities[c] ] ) );
+            
+            nr_orbits :=
+              List( [ 1 .. l ], c -> Length( orbits[c] ) );
+            
+            orbit_lengths :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          Length( orbits[c][o] ) ) );
+            
+            schreier_sims :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          SchreierSimsOnASingleOrbit( perms[c], k, orbits[c][o][1], orbit_lengths[c][o] ) ) );
+            
+            autos :=
+              List( [ 1 .. l ], c -> List( data, datum -> datum[3][c] ) );
+            
+            trans := c ->
+              function( eval, triple )
+                local i, b_i, r;
+                
+                i := triple[1];
+                b_i := triple[2];
+                r := triple[3];
+                
+                return PreCompose( C, eval[i], autos[c][r][b_i] );
+                
+            end;
+            
+            identities :=
+              List( [ 1 .. l ], c -> IdentityMorphism( C, objectsC[c] ) );
+            
+            transversals :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          IteratedListOfActions( [ identities[c] ], schreier_sims[c][o][2], trans( c ) ) ) );
+            
+            inverses :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          List( [ 1 .. orbit_lengths[c][o] ], i ->
+                                InverseForMorphisms( C,
+                                        transversals[c][o][i] ) ) ) );
+            
+            stabilizers :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          List( [ 1 .. orbit_lengths[c][o] * k - (orbit_lengths[c][o] - 1) ], j ->
+                                PreCompose( C,
+                                        PreCompose( C,
+                                                transversals[c][o][schreier_sims[c][o][3][j][1]],
+                                                autos[c][schreier_sims[c][o][3][j][3]][schreier_sims[c][o][3][j][2]] ),
+                                        inverses[c][o][schreier_sims[c][o][3][j][4]] ) ) ) );
+            
+            coequalizer_projections :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          ProjectionOntoCoequalizerOfIdentityAndAutomorphisms( C,
+                                  objectsC[c],
+                                  stabilizers[c][o] ) ) );
+            
+            coequalizer_positions :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          SafePositionProperty( [ 1 .. l ], d ->
+                                  IsEqualForObjects( C, Target( coequalizer_projections[c][o] ), objectsC[d] ) ) ) );
+            
+            concat_coeq_pos := Concatenation( coequalizer_positions );
+            
+            coequalizer :=
+              List( [ 1 .. l ], c -> Number( concat_coeq_pos, i -> i = c ) );
+            
+            coequalizer := ObjectConstructor( UCm,
+                                   Pair( Sum( coequalizer ), coequalizer ) );
+            
+            projections :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          List( [ 1 .. orbit_lengths[c][o] ], i ->
+                                PreCompose( C, inverses[c][o][i], coequalizer_projections[c][o] ) ) ) );
+            
+            schreier_sims_orbits :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          schreier_sims[c][o][1] ) );
+            
+            schreier_sims_positions :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. multiplicities[c] ], i ->
+                          SafePosition( Concatenation( schreier_sims_orbits[c] ), i ) ) );
+            
+            coarse_maps :=
+              List( [ 1 .. l ], c ->
+                    Concatenation( List( [ 1 .. nr_orbits[c] ], o ->
+                            ListWithIdenticalEntries( orbit_lengths[c][o], -1 + coequalizer_positions[c][o] ) ) ){schreier_sims_positions[c]} );
+            
+            offset_orbits :=
+              List( [ 1 .. l ], c -> Sum( nr_orbits{[ 1 .. c - 1 ]} ) );
+            
+            fine_maps :=
+              List( [ 1 .. l ], c ->
+                    Concatenation(
+                            List( [ 1 .. nr_orbits[c] ], o ->
+                                  ListWithIdenticalEntries( orbit_lengths[c][o],
+                                          Number( concat_coeq_pos{[ 1 .. offset_orbits[c] + o - 1 ]}, i ->
+                                                  i = coequalizer_positions[c][o] ) ) ) ){schreier_sims_positions[c]} );
+            
+            mors :=
+              List( [ 1 .. l ], c ->
+                    Concatenation( projections[c] ){schreier_sims_positions[c]} );
+            
+            return MorphismConstructor( UCm,
+                           object,
+                           Triple( coarse_maps, fine_maps, mors ),
+                           coequalizer );
+            
+        end );
+        
+    fi;
+    
+    if HasIsSkeletalCategory( C ) and
+       IsSkeletalCategory( C ) and
+       CanCompute( C, "CoequalizerOfIdentityAndAutomorphisms" ) and
+       CanCompute( C, "UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms" ) then
+        
+        ##
+        AddUniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms( UCm,
+          function( UCm, object, automorphisms, test_object, tau )
+            local C, objectsC, multiplicities, l, k, data, perms, orbits, nr_orbits, orbit_lengths,
+                  schreier_sims, autos, trans, identities, transversals, inverses, stabilizers,
+                  coequalizers, coequalizer_positions, concat_coeq_pos, coequalizer,
+                  offset_orbits, orb_map, preim_c, preim_i, first_orb, data_tau, coarse_maps_tau,
+                  fine_maps_tau, mors_tau, coarse_maps_univ, fine_maps_univ, mor_univ;
+            
+            C := UnderlyingCategory( UCm );
+            
+            objectsC := SetOfObjectsOfCategory( C );
+            
+            multiplicities := PairOfIntAndList( object )[2];
+            
+            l := NumberOfObjectsOfUnderlyingCategory( UCm );
+            
+            k := Length( automorphisms );
+            
+            data := List( automorphisms, TripleOfLists );
+            
+            perms :=
+              List( [ 1 .. l ], c -> List( data, datum -> PermList( List( datum[2][c], i -> 1 + i ) ) ) );
+            
+            orbits :=
+              List( [ 1 .. l ], c -> OrbitsPerms( perms[c], [ 1 .. multiplicities[c] ] ) );
+            
+            nr_orbits :=
+              List( [ 1 .. l ], c -> Length( orbits[c] ) );
+            
+            orbit_lengths :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          Length( orbits[c][o] ) ) );
+            
+            schreier_sims :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          SchreierSimsOnASingleOrbit( perms[c], k, orbits[c][o][1], orbit_lengths[c][o] ) ) );
+            
+            autos :=
+              List( [ 1 .. l ], c -> List( data, datum -> datum[3][c] ) );
+            
+            trans := c ->
+              function( eval, triple )
+                local i, b_i, r;
+                
+                i := triple[1];
+                b_i := triple[2];
+                r := triple[3];
+                
+                return PreCompose( C, eval[i], autos[c][r][b_i] );
+                
+            end;
+            
+            identities :=
+              List( [ 1 .. l ], c -> IdentityMorphism( C, objectsC[c] ) );
+            
+            transversals :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          IteratedListOfActions( [ identities[c] ], schreier_sims[c][o][2], trans( c ) ) ) );
+            
+            inverses :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          List( [ 1 .. orbit_lengths[c][o] ], i ->
+                                InverseForMorphisms( C,
+                                        transversals[c][o][i] ) ) ) );
+            
+            stabilizers :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          List( [ 1 .. orbit_lengths[c][o] * k - (orbit_lengths[c][o] - 1) ], j ->
+                                PreCompose( C,
+                                        PreCompose( C,
+                                                transversals[c][o][schreier_sims[c][o][3][j][1]],
+                                                autos[c][schreier_sims[c][o][3][j][3]][schreier_sims[c][o][3][j][2]] ),
+                                        inverses[c][o][schreier_sims[c][o][3][j][4]] ) ) ) );
+            
+            coequalizers :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          CoequalizerOfIdentityAndAutomorphisms( C,
+                                  objectsC[c],
+                                  stabilizers[c][o] ) ) );
+            
+            coequalizer_positions :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          SafePositionProperty( [ 1 .. l ], d ->
+                                  IsEqualForObjects( C, coequalizers[c][o], objectsC[d] ) ) ) );
+            
+            concat_coeq_pos := Concatenation( coequalizer_positions );
+            
+            coequalizer :=
+              List( [ 1 .. l ], c -> Number( concat_coeq_pos, i -> i = c ) );
+            
+            offset_orbits :=
+              List( [ 1 .. l ], c -> Sum( nr_orbits{[ 1 .. c - 1 ]} ) );
+            
+            orb_map :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          Number( concat_coeq_pos{[ 1 .. offset_orbits[c] + o ]}, i -> i = coequalizer_positions[c][o] ) ) );
+            
+            preim_c :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. coequalizer[c] ], i ->
+                          SafeFirst( [ 1 .. l ], d ->
+                                  c in coequalizer_positions[d] and i in orb_map[d] ) ) );
+            
+            preim_i :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. coequalizer[c] ], i ->
+                          SafeFirst( [ 1 .. nr_orbits[preim_c[c][i]] ], j ->
+                                  coequalizer_positions[preim_c[c][i]][j] = c and orb_map[preim_c[c][i]][j] = i ) ) );
+            
+            first_orb := List( [ 1 .. l ], c -> List( [ 1 .. coequalizer[c] ], i -> orbits[preim_c[c][i]][preim_i[c][i]][1] ) );
+            
+            data_tau := TripleOfLists( tau );
+            
+            coarse_maps_tau := data_tau[1];
+
+            fine_maps_tau := data_tau[2];
+            
+            mors_tau := data_tau[3];
+            
+            coarse_maps_univ := List( [ 1 .. l ], c ->
+                                      List( [ 1 .. coequalizer[c] ], i -> coarse_maps_tau[preim_c[c][i]][first_orb[c][i]] ) );
+            
+            fine_maps_univ := List( [ 1 .. l ], c ->
+                                    List( [ 1 .. coequalizer[c] ], i -> fine_maps_tau[preim_c[c][i]][first_orb[c][i]] ) );
+
+            mor_univ := List( [ 1 .. l ], c ->
+                              List( [ 1 .. coequalizer[c] ], i ->
+                                    UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms( C,
+                                            objectsC[preim_c[c][i]],
+                                            stabilizers[preim_c[c][i]][preim_i[c][i]],
+                                            objectsC[1 + coarse_maps_tau[preim_c[c][i]][first_orb[c][i]]],
+                                            mors_tau[preim_c[c][i]][first_orb[c][i]] ) ) );
+            
+            return MorphismConstructor( UCm,
+                           ObjectConstructor( UCm, Pair( Sum( coequalizer ), coequalizer ) ),
+                           Triple( coarse_maps_univ, fine_maps_univ, mor_univ ),
+                           test_object );
+            
+        end );
+        
+    fi;
+
     if HasIsFiniteCategory( C ) and IsFiniteCategory( C ) and
         HasRangeCategoryOfHomomorphismStructure( C ) and IsIntervalCategory( H ) and
        CanCompute( C, "SetOfObjectsOfCategory" ) then

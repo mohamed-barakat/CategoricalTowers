@@ -107,3 +107,39 @@ InstallGlobalFunction( SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism,
     return testList;
     
 end );
+
+##
+InstallMethod( SchreierSimsOnASingleOrbit,
+        [ IsList, IsInt, IsInt, IsInt ],
+        
+  function ( perms, k, b, m )
+    local B, T, S, i, b_i, r, p;
+    
+    B := [ b ];
+    T := [ ];
+    S := [ ];
+    
+    for i in [ 1 .. m ] do ## while i <= Length( B )
+        
+        b_i := B[i];
+        
+        for r in [ 1 .. k ] do
+            
+            b := b_i^perms[r];
+            
+            p := Position( B, b );
+            
+            if p = fail then
+                Add( B, b );
+                Add( T, NTuple( 3, i, b_i, r ) );
+            else
+                Add( S, NTuple( 4, i, b_i, r, p ) );
+            fi;
+            
+        od;
+        
+    od;
+    
+    return Triple( B, T, S );
+    
+end );

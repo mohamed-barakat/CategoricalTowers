@@ -72,3 +72,34 @@ CapJitAddTypeSignature( "SKELETAL_CATEGORY_OF_FINITE_SETS_IsMonomorphism", [ IsL
 
 DeclareGlobalFunction( "SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism" );
 CapJitAddTypeSignature( "SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism", [ IsList, IsBigInt ], CapJitDataTypeOfListOf( IsBool ) );
+
+#! @Description
+#!  The input is a list <A>perms</A> of <A>k</A> many permutations,
+#!  and an integer <A>b</A> and the length <A>m</A> of its orbit under the permutations.
+#!  The output is a triple of lists,
+#!  the first of which is a list of length <A>m</A> of integers defining the orbit,
+#!  the second is a list of length <A>m</A>-1 of pairs of integers corresponding to the non-trivial transversals,
+#!  and the third is a list of <A>m</A><A>k</A> - (<A>m</A>-1) many triples of integers
+#!  corresponding to the list of generators of the stabilizer of <A>b</A>.
+#! @Arguments perms, c, b, m
+#! @Returns a triple of lists
+DeclareOperation( "SchreierSimsOnASingleOrbit",
+        [ IsList, IsInt, IsInt, IsInt ] );
+
+CapJitAddTypeSignature( "SchreierSimsOnASingleOrbit", [ IsList, IsInt, IsInt, IsInt ], function ( input_types )
+    
+    return CapJitDataTypeOfNTupleOf( 3,
+                   CapJitDataTypeOfListOf( IsInt ),
+                   CapJitDataTypeOfListOf(
+                           CapJitDataTypeOfNTupleOf( 3,
+                                   IsInt,
+                                   IsInt,
+                                   IsInt ) ),
+                   CapJitDataTypeOfListOf(
+                           CapJitDataTypeOfNTupleOf( 4,
+                                   IsInt,
+                                   IsInt,
+                                   IsInt,
+                                   IsInt ) ) );
+    
+end );
