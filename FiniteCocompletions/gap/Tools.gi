@@ -130,7 +130,7 @@ InstallMethodForCompilerForCAP( SchreierSimsOnASingleOrbit,
     predicate :=
       function( tuple_old, tuple_new )
         
-        return tuple_new[1] >= m;
+        return tuple_new[1] > m;
         
     end;
     
