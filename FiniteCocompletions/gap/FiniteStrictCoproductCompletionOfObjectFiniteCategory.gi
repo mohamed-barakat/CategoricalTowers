@@ -933,7 +933,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
                           List( [ 1 .. orbit_lengths[c][o] ], a ->
-                                PreCompose( C, schreier_sims[c][o][3][a], coequalizers[c][o] ) ) ) );
+                                PreCompose( C, InverseForMorphisms( C, schreier_sims[c][o][3][a] ), coequalizers[c][o] ) ) ) );
             
             maps1 :=
               List( [ 1 .. l ], c ->
