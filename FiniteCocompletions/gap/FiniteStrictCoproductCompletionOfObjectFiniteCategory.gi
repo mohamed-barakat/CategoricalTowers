@@ -870,22 +870,22 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             
             offset_orbits :=
               List( [ 1 .. l ], c -> Sum( nr_orbits{[ 1 .. c - 1 ]} ) );
-
+            
             orbit_lengths :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
                           Length( orbits[c][o] ) ) );
-
+            
             schreier_sims :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
-                      SchreierSimsOnOrbit( UCm, automorphisms, c, orbits[c][o][1], orbit_lengths[c][o] ) ) );
+                          SchreierSimsOnOrbit( UCm, automorphisms, c, orbits[c][o][1], orbit_lengths[c][o] ) ) );
             
             schreier_sims_orbits :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
                           schreier_sims[c][o][2] ) );
-
+            
             schreier_sims_positions :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. multiplicities[c] ], i ->
@@ -905,7 +905,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                                   IsEqualForObjects( C, Target( coequalizers[c][o] ), objectsC[d] ) ) ) );
             
             concat_coeq_pos := Concatenation( coequalizer_positions );
-
+            
             coequalizer :=
               List( [ 1 .. l ], c -> Number( concat_coeq_pos, i -> i = c ) );
 
@@ -922,13 +922,14 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
               List( [ 1 .. l ], c ->
                     -1 + Concatenation( List( [ 1 .. nr_orbits[c] ], o ->
                             ListWithIdenticalEntries( orbit_lengths[c][o], coequalizer_positions[c][o] ) ) ){schreier_sims_positions[c]} );
-
-            maps2 := List( [ 1 .. l ], c ->
-              Concatenation(
-                List( [ 1 .. nr_orbits[c] ], o ->
-                  ListWithIdenticalEntries( orbit_lengths[c][o],
-                    Number( concat_coeq_pos{[ 1 .. offset_orbits[c] + o - 1 ]}, i -> i = coequalizer_positions[c][o] ) ) ) ){schreier_sims_positions[c]} );
-
+            
+            maps2 :=
+              List( [ 1 .. l ], c ->
+                    Concatenation(
+                            List( [ 1 .. nr_orbits[c] ], o ->
+                                  ListWithIdenticalEntries( orbit_lengths[c][o],
+                                          Number( concat_coeq_pos{[ 1 .. offset_orbits[c] + o - 1 ]}, i -> i = coequalizer_positions[c][o] ) ) ) ){schreier_sims_positions[c]} );
+            
             mors :=
               List( [ 1 .. l ], c ->
                     Concatenation( projections[c] ){schreier_sims_positions[c]} );
