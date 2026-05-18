@@ -858,7 +858,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
         ##
         AddProjectionOntoCoequalizerOfIdentityAndAutomorphisms( UCm,
           function( UCm, object, automorphisms )
-            local C, objectsC, pair, multiplicities, l, k, data, perms, orbits, nr_orbits, offset_orbits, orbit_lengths,
+            local C, objectsC, multiplicities, l, k, data, perms, orbits, nr_orbits, offset_orbits, orbit_lengths,
             schreier_sims, schreier_sims_orbits, schreier_sims_positions, coequalizers, coequalizer_positions,
             concat_coeq_pos, coequalizer, projections, maps1, maps2, mors;
             
@@ -866,9 +866,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             
             objectsC := SetOfObjects( C );
             
-            pair := ObjectDatum( UCm, object );
-            
-            multiplicities := pair[2];
+            multiplicities := ObjectDatum( UCm, object )[2];
             
             l := NumberOfObjectsOfUnderlyingCategory( UCm );
             
@@ -960,7 +958,112 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
         end );
         
     fi;
-    
+
+    if CanCompute( C, "CoequalizerOfIdentityAndAutomorphisms" ) and
+       CanCompute( C, "UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms" ) then
+        
+        ##
+        AddUniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms( UCm,
+          function( UCm, object, automorphisms, test_object, tau )
+            local C, objectsC, multiplicities, l, k, data, perms, orbits, nr_orbits, offset_orbits,
+            schreier_sims, coequalizers, coequalizer_positions, concat_coeq_pos, coequalizer,
+            orb_map, preim_c, preim_i, first_orb, data_tau, map_tau, mor_tau, map_univ, mor_univ;
+            
+            C := UnderlyingCategory( UCm );
+            
+            objectsC := SetOfObjects( C );
+            
+            multiplicities := ObjectDatum( UCm, object )[2];
+            
+            l := NumberOfObjectsOfUnderlyingCategory( UCm );
+            
+            k := Length( automorphisms );
+            
+            data :=
+              List( [ 1 .. k ], r -> PairOfLists( automorphisms[r] ) );
+            
+            perms :=
+              List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> PermList( 1 + data[r][1][c][2] ) ) );
+
+            orbits :=
+              List( [ 1 .. l ], c -> OrbitsPerms( perms[c], [ 1 .. multiplicities[c] ] ) );
+            
+            nr_orbits :=
+              List( [ 1 .. l ], c -> Length( orbits[c] ) );
+            
+            offset_orbits :=
+              List( [ 1 .. l ], c -> Sum( nr_orbits{[ 1 .. c - 1 ]} ) );
+            
+            schreier_sims :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          SchreierSimsOnASingleOrbit( UCm, automorphisms, c, orbits[c][o][1], Length( orbits[c][o] ) ) ) );
+            
+            coequalizers :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          CoequalizerOfIdentityAndAutomorphisms( C,
+                                  objectsC[c],
+                                  schreier_sims[c][o][4] ) ) );
+            
+            coequalizer_positions :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          SafePositionProperty( [ 1 .. l ], d ->
+                                  IsEqualForObjects( C, coequalizers[c][o], objectsC[d] ) ) ) );
+
+            concat_coeq_pos := Concatenation( coequalizer_positions );
+            
+            coequalizer :=
+              List( [ 1 .. l ], c -> Number( concat_coeq_pos, i -> i = c ) );
+            
+            orb_map :=
+              List( [ 1 .. l ], c ->
+                List( [ 1 .. nr_orbits[c] ], o ->
+                  Number( concat_coeq_pos{[ 1 .. offset_orbits[c] + o ]}, i -> i = coequalizer_positions[c][o] ) ) );
+
+            preim_c :=
+              List( [ 1 .. l ], c ->
+                List( [ 1 .. coequalizer[c] ], i ->
+                  SafeFirst( [ 1 .. l ], d ->
+                    c in coequalizer_positions[d] and i in orb_map[d] ) ) );
+
+            preim_i :=
+              List( [ 1 .. l ], c ->
+                List( [ 1 .. coequalizer[c] ], i ->
+                  SafeFirst( [ 1 .. nr_orbits[preim_c[c][i]] ], j ->
+                    coequalizer_positions[preim_c[c][i]][j] = c and orb_map[preim_c[c][i]][j] = i ) ) );
+
+            first_orb := List( [ 1 .. l ], c -> List( [ 1 .. coequalizer[c] ], i -> orbits[preim_c[c][i]][preim_i[c][i]][1] ) );
+
+            data_tau := MorphismDatum( tau );
+
+            map_tau := data_tau[1];
+
+            mor_tau := data_tau[2];
+
+            map_univ := List( [ 1 .. l ], c ->
+                          Pair( List( [ 1 .. coequalizer[c] ], i -> map_tau[preim_c[c][i]][1][first_orb[c][i]] ),
+                                List( [ 1 .. coequalizer[c] ], i -> map_tau[preim_c[c][i]][2][first_orb[c][i]] ) ) );
+
+            mor_univ := List( [ 1 .. l ], c ->
+                          List( [ 1 .. coequalizer[c] ], i ->
+                            UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms(
+                                  C,
+                                  objectsC[preim_c[c][i]],
+                                  schreier_sims[preim_c[c][i]][preim_i[c][i]][4],
+                                  objectsC[ map_tau[preim_c[c][i]][1][first_orb[c][i]] ],
+                                  mor_tau[preim_c[c][i]][first_orb[c][i]] ) ) );
+            
+            return MorphismConstructor( UCm,
+                           ObjectConstructor( UCm, Pair( Sum( coequalizer ), coequalizer ) ),
+                           Pair( map_univ, mor_univ ),
+                           test_object );
+            
+        end );
+        
+    fi;
+
     if HasIsFiniteCategory( C ) and IsFiniteCategory( C ) and
        IsBound( H ) and IsIntervalCategory( H ) and
        CanCompute( C, "SetOfObjectsOfCategory" ) then
