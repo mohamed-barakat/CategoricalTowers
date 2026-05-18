@@ -1047,13 +1047,12 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
 
             mor_univ := List( [ 1 .. l ], c ->
                           List( [ 1 .. coequalizer[c] ], i ->
-                            UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms(
-                                  C,
+                            UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms( C,
                                   objectsC[preim_c[c][i]],
                                   schreier_sims[preim_c[c][i]][preim_i[c][i]][4],
-                                  objectsC[ map_tau[preim_c[c][i]][1][first_orb[c][i]] ],
+                                  objectsC[1 + map_tau[preim_c[c][i]][1][first_orb[c][i]]],
                                   mor_tau[preim_c[c][i]][first_orb[c][i]] ) ) );
-            
+
             return MorphismConstructor( UCm,
                            ObjectConstructor( UCm, Pair( Sum( coequalizer ), coequalizer ) ),
                            Pair( map_univ, mor_univ ),
