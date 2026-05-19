@@ -77,11 +77,11 @@ DeclareOperation( "SchreierSimsOnASingleOrbit",
 CapJitAddTypeSignature( "SchreierSimsOnASingleOrbit", [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsInt, IsInt, IsInt ], function ( input_types )
     local type_of_list;
     
-    type_of_list := CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( input_types[1].category ) );
+    type_of_list := CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( UnderlyingCategory( input_types[1].category ) ) );
     
     return CapJitDataTypeOfNTupleOf( 4,
                    IsInt,
-                   CapJitDataTypeOfListOf( IsInt ),
+                   CapJitDataTypeOfListOf( IsBigInt ),
                    type_of_list,
                    type_of_list );
     

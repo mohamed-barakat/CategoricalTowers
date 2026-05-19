@@ -105,7 +105,7 @@ InstallGlobalFunction( SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism,
 end );
 
 ##
-InstallMethodForCompilerForCAP( SchreierSimsOnASingleOrbit,
+InstallMethod( SchreierSimsOnASingleOrbit,
         [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsInt, IsInt, IsInt ],
         
   function ( UCm, automorphisms, c, e, m )
@@ -125,7 +125,8 @@ InstallMethodForCompilerForCAP( SchreierSimsOnASingleOrbit,
     
     id := IdentityMorphism( C, object );
     
-    initial_value := NTuple( 4, 1, [ e ], [ id ], [ ] );
+    initial_value := NTuple( 4, 1, [ e ], [ id ], CapJitTypedExpression( [ ], cat -> CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( C ) ) ) );
+    #initial_value := NTuple( 4, 1, [ e ], [ id ], [ id ] );
     
     predicate :=
       function( tuple_old, tuple_new )
