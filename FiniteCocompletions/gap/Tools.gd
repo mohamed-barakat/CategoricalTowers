@@ -63,26 +63,30 @@ DeclareGlobalFunction( "SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism" );
 CapJitAddTypeSignature( "SKELETAL_CATEGORY_OF_FINITE_SETS_IsEpimorphism", [ IsList, IsBigInt ], CapJitDataTypeOfListOf( IsBool ) );
 
 #! @Description
-#!  The input is <A>UCm</A> $:=$ <C>FiniteStrictCoproductCompletionOfObjectFiniteCategory</C>( $C$ ) an object-finite category $C$,
-#!  a list <A>autos</A> of $k$ many automorphisms in $C$,
-#!  an index <A>c</A> of an object in $C$ (a positive integer),
-#!  and an integer $i$ and the length $m$ of its orbit under the permutation parts of the automorphisms of the object of index <A>c</A> in $C$.
-#!  The output is a pair of lists of automorphisms of $C$
-#!  corresponding to a list of $m$ transversals and to a list of $m k - (m-1)$ of generators of the stabilizier.
-#! @Arguments UCm, autos, c, e, m
-#! @Returns a list integers
+#!  The input is a list <A>perms</A> of <A>k</A> many permutations,
+#!  and an integer <A>b</A> and the length <A>m</A> of its orbit under the permutations.
+#!  The output is a triple of lists,
+#!  the first of which is a list of length <A>m</A> of integers defining the orbit,
+#!  the second is a list of length <A>m</A>-1 of pairs of integers corresponding to the non-trivial transversals,
+#!  and the third is a list of <A>m</A><A>k</A> - (<A>m</A>-1) many triples of integers
+#!  corresponding to the list of generators of the stabilizer of <A>b</A>.
+#! @Arguments perms, c, b, m
+#! @Returns a triple of lists
 DeclareOperation( "SchreierSimsOnASingleOrbit",
-        [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsInt, IsInt, IsInt ] );
+        [ IsList, IsInt, IsInt, IsInt ] );
 
-CapJitAddTypeSignature( "SchreierSimsOnASingleOrbit", [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsInt, IsInt, IsInt ], function ( input_types )
-    local type_of_list;
+CapJitAddTypeSignature( "SchreierSimsOnASingleOrbit", [ IsList, IsInt, IsInt, IsInt ], function ( input_types )
     
-    type_of_list := CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( UnderlyingCategory( input_types[1].category ) ) );
-    
-    return CapJitDataTypeOfNTupleOf( 4,
-                   IsInt,
-                   CapJitDataTypeOfListOf( IsBigInt ),
-                   type_of_list,
-                   type_of_list );
+    return CapJitDataTypeOfNTupleOf( 3,
+                   CapJitDataTypeOfListOf( IsInt ),
+                   CapJitDataTypeOfListOf(
+                           CapJitDataTypeOfNTupleOf( 2,
+                                   IsInt,
+                                   IsInt ) ),
+                   CapJitDataTypeOfListOf(
+                           CapJitDataTypeOfNTupleOf( 3,
+                                   IsInt,
+                                   IsInt,
+                                   IsInt ) ) );
     
 end );

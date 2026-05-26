@@ -106,69 +106,36 @@ end );
 
 ##
 InstallMethod( SchreierSimsOnASingleOrbit,
-        [ IsFiniteStrictCoproductCompletionOfObjectFiniteCategory, IsList, IsInt, IsInt, IsInt ],
+        [ IsList, IsInt, IsInt, IsInt ],
         
-  function ( UCm, automorphisms, c, e, m )
-    local C, object, k, data, perms, autos, targets, id, initial_value, predicate, func;
+  function ( perms, k, b, m )
+    local B, T, S, i, b_i, r, p;
     
-    C := UnderlyingCategory( UCm );
+    B := [ b ];
+    T := [ ];
+    S := [ ];
     
-    object := SetOfObjects( C )[c];
-    
-    k := Length( automorphisms );
-    
-    data := List( [ 1 .. k ], r -> PairOfLists( automorphisms[r] ) );
-    
-    perms := List( [ 1 .. k ], r -> PermList( 1 + data[r][1][c][2] ) );
-    
-    autos := List( [ 1 .. k ], r -> data[r][2][c] );
-    
-    id := IdentityMorphism( C, object );
-    
-    initial_value := NTuple( 4, 1, [ e ], [ id ], CapJitTypedExpression( [ ], cat -> CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( C ) ) ) );
-    #initial_value := NTuple( 4, 1, [ e ], [ id ], [ id ] );
-    
-    predicate :=
-      function( tuple_old, tuple_new )
+    for i in [ 1 .. m ] do ## while i <= Length( B )
         
-        return tuple_new[1] > m;
-        
-    end;
-    
-    func :=
-      function( tuple )
-        local i, B, b_i, T, t_i, S, r, b, t, j;
-        
-        i := tuple[1];
-        
-        B := tuple[2];
-        b_i := B[i];
-        
-        T := tuple[3];
-        t_i := T[i];
-        
-        S := tuple[4];
+        b_i := b;
         
         for r in [ 1 .. k ] do
+            
             b := b_i^perms[r];
             
-            t := PreCompose( C, t_i, autos[r][b_i] );
+            p := Position( B, b );
             
-            j := Position( B, b );
-            
-            if IsInt( j ) then
-                S := Concatenation( S, [ PreCompose( C, t, InverseForMorphisms( C, T[j] ) ) ] );
+            if p = fail then
+                Add( B, b );
+                Add( T, Pair( i, r ) );
             else
-                B := Concatenation( B, [ b ] );
-                T := Concatenation( T, [ t ] );
+                Add( S, Triple( i, r, p ) );
             fi;
             
         od;
         
-        return NTuple( 4, i + 1, B, T, S );
-        
-    end;
+    od;
     
-    return CapFixpoint( predicate, func, initial_value );
+    return Triple( B, T, S );
     
 end );
