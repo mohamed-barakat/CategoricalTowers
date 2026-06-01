@@ -958,7 +958,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
                           List( [ 1 .. orbit_lengths[c][o] ], i ->
-                                PreCompose( C, InverseForMorphisms( C, transversals[c][o][i] ), coequalizer_projections[c][o] ) ) ) );
+                                PreCompose( C, inverses[c][o][i], coequalizer_projections[c][o] ) ) ) );
             
             schreier_sims_orbits :=
               List( [ 1 .. l ], c ->
