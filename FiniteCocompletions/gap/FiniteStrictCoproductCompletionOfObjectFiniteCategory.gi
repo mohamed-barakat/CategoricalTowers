@@ -671,7 +671,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             
             s := PairOfIntAndList(common_source)[2];
             
-            data := List( list_of_parallel_morphisms, mor -> PairOfLists( mor ) );
+            data := List( list_of_parallel_morphisms, PairOfLists );
             
             maps := List( data, datum -> datum[1] );
             
@@ -723,7 +723,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             
             s := PairOfIntAndList(common_source)[2];
             
-            data := List( list_of_parallel_morphisms, mor -> PairOfLists( mor ) );
+            data := List( list_of_parallel_morphisms, PairOfLists );
             
             maps := List( data, datum -> datum[1] );
             
@@ -790,7 +790,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             
             s := PairOfIntAndList(common_source)[2];
             
-            data := List( list_of_parallel_morphisms, mor -> PairOfLists( mor ) );
+            data := List( list_of_parallel_morphisms, PairOfLists );
             
             maps := List( data, datum -> datum[1] );
             
@@ -872,11 +872,10 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             
             k := Length( automorphisms );
             
-            data :=
-              List( [ 1 .. k ], r -> PairOfLists( automorphisms[r] ) );
+            data := List( automorphisms, PairOfLists );
             
             perms :=
-              List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> PermList( List( data[r][1][c][2], i -> 1 + i ) ) ) );
+              List( [ 1 .. l ], c -> List( data, datum -> PermList( List( datum[1][c][2], i -> 1 + i ) ) ) );
             
             orbits :=
               List( [ 1 .. l ], c -> OrbitsPerms( perms[c], [ 1 .. multiplicities[c] ] ) );
@@ -895,7 +894,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                           SchreierSimsOnASingleOrbit( perms[c], k, orbits[c][o][1], orbit_lengths[c][o] ) ) );
             
             autos :=
-              List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> data[r][2][c] ) );
+              List( [ 1 .. l ], c -> List( data, datum -> datum[2][c] ) );
             
             trans := c ->
               function( eval, pair )
@@ -1020,11 +1019,10 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             
             k := Length( automorphisms );
             
-            data :=
-              List( [ 1 .. k ], r -> PairOfLists( automorphisms[r] ) );
+            data := List( automorphisms, PairOfLists );
             
             perms :=
-              List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> PermList( List( data[r][1][c][2], i -> 1 + i ) ) ) );
+              List( [ 1 .. l ], c -> List( data, datum -> PermList( List( datum[1][c][2], i -> 1 + i ) ) ) );
             
             orbits :=
               List( [ 1 .. l ], c -> OrbitsPerms( perms[c], [ 1 .. multiplicities[c] ] ) );
@@ -1043,7 +1041,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                           SchreierSimsOnASingleOrbit( perms[c], k, orbits[c][o][1], orbit_lengths[c][o] ) ) );
             
             autos :=
-              List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> data[r][2][c] ) );
+              List( [ 1 .. l ], c -> List( data, datum -> datum[2][c] ) );
             
             trans := c ->
               function( eval, pair )
