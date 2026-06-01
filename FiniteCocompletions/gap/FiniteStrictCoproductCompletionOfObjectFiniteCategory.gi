@@ -858,7 +858,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
         AddProjectionOntoCoequalizerOfIdentityAndAutomorphisms( UCm,
           function( UCm, object, automorphisms )
             local C, objectsC, multiplicities, l, k, data, perms, orbits, nr_orbits, orbit_lengths,
-                  schreier_sims, autos, trans, identities, transversals, stabilizers,
+                  schreier_sims, autos, trans, identities, transversals, inverses, stabilizers,
                   coequalizer_projections, coequalizer_positions, concat_coeq_pos, coequalizer,
                   projections, schreier_sims_orbits, schreier_sims_positions, maps1, offset_orbits, maps2, mors;
             
@@ -916,6 +916,13 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                     List( [ 1 .. nr_orbits[c] ], o ->
                           Iterated( schreier_sims[c][o][2], trans( c ), [ identities[c] ] ) ) );
             
+            inverses :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          List( [ 1 .. orbit_lengths[c][o] ], i ->
+                                InverseForMorphisms( C,
+                                        transversals[c][o][i] ) ) ) );
+            
             stabilizers :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
@@ -924,8 +931,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                                         PreCompose( C,
                                                 transversals[c][o][schreier_sims[c][o][3][j][1]],
                                                 autos[c][schreier_sims[c][o][3][j][2]][schreier_sims[c][o][3][j][1]] ),
-                                        InverseForMorphisms( C,
-                                                transversals[c][o][schreier_sims[c][o][3][j][3]] ) ) ) ) );
+                                        inverses[c][o][schreier_sims[c][o][3][j][3]] ) ) ) );
             
             coequalizer_projections :=
               List( [ 1 .. l ], c ->
@@ -1000,7 +1006,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
         AddUniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms( UCm,
           function( UCm, object, automorphisms, test_object, tau )
             local C, objectsC, multiplicities, l, k, data, perms, orbits, nr_orbits, orbit_lengths,
-                  schreier_sims, autos, trans, identities, transversals, stabilizers,
+                  schreier_sims, autos, trans, identities, transversals, inverses, stabilizers,
                   coequalizers, coequalizer_positions, concat_coeq_pos, coequalizer,
                   offset_orbits, orb_map, preim_c, preim_i, first_orb, data_tau, map_tau, mor_tau, map_univ, mor_univ;
             
@@ -1058,6 +1064,13 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                     List( [ 1 .. nr_orbits[c] ], o ->
                           Iterated( schreier_sims[c][o][2], trans( c ), [ identities[c] ] ) ) );
             
+            inverses :=
+              List( [ 1 .. l ], c ->
+                    List( [ 1 .. nr_orbits[c] ], o ->
+                          List( [ 1 .. orbit_lengths[c][o] ], i ->
+                                InverseForMorphisms( C,
+                                        transversals[c][o][i] ) ) ) );
+            
             stabilizers :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
@@ -1066,8 +1079,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                                         PreCompose( C,
                                                 transversals[c][o][schreier_sims[c][o][3][j][1]],
                                                 autos[c][schreier_sims[c][o][3][j][2]][schreier_sims[c][o][3][j][1]] ),
-                                        InverseForMorphisms( C,
-                                                transversals[c][o][schreier_sims[c][o][3][j][3]] ) ) ) ) );
+                                        inverses[c][o][schreier_sims[c][o][3][j][3]] ) ) ) );
             
             coequalizers :=
               List( [ 1 .. l ], c ->
