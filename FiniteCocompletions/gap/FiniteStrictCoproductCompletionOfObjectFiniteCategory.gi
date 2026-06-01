@@ -897,17 +897,14 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             autos :=
               List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> data[r][2][c] ) );
             
-            trans :=
-              function( eval_c, pair )
-                local eval, c, i, r;
-                
-                eval := eval_c[1];
-                c := eval_c[2];
+            trans := c ->
+              function( eval, pair )
+                local i, r;
                 
                 i := pair[1];
                 r := pair[2];
                 
-                return Pair( Concatenation( eval, [ PreCompose( C, eval[i], autos[c][r][i] ) ] ), c );
+                return Concatenation( eval, [ PreCompose( C, eval[i], autos[c][r][i] ) ] );
                 
             end;
             
@@ -917,7 +914,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             transversals :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
-                          Iterated( schreier_sims[c][o][2], trans, Pair( [ identities[c] ], c ) )[1] ) );
+                          Iterated( schreier_sims[c][o][2], trans( c ), [ identities[c] ] ) ) );
             
             stabilizers :=
               List( [ 1 .. l ], c ->
@@ -1042,17 +1039,14 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             autos :=
               List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> data[r][2][c] ) );
             
-            trans :=
-              function( eval_c, pair )
-                local eval, c, i, r;
-                
-                eval := eval_c[1];
-                c := eval_c[2];
+            trans := c ->
+              function( eval, pair )
+                local i, r;
                 
                 i := pair[1];
                 r := pair[2];
                 
-                return Pair( Concatenation( eval, [ PreCompose( C, eval[i], autos[c][r][i] ) ] ), c );
+                return Concatenation( eval, [ PreCompose( C, eval[i], autos[c][r][i] ) ] );
                 
             end;
             
@@ -1062,7 +1056,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             transversals :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
-                          Iterated( schreier_sims[c][o][2], trans, Pair( [ identities[c] ], c ) )[1] ) );
+                          Iterated( schreier_sims[c][o][2], trans( c ), [ identities[c] ] ) ) );
             
             stabilizers :=
               List( [ 1 .. l ], c ->
