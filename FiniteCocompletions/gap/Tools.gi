@@ -117,7 +117,7 @@ InstallMethod( SchreierSimsOnASingleOrbit,
     
     for i in [ 1 .. m ] do ## while i <= Length( B )
         
-        b_i := b;
+        b_i := B[i];
         
         for r in [ 1 .. k ] do
             
