@@ -14,14 +14,16 @@ x := Pair( 5, [ 5 ] ) / UTm;
 #! ategoryWithSingleObject( ) )>
 f1 := MorphismConstructor(
               x,
-              [ [ [ [ 0, 0, 0, 0, 0 ], [ 2, 4, 0, 3, 1 ] ] ],
+              [ [ [ 0, 0, 0, 0, 0 ] ],
+                [ [ 2, 4, 0, 3, 1 ] ],
                 [ [ id_T, id_T, id_T, id_T, id_T ] ] ],
               x );
 #! <A morphism in FiniteStrictCoproductCompletionOfObjectFiniteCategory( Terminal\
 #! CategoryWithSingleObject( ) )>
 f2 := MorphismConstructor(
               x,
-              [ [ [ [ 0, 0, 0, 0, 0 ], [ 0, 1, 3, 2, 4 ] ] ],
+              [ [ [ 0, 0, 0, 0, 0 ] ],
+                [ [ 0, 1, 3, 2, 4 ] ],
                 [ [ id_T, id_T, id_T, id_T, id_T ] ] ],
               x );
 #! <A morphism in FiniteStrictCoproductCompletionOfObjectFiniteCategory( Terminal\
