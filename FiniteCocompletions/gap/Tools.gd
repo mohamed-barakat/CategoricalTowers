@@ -80,11 +80,13 @@ CapJitAddTypeSignature( "SchreierSimsOnASingleOrbit", [ IsList, IsInt, IsInt, Is
     return CapJitDataTypeOfNTupleOf( 3,
                    CapJitDataTypeOfListOf( IsInt ),
                    CapJitDataTypeOfListOf(
-                           CapJitDataTypeOfNTupleOf( 2,
+                           CapJitDataTypeOfNTupleOf( 3,
+                                   IsInt,
                                    IsInt,
                                    IsInt ) ),
                    CapJitDataTypeOfListOf(
-                           CapJitDataTypeOfNTupleOf( 3,
+                           CapJitDataTypeOfNTupleOf( 4,
+                                   IsInt,
                                    IsInt,
                                    IsInt,
                                    IsInt ) ) );

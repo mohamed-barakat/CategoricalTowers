@@ -127,9 +127,11 @@ InstallMethod( SchreierSimsOnASingleOrbit,
             
             if p = fail then
                 Add( B, b );
-                Add( T, Pair( i, r ) );
+                ## PreCompose( C, t_i, autos[r][b_i] )
+                Add( T, Triple( i, b_i, r ) );
             else
-                Add( S, Triple( i, r, p ) );
+                ## PreCompose( C, PreCompose( C, t_i, autos[r][b_i] ), InverseForMorphisms( C, T[p] ) )
+                Add( S, NTuple( 4, i, b_i, r, p ) );
             fi;
             
         od;
