@@ -226,7 +226,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             coarse_maps := triple_of_lists[1];
             fine_maps := triple_of_lists[2];
             mors := triple_of_lists[3];
-
+            
             return l = Length( coarse_maps ) and
                    l = Length( fine_maps ) and
                    l = Length( mors ) and
