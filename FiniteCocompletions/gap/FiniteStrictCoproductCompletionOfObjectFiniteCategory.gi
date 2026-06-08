@@ -913,7 +913,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             data := List( automorphisms, TripleOfLists );
             
             perms :=
-              List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> PermList( List( data[r][2][c], i -> 1 + i ) ) ) );
+              List( [ 1 .. l ], c -> List( data, datum -> PermList( List( datum[2][c], i -> 1 + i ) ) ) );
             
             orbits :=
               List( [ 1 .. l ], c -> OrbitsPerms( perms[c], [ 1 .. multiplicities[c] ] ) );
@@ -1061,7 +1061,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             data := List( automorphisms, TripleOfLists );
             
             perms :=
-              List( [ 1 .. l ], c -> List( [ 1 .. k ], r -> PermList( List( data[r][2][c], i -> 1 + i ) ) ) );
+              List( [ 1 .. l ], c -> List( data, datum -> PermList( List( datum[2][c], i -> 1 + i ) ) ) );
             
             orbits :=
               List( [ 1 .. l ], c -> OrbitsPerms( perms[c], [ 1 .. multiplicities[c] ] ) );
