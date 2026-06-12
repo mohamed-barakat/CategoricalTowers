@@ -88,7 +88,7 @@ Dependencies := rec(
   GAP := ">= 4.13.0",
   NeededOtherPackages := [
                    [ "GAPDoc", ">= 1.5" ],
-                   [ "CAP", ">= 2026.05-02" ],
+                   [ "CAP", ">= 2026.06-03" ],
                    [ "MonoidalCategories", ">= 2026.06-01" ],
                    [ "CartesianCategories", ">= 2026.06-01" ],
                    [ "ToolsForCategoricalTowers", ">= 2025.08-01" ],

@@ -944,7 +944,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                 b_i := triple[2];
                 r := triple[3];
                 
-                return Concatenation( eval, [ PreCompose( C, eval[i], autos[c][r][b_i] ) ] );
+                return PreCompose( C, eval[i], autos[c][r][b_i] );
                 
             end;
             
@@ -954,7 +954,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             transversals :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
-                          Iterated( schreier_sims[c][o][2], trans( c ), [ identities[c] ] ) ) );
+                          IteratedListOfActions( [ identities[c] ], schreier_sims[c][o][2], trans( c ) ) ) );
             
             inverses :=
               List( [ 1 .. l ], c ->
@@ -1095,7 +1095,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
                 b_i := triple[2];
                 r := triple[3];
                 
-                return Concatenation( eval, [ PreCompose( C, eval[i], autos[c][r][b_i] ) ] );
+                return PreCompose( C, eval[i], autos[c][r][b_i] );
                 
             end;
             
@@ -1105,7 +1105,7 @@ InstallMethod( FiniteStrictCoproductCompletionOfObjectFiniteCategory,
             transversals :=
               List( [ 1 .. l ], c ->
                     List( [ 1 .. nr_orbits[c] ], o ->
-                          Iterated( schreier_sims[c][o][2], trans( c ), [ identities[c] ] ) ) );
+                          IteratedListOfActions( [ identities[c] ], schreier_sims[c][o][2], trans( c ) ) ) );
             
             inverses :=
               List( [ 1 .. l ], c ->
